@@ -1,0 +1,14 @@
+@startuml
+package "Requirements" {
+  usecase "Iniciar Sesión" as Login <<processing>>
+  usecase "Recuperar Contraseña" as Recover <<processing>>
+  usecase "Ver Dashboard" as ViewDash <<browsing>>
+  
+  actor "Usuario" as User
+}
+
+User --> Login
+User --> Recover
+Login ..> ViewDash : <<include>> (success)
+Login <.. Recover : <<extend>> (forgot password)
+@enduml

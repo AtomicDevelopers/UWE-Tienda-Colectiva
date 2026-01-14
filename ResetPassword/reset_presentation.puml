@@ -1,0 +1,38 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "Presentation" {
+
+  ' --- Paso 1: Solicitar ---
+  package "RecoverPage" <<presentationPage>> {
+    package ":RequestForm" <<inputForm>> {
+      rectangle ":EmailAddress" <<textInput>>
+      rectangle ":SendCode" <<button>>
+    }
+  }
+
+  ' --- Paso 2: Ingresar Token ---
+  package "TokenPage" <<presentationPage>> {
+    package ":TokenForm" <<inputForm>> {
+      rectangle ":CodeInput" <<textInput>>
+      rectangle ":VerifyButton" <<button>>
+    }
+  }
+
+  ' --- Paso 3: Nueva Contraseña ---
+  package "NewPasswordPage" <<presentationPage>> {
+    package ":PasswordForm" <<inputForm>> {
+      rectangle ":NewPassword" <<textInput>>
+      rectangle ":ConfirmPassword" <<textInput>>
+      rectangle ":ChangeButton" <<button>>
+    }
+  }
+
+  ' --- Éxito ---
+  package "SuccessPage" <<presentationPage>> {
+    rectangle ":SuccessMessage" <<text>>
+    rectangle ":BackToLogin" <<anchor>>
+  }
+
+}
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+package "Navigation" {
+  class "LoginForm" as Login <<navigationClass>>
+  class "RecoverPage" as Recover <<navigationClass>>
+  class "TokenInputPage" as TokenPage <<navigationClass>>
+  class "NewPasswordPage" as NewPassPage <<navigationClass>>
+  class "RecoverySuccess" as Success <<navigationClass>>
+
+  Login --> Recover : <<navigationLink>>
+  Recover --> TokenPage : <<navigationLink>>
+  TokenPage --> NewPassPage : <<navigationLink>>
+  NewPassPage --> Success : <<navigationLink>>
+  Success --> Login : <<navigationLink>>
+}
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+package "Navigation" {
+  class "Home" as Home <<navigationClass>> {
+    {tag=isHome}
+  }
+  
+  class "Menu" as Menu <<menu>>
+  class "LoginForm" as LoginForm <<navigationClass>>
+  class "Dashboard" as Dashboard <<navigationClass>>
+  
+  class "RecoverPassword" as RecPass <<navigationClass>>
+  class "LoginError" as LoginError <<navigationClass>>
+
+  ' Flujo Principal
+  Home --> Menu : <<navigationLink>>
+  Menu --> LoginForm : <<navigationLink>>
+  LoginForm --> Dashboard : <<navigationLink>>
+  
+  ' Flujos de Error y Recuperación (Solicitados)
+  LoginForm --> LoginError : <<navigationLink>> (Error)
+  LoginError --> LoginForm : <<navigationLink>> (Reintentar)
+  
+  Menu --> RecPass : <<navigationLink>>
+  LoginForm --> RecPass : <<navigationLink>>
+  RecPass --> LoginForm : <<navigationLink>> (Cancelar/Volver)
+}
+@enduml

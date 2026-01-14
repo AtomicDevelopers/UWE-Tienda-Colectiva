@@ -1,0 +1,23 @@
+@startuml
+package "Process" {
+  class "ResetFlow" as Process <<processClass>>
+  
+  class "EmailInput" <<userAction>>
+  class "TokenGeneration" <<systemAction>>
+  class "TokenValidation" <<systemAction>>
+  class "PasswordUpdate" <<systemAction>>
+  
+  class "EmailSender" <<systemAction>>
+  
+  Process *-- EmailInput
+  Process *-- TokenGeneration
+  Process *-- EmailSender
+  Process *-- TokenValidation
+  Process *-- PasswordUpdate
+  
+  EmailInput --> TokenGeneration : submit
+  TokenGeneration --> EmailSender : success
+  EmailSender --> TokenValidation : user enters code
+  TokenValidation --> PasswordUpdate : valid
+}
+@enduml

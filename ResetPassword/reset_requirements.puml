@@ -1,0 +1,13 @@
+@startuml
+package "Requirements" {
+  usecase "Solicitar Recuperación" as RequestReset <<processing>>
+  usecase "Validar Token" as ValidateToken <<processing>>
+  usecase "Cambiar Contraseña" as ChangePassword <<processing>>
+  
+  actor "Usuario" as User
+}
+
+User --> RequestReset
+RequestReset ..> ValidateToken : <<include>>
+ValidateToken ..> ChangePassword : <<include>>
+@enduml

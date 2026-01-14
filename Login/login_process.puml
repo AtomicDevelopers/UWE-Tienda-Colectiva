@@ -1,0 +1,23 @@
+@startuml
+package "Process" {
+  class "LoginFlow" as Process <<processClass>>
+  class "RecoveryFlow" as RecProcess <<processClass>>
+  
+  class "LoginInput" <<userAction>>
+  class "Validation" <<systemAction>>
+  class "ErrorDisplay" <<displayAction>>
+  
+  class "EmailInput" <<userAction>>
+  class "SendToken" <<systemAction>>
+  
+  Process *-- LoginInput
+  Process *-- Validation
+  Process *-- ErrorDisplay
+  
+  RecProcess *-- EmailInput
+  RecProcess *-- SendToken
+  
+  LoginInput --> Validation : submit
+  Validation --> ErrorDisplay : invalid
+}
+@enduml

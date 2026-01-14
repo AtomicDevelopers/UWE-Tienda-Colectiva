@@ -1,0 +1,40 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "Presentation" {
+
+  ' --- Login Page ---
+  package "LoginPage" <<presentationPage>> {
+    rectangle ":Header" as Header <<anchor>>
+    package ":LoginForm" <<inputForm>> {
+      rectangle ":Email" as Email <<textInput>>
+      rectangle ":Password" as Pass <<textInput>>
+      rectangle ":Login" as LoginBtn <<button>>
+      rectangle ":RecoverLink" as RecLink <<anchor>>
+    }
+    rectangle ":Footer" as Footer <<anchor>>
+  }
+
+  ' --- Recovery Page ---
+  package "RecoverPasswordPage" <<presentationPage>> {
+    rectangle ":RecoveryForm" <<inputForm>> {
+      rectangle ":EmailRecovery" <<textInput>>
+      rectangle ":SendButton" <<button>>
+      rectangle ":CancelLink" <<anchor>>
+    }
+  }
+
+  ' --- Error Page ---
+  package "LoginErrorPage" <<presentationPage>> {
+    rectangle ":ErrorMessage" <<text>>
+    rectangle ":RetryButton" <<button>>
+  }
+
+  ' --- Dashboard (Simplificado) ---
+  package "DashboardPage" <<presentationPage>> {
+    rectangle ":WelcomeMessage" <<text>>
+  }
+
+}
+
+@enduml

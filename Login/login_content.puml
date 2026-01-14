@@ -1,0 +1,30 @@
+@startuml
+package "Content" {
+  class Usuario {
+    - email : String
+    - password : String
+    - nombreComplete : String
+    - rol : String
+    + validarCredenciales() : Boolean
+  }
+
+  class Sesion {
+    - token : String
+    - fechaExp : Date
+  }
+  
+  class RecoveryToken {
+    - email : String
+    - code : String
+    - expiration : Date
+  }
+  
+  class ErrorMessage {
+    - code : String
+    - description : String
+  }
+
+  Usuario "1" -- "0..1" Sesion : mantiene >
+  Usuario "1" -- "0..*" RecoveryToken : solicita >
+}
+@enduml
