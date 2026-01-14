@@ -1,5 +1,20 @@
 @startuml login_requirements
 allow_mixing
+
+skinparam shadow false
+
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
 package "Requirements Login" {
   usecase "Iniciar Sesión" as Login <<processing>>
   usecase "Recuperar Contraseña" as Recover <<processing>>
@@ -8,56 +23,74 @@ package "Requirements Login" {
   actor "Usuario" as User
 }
 
+User --> Login
+User --> Recover
+Login ..> ViewDash 
+Login <.. Recover 
+
 package "Activity Login" {
+  circle " " as AL_Start <<start>>
+  circle " " as AL_End <<end>>
+  skinparam circleBackgroundColor black
+
   class "LoginForm" as AL_Form <<displayAction>> {
     {type=form}
-    email
-    password
+    --
+    <<interactionPin>>
+    + email
+    + password
   }
   
   class "CredentialInput" as AL_Input <<userAction>> {
-    email
-    password
+
+    + email
+    + password
   }
   
   class "ValidateSession" as AL_Process <<systemAction>> {
     {confirmed}
   }
   
+  AL_Start --> AL_Form
   AL_Form --> AL_Input : submit
   AL_Input --> AL_Process : validate
+  AL_Process --> AL_End : success
 }
 
 package "Activity Reset Password" {
+  circle " " as AR_Start <<start>>
+  circle " " as AR_End <<end>>
+
   class "RecoveryForm" as AR_Form <<displayAction>> {
     {type=form}
-    email
+    --
+    + email
   }
   
   class "EmailInput" as AR_Input <<userAction>> {
-    email
+    --
+    + email
   }
   
   class "ValidateEmail" as AR_ValEmail <<systemAction>> {
-    token
+    + token
   }
   
   class "TokenInput" as AR_Token <<userAction>> {
-    receivedToken
+    --
+    + receivedToken
   }
   
   class "ChangePassword" as AR_Change <<systemAction>> {
-    newPassword
+    --
+    + newPassword
   }
   
+  AR_Start --> AR_Form
   AR_Form --> AR_Input
   AR_Input --> AR_ValEmail : check
   AR_ValEmail --> AR_Token : success
   AR_Token --> AR_Change : update
+  AR_Change --> AR_End
 }
-
-User --> Login
-User --> Recover
-Login ..> ViewDash 
-Login <.. Recover 
 @enduml
