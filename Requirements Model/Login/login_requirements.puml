@@ -33,7 +33,7 @@ package "Activity Login" {
   circle " " as AL_End <<end>>
   skinparam circleBackgroundColor black
 
-  class "LoginForm" as AL_Form <<displayAction>> {
+  class "Formulario Login" as AL_Form <<displayAction>> {
     {type=form}
     --
     <<interactionPin>>
@@ -41,13 +41,13 @@ package "Activity Login" {
     + password
   }
   
-  class "CredentialInput" as AL_Input <<userAction>> {
+  class "Ingresar credenciales" as AL_Input <<userAction>> {
 
     + email
     + password
   }
   
-  class "ValidateSession" as AL_Process <<systemAction>> {
+  class "Validar Sesión" as AL_Process <<systemAction>> {
     {confirmed}
   }
   
@@ -61,28 +61,28 @@ package "Activity Reset Password" {
   circle " " as AR_Start <<start>>
   circle " " as AR_End <<end>>
 
-  class "RecoveryForm" as AR_Form <<displayAction>> {
+  class "Formulario Recuperar Contraseña" as AR_Form <<displayAction>> {
     {type=form}
     --
     <<interactionPin>>
     + email
   }
   
-  class "EmailInput" as AR_Input <<userAction>> {
+  class "Ingresar email" as AR_Input <<userAction>> {
     --
     + email
   }
   
-  class "ValidateEmail" as AR_ValEmail <<systemAction>> {
+  class "Validar Email" as AR_ValEmail <<systemAction>> {
     + token
   }
   
-  class "TokenInput" as AR_Token <<userAction>> {
+  class "Ingresar Token" as AR_Token <<userAction>> {
     --
     + receivedToken
   }
   
-  class "ChangePassword" as AR_Change <<systemAction>> {
+  class "Cambiar Contraseña" as AR_Change <<systemAction>> {
     --
     + newPassword
   }

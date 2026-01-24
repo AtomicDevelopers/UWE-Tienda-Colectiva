@@ -2,7 +2,7 @@
 allow_mixing
 
 skinparam shadow false
-skinparam packageStyle rectangle
+
 skinparam roundCorner 15
 skinparam class {
   BackgroundColor #FEFECE
@@ -32,7 +32,7 @@ AnonUser --> GoLogin
 ViewCatalog ..> ViewShop : <<include>>
 ViewShop ..> ViewShopProducts : <<include>>
 
-package "Activity Browse Shop" {
+package "Activity Ver Catálogo Tiendas" {
   circle " " as BS_Start <<start>>
   circle " " as BS_End <<end>>
   skinparam circleBackgroundColor black
@@ -84,7 +84,7 @@ package "Activity Browse Shop" {
   BS_ProdDetail --> BS_End
 }
 
-package "Activity Search Product" {
+package "Activity Buscar Productos" {
   circle " " as SP_Start <<start>>
   circle " " as SP_End <<end>>
 
