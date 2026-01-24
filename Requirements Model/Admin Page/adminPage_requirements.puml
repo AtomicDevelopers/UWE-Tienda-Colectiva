@@ -1,0 +1,138 @@
+@startuml adminPage_requirements
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Admin Page" {
+  actor "Usuario Administrador" as Admin
+  
+  usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
+  usecase "Agregar Productos" as AddProduct <<processing>>
+  usecase "Cerrar Sesión" as Logout <<processing>>
+}
+
+Admin --> CreateShop
+Admin --> AddProduct
+Admin --> Logout
+
+package "Activity crear tienda" {
+  circle " " as CS_Start <<start>>
+  circle " " as CS_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Formulario Crear Tienda" as CS_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + nombre
+    + fotoPortada
+    + telefono
+    + direccion
+    + estadoEspacio {checkbox}
+  }
+  
+  class "Ingresar datos tienda" as CS_Input <<userAction>> {
+    --
+    + nombre
+    + fotoPortada
+    + telefono
+    + direccion
+    + disponible
+  }
+  
+  class "Validar y guardar tienda" as CS_Process <<systemAction>> {
+    {validated}
+    {saved}
+  }
+
+  class "Mensaje de éxito" as CS_Success <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Tienda creada correctamente"
+  }
+  
+  CS_Start --> CS_Form
+  CS_Form --> CS_Input : submit
+  CS_Input --> CS_Process : validate
+  CS_Process --> CS_Success : success
+  CS_Success --> CS_End
+}
+
+package "Activity agregar productos" {
+  circle " " as AP_Start <<start>>
+  circle " " as AP_End <<end>>
+
+  class "Formulario Agregar Productos" as AP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + nombre
+    + precio
+    + foto
+    + cantidad
+  }
+  
+  class "Ingresar datos producto" as AP_Input <<userAction>> {
+    --
+    + nombre
+    + precio
+    + foto
+    + cantidad
+  }
+  
+  class "Validar y guardar producto" as AP_Process <<systemAction>> {
+    {validated}
+    {saved}
+  }
+  
+  class "Lista de productos actualizada" as AP_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + products
+  }
+  
+  AP_Start --> AP_Form
+  AP_Form --> AP_Input : submit
+  AP_Input --> AP_Process : validate
+  AP_Process --> AP_List : update view
+  AP_List --> AP_End
+}
+
+package "Activity cerrar sesión" {
+  circle " " as LO_Start <<start>>
+  circle " " as LO_End <<end>>
+
+  class "Opción Cerrar Sesión" as LO_Opt <<userAction>> {
+    --
+    <<interactionPin>>
+    + action "Cerrar Sesión"
+  }
+  
+  class "Invalidar Sesión" as LO_Process <<systemAction>> {
+    {tokenInvalidated}
+  }
+  
+  class "Redirigir a página principal" as LO_Redirect <<systemAction>> {
+    {redirectUrl: /}
+  }
+
+  LO_Start --> LO_Opt 
+  LO_Opt --> LO_Process : submit
+  LO_Process --> LO_Redirect : done
+  LO_Redirect --> LO_End
+}
+@enduml

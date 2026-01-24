@@ -88,8 +88,8 @@ package "Activity Reset Password" {
   }
   
   AR_Start --> AR_Form
-  AR_Form --> AR_Input
-  AR_Input --> AR_ValEmail : check
+  AR_Form --> AR_Input : submit
+  AR_Input --> AR_ValEmail : validate
   AR_ValEmail --> AR_Token : success
   AR_Token --> AR_Change : update
   AR_Change --> AR_End

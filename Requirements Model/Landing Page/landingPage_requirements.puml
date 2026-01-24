@@ -54,7 +54,7 @@ package "Activity Ver Catálogo Tiendas" {
     --
     <<displayPin>>
     + nombre
-    + foto {type=image}
+    + fotoPortada {type=image}
     + telefono
     + direccion
     + numeroNegocios
