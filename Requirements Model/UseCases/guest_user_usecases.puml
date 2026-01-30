@@ -15,8 +15,7 @@ skinparam usecase {
   ArrowColor #A80036
 }
 
-actor "Usuario Anónimo" as AnonUser
-package "Requirements Landing Page" {
+actor "Usuario Invitado" as AnonUser
 
   usecase "Establecer Ubicación" as SetLocation <<processing>>
   usecase "Ver Catálogo Tiendas" as ViewCatalog <<browsing>>
@@ -26,10 +25,10 @@ package "Requirements Landing Page" {
   usecase "Ver Detalle de Producto" as ViewProductDetail <<browsing>>
   usecase "Guardar Productos de Interés" as SaveFavoriteProducts <<processing>>
   usecase "Ver Productos de Interes" as ViewFavoriteProducts <<browsing>>
+  usecase "Ver Producto más vendido" as ViewMostSoldProducts <<browsing>>
 
   usecase "Ir a Login" as GoLogin <<processing>>
   usecase "Registrarse" as register <<processing>>
-}
 
 AnonUser --> SetLocation
 AnonUser --> ViewCatalog
@@ -39,9 +38,10 @@ AnonUser --> register
 AnonUser --> ViewProductDetail
 AnonUser --> SaveFavoriteProducts
 AnonUser --> ViewFavoriteProducts
+AnonUser --> ViewMostSoldProducts
 
 'TODO: Discuss with others
-SetLocation <.. ViewCatalog : <<include>>
+SetLocation <.. ViewCatalog : <<iSnclude>>
 SetLocation <.. SearchGlobal : <<include>>
 
 ViewProductDetail <.. SaveFavoriteProducts : <<extends>>
