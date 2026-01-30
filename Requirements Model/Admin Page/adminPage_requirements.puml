@@ -19,6 +19,9 @@ package "Requirements Admin Page" {
   actor "Usuario Administrador" as Admin
   
   usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
+  usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
+  usecase "Agregar Espacios de Tienda" as AddShopSpaces <<processing>>
+  usecase "Ver Espacios de Tienda" as ViewShopSpaces <<browsing>>
   usecase "Agregar Productos" as AddProduct <<processing>>
   usecase "Cerrar Sesión" as Logout <<processing>>
 }
@@ -26,6 +29,13 @@ package "Requirements Admin Page" {
 Admin --> CreateShop
 Admin --> AddProduct
 Admin --> Logout
+Admin --> ViewShopDetail
+Admin --> ViewShopSpaces
+Admin --> AddShopSpaces
+
+CreateShop <.. ViewShopDetail : <<include>>
+ViewShopDetail <.. ViewShopSpaces : <<include>>
+ViewShopDetail <.. AddShopSpaces : <<extends>>
 
 package "Activity crear tienda" {
   circle " " as CS_Start <<start>>
