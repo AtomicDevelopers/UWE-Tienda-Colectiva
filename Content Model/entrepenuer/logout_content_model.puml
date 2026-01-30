@@ -1,0 +1,35 @@
+@startuml logout_content_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Content - Logout" {
+
+  class "Emprendedor" as Entrepreneur <<content>> {
+    +id: UUID
+    +email: String
+  }
+
+  class "Sesion" as Session <<content>> {
+    +sessionId: UUID
+    +createdAt: DateTime
+    +expiresAt: DateTime
+    +isActive: Boolean
+  }
+
+  class "Token" as Token <<content>> {
+    +accessToken: String
+    +refreshToken: String
+    +expiresAt: DateTime
+  }
+
+  Entrepreneur "1" -- "0..*" Session : inicia
+  Session "1" o-- "1" Token : contiene
+}
+@enduml

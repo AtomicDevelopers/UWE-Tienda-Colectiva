@@ -1,0 +1,63 @@
+@startuml logout_requirements
+allow_mixing
+skinparam shadow false
+
+skinparam roundCorner 15
+
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+
+package "Requerimientos - Acceso" {
+  usecase "Cerrar sesión" as UC_Logout <<processing>>
+  actor "Emprendedor" as Entrepreneur
+  Entrepreneur --> UC_Logout
+
+}
+
+package "Activity - Cerrar sesión" {
+
+  skinparam circleBackgroundColor black
+
+  circle " " as LS_Start <<start>>
+  circle " " as LS_End <<end>>
+
+  class "Seleccionar opción Cerrar sesión" as LS_Select <<userAction>>
+
+  class "Solicitar confirmación" as LS_Ask <<displayAction>>
+
+  class "Confirmar cierre de sesión" as LS_Confirm <<userAction>>
+
+  class "Cerrar sesión activa" as LS_Close <<systemAction>> {
+    {confirmed}
+  }
+
+  class "Eliminar datos de sesión (token)" as LS_Clear <<systemAction>>
+
+  class "Redirigir a pantalla de acceso" as LS_Redirect <<displayAction>>
+
+  class "Cancelar" as LS_Cancel <<displayAction>>
+
+  LS_Start --> LS_Select
+  LS_Select --> LS_Ask
+
+  LS_Ask --> LS_Confirm : confirmar
+  LS_Ask --> LS_Cancel : cancelar
+
+  LS_Confirm --> LS_Close
+  LS_Close --> LS_Clear
+  LS_Clear --> LS_Redirect
+  LS_Redirect --> LS_End
+
+  LS_Cancel --> LS_End
+}
+@enduml

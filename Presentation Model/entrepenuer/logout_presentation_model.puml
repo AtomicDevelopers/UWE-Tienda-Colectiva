@@ -1,0 +1,37 @@
+@startuml logout_presentation_model
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Cerrar sesión" {
+
+  rectangle "Dashboard" as P_Dashboard <<presentationClass>> {
+    rectangle ":Header" as D_Header
+    rectangle ":BtnLogout" as D_Logout
+  }
+
+  rectangle "LogoutConfirmation" as P_Confirm <<presentationClass>> {
+    rectangle ":DialogTitle" as C_Title
+    rectangle ":DialogMessage" as C_Message
+    rectangle ":Actions" as C_Actions {
+      rectangle ":BtnConfirm" as C_Confirm
+      rectangle ":BtnCancel" as C_Cancel
+    }
+  }
+
+  rectangle "HomeAcceso" as P_Home <<presentationClass>> {
+    rectangle ":Header" as H_Header
+    rectangle ":Actions" as H_Actions {
+      rectangle ":BtnLogin" as H_Login
+      rectangle ":BtnRegister" as H_Register
+      rectangle ":BtnRecover" as H_Recover
+    }
+  }
+}
+@enduml

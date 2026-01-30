@@ -1,5 +1,4 @@
 @startuml login_entrepenuer_model
-title Presentation - Acceso Emprendedor [Presentation Diagram]
 
 skinparam shadow false
 skinparam roundCorner 12

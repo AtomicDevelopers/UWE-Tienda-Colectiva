@@ -1,0 +1,30 @@
+@startuml logout_process_activity_model
+skinparam shadow false
+skinparam roundCorner 12
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+skinparam component {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Activity - Cerrar sesión" {
+
+  start
+  :Seleccionar "Cerrar sesión";
+
+  :Mostrar confirmación;
+
+  if (¿Confirmar logout?) then (Sí)
+    :Cerrar sesión (invalidar token / limpiar sesión);
+    :Redirigir a HomeAcceso/Login;
+  else (No)
+    :Cancelar y volver al Dashboard;
+  endif
+
+  stop
+}
+@enduml

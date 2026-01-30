@@ -1,0 +1,25 @@
+@startuml logout_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Cerrar sesión" {
+
+  class "Dashboard" as Dashboard <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "LogoutConfirmation" as Confirm <<navigationClass>>
+  class "HomeAcceso" as Home <<navigationClass>>
+
+  Dashboard "1" --> "1" Confirm : <<navigationLink>>\n-openLogout
+  Confirm "1" --> "1" Home : <<navigationLink>>\n-confirmLogout
+  Confirm "1" --> "1" Dashboard : <<navigationLink>>\n-cancel
+}
+@enduml

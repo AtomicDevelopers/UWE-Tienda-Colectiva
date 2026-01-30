@@ -1,0 +1,35 @@
+@startuml
+
+skinparam shadow false
+skinparam roundCorner 12
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+skinparam component {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Process Logout " {
+
+  class "LogoutProcessing" <<process>> {
+  }
+
+  class "LogoutExecution" <<process>> {
+  }
+
+  class "LogoutConfirmation" <<process>> {
+    -sessionCleared()
+  }
+
+  class "ValidationError" <<process>> {
+    -message : String
+  }
+
+  LogoutProcessing *-- LogoutExecution
+  LogoutExecution *-- LogoutConfirmation
+  LogoutExecution --> ValidationError
+}
+@enduml
