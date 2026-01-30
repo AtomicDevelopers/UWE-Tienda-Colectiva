@@ -1,0 +1,88 @@
+@startuml gestion_product_model
+title Presentation - Gestionar productos [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar productos" {
+
+  rectangle "ProductList" as P_List <<presentationClass>> {
+    rectangle ":Header" as PL_Header
+    rectangle ":Search/Filter" as PL_Filter {
+      rectangle ":InputSearch" as PL_Search <<inputField>>
+      rectangle ":SelectTag" as PL_TagFilter <<select>>
+    }
+    rectangle ":ProductItems" as PL_Items {
+      rectangle ":ProductCard" as PL_Card1
+      rectangle ":ProductCard" as PL_Card2
+    }
+    rectangle ":Actions" as PL_Actions {
+      rectangle ":BtnCreate" as PL_CreateBtn
+    }
+    rectangle ":EmptyState" as PL_Empty <<message>>
+  }
+
+  rectangle "ProductDetail" as P_Detail <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":Photo" as PD_Photo
+    rectangle ":Info" as PD_Info {
+      rectangle ":Name" as PD_Name
+      rectangle ":Description" as PD_Desc
+      rectangle ":Tag" as PD_Tag
+      rectangle ":Stock" as PD_Stock
+    }
+    rectangle ":Actions" as PD_Actions {
+      rectangle ":BtnEdit" as PD_EditBtn
+      rectangle ":BtnDelete" as PD_DeleteBtn
+      rectangle ":BtnBack" as PD_BackBtn
+    }
+  }
+
+  rectangle "CreateProductForm" as P_Create <<presentationClass>> {
+    rectangle ":Title" as PC_Title
+    rectangle ":FormFields" as PC_Form <<form>> {
+      rectangle ":Tag" as PC_Tag <<select>>
+      rectangle ":Photo" as PC_Photo <<filePicker>>
+      rectangle ":Name" as PC_Name <<inputField>>
+      rectangle ":Description" as PC_Desc <<inputField>>
+      rectangle ":Stock" as PC_Stock <<inputField>>
+    }
+    rectangle ":Actions" as PC_Actions {
+      rectangle ":BtnSave" as PC_Save
+      rectangle ":BtnCancel" as PC_Cancel
+      rectangle ":MsgError" as PC_Error <<message>>
+    }
+  }
+
+  rectangle "EditProductForm" as P_Edit <<presentationClass>> {
+    rectangle ":Title" as PE_Title
+    rectangle ":FormFields" as PE_Form <<form>> {
+      rectangle ":Tag" as PE_Tag <<select>>
+      rectangle ":Photo" as PE_Photo <<filePicker>>
+      rectangle ":Name" as PE_Name <<inputField>>
+      rectangle ":Description" as PE_Desc <<inputField>>
+      rectangle ":Stock" as PE_Stock <<inputField>>
+    }
+    rectangle ":Actions" as PE_Actions {
+      rectangle ":BtnUpdate" as PE_Update
+      rectangle ":BtnCancel" as PE_Cancel
+      rectangle ":MsgError" as PE_Error <<message>>
+    }
+  }
+
+  rectangle "DeleteConfirmation" as P_Delete <<presentationClass>> {
+    rectangle ":DialogTitle" as PDG_Title
+    rectangle ":DialogMessage" as PDG_Message
+    rectangle ":Actions" as PDG_Actions {
+      rectangle ":BtnConfirm" as PDG_Confirm
+      rectangle ":BtnCancel" as PDG_Cancel
+    }
+  }
+}
+@enduml

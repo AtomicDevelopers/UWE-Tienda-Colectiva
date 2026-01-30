@@ -1,0 +1,41 @@
+@startuml access_content_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+package "Content - Inventario" {
+
+  class "Emprendedor" as Entrepreneur <<content>> {
+    +id: UUID
+    +name: String
+    +email: String
+  }
+
+  class "Producto" as Product <<content>> {
+    +id: UUID
+    +nombre: String
+    +descripcion: String
+    +cantidadExistencia: Int
+    +fotoUrl: String
+    +createdAt: DateTime
+    +updatedAt: DateTime
+  }
+
+  class "Etiqueta" as Tag <<content>> {
+    +id: UUID
+    +nombre: String
+  }
+
+  ' Relaciones principales
+  Entrepreneur "1" -- "0..*" Product : administra
+
+  ' Si un producto puede tener varias etiquetas:
+  Product "0..*" -- "0..*" Tag : clasifica
+}
+@enduml
+

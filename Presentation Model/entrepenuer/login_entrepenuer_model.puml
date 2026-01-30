@@ -1,0 +1,80 @@
+@startuml login_entrepenuer_model
+title Presentation - Acceso Emprendedor [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+skinparam component {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation [Presentation Diagram]" {
+
+  rectangle "HomeAcceso" as P_Home <<presentationClass>> {
+    rectangle ":Header" as H_Header
+    rectangle ":Actions" as H_Actions {
+      rectangle ":BtnLogin" as H_LoginBtn
+      rectangle ":BtnRegister" as H_RegisterBtn
+      rectangle ":BtnRecover" as H_RecoverBtn
+    }
+  }
+
+  rectangle "LoginForm" as P_Login <<presentationClass>> {
+    rectangle ":Title" as L_Title
+    rectangle ":LoginFields" as L_Fields <<form>> {
+      rectangle ":Email" as L_Email <<inputField>>
+      rectangle ":Password" as L_Pass <<inputField>>
+    }
+    rectangle ":LoginActions" as L_Actions {
+      rectangle ":BtnSubmit" as L_Submit
+      rectangle ":LinkRecover" as L_LinkRecover
+      rectangle ":MsgError" as L_Error <<message>>
+    }
+  }
+
+  rectangle "RegisterForm" as P_Register <<presentationClass>> {
+    rectangle ":Title" as R_Title
+    rectangle ":RegisterFields" as R_Fields <<form>> {
+      rectangle ":Name" as R_Name <<inputField>>
+      rectangle ":Email" as R_Email <<inputField>>
+      rectangle ":Celular" as R_Phone <<inputField>>
+      rectangle ":Password" as R_Pass <<inputField>>
+      rectangle ":ConfirmPassword" as R_Confirm <<inputField>>
+    }
+    rectangle ":SpaceSelection" as R_Space <<form>> {
+      rectangle ":Departamento" as R_Department <<select>>
+      rectangle ":Local" as R_Local <<select>>
+      rectangle ":CantidadEspacio" as R_Qty <<inputField>>
+    }
+    rectangle ":RegisterActions" as R_Actions {
+      rectangle ":BtnSubmitRequest" as R_Submit
+      rectangle ":MsgInfo" as R_Info <<message>>
+      rectangle ":MsgError" as R_Error <<message>>
+    }
+  }
+
+  rectangle "RecoverPassword" as P_Recover <<presentationClass>> {
+    rectangle ":Title" as RP_Title
+    rectangle ":RecoverFields" as RP_Fields <<form>> {
+      rectangle ":Email" as RP_Email <<inputField>>
+      rectangle ":Celular" as RP_Phone <<inputField>>
+    }
+    rectangle ":RecoverActions" as RP_Actions {
+      rectangle ":BtnSend" as RP_Send
+      rectangle ":MsgInfo" as RP_Info <<message>>
+      rectangle ":MsgError" as RP_Error <<message>>
+    }
+  }
+
+  rectangle "Dashboard" as P_Dashboard <<presentationClass>> {
+    rectangle ":Header" as D_Header
+    rectangle ":Content" as D_Content
+    rectangle ":BtnLogout" as D_Logout
+  }
+}
+@enduml

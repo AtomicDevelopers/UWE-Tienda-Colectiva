@@ -1,0 +1,48 @@
+@startuml access_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar productos" {
+
+  class "Dashboard" as Dashboard <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "ProductList" as List <<navigationClass>>
+  class "ProductDetail" as Detail <<navigationClass>>
+
+  class "CreateProductForm" as Create <<navigationClass>>
+  class "EditProductForm" as Edit <<navigationClass>>
+
+  class "DeleteConfirmation" as DeleteConfirm <<navigationClass>>
+  class "OperationSuccess" as Success <<navigationClass>>
+
+  ' Entrada desde Dashboard
+  Dashboard "1" --> "1" List : <<navigationLink>>\n-openProducts
+
+  ' Listado -> Acciones
+  List "1" --> "*" Detail : <<navigationLink>>\n-openProduct
+  List "1" --> "1" Create : <<navigationLink>>\n-createProduct
+
+  ' Detalle -> Editar / Eliminar / Volver
+  Detail "1" --> "1" Edit : <<navigationLink>>\n-editProduct
+  Detail "1" --> "1" DeleteConfirm : <<navigationLink>>\n-deleteProduct
+  Detail "1" --> "1" List : <<navigationLink>>\n-backToList
+
+  ' Crear / Editar -> Éxito -> Listado
+  Create "1" --> "1" Success : <<navigationLink>>\n-created
+  Edit "1" --> "1" Success : <<navigationLink>>\n-updated
+  Success "1" --> "1" List : <<navigationLink>>\n-backToList
+
+  ' Eliminar -> (confirmar/cancelar)
+  DeleteConfirm "1" --> "1" Success : <<navigationLink>>\n-deleted
+  DeleteConfirm "1" --> "1" Detail : <<navigationLink>>\n-cancel
+}
+@enduml

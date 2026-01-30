@@ -1,4 +1,14 @@
 @startuml login_process_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
 package "Process Login " {
 
   ' ----- Proceso principal -----

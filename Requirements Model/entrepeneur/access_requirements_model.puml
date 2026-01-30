@@ -1,0 +1,188 @@
+@startuml entrepeneur_login_requirement
+allow_mixing
+
+skinparam shadow false
+
+skinparam roundCorner 15
+
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+
+package "Requerimientos - Inventario" {
+
+  usecase "Gestionar productos" as UC_Manage <<processing>>
+
+  usecase "Listar productos" as UC_List <<browsing>>
+  usecase "Ver detalle de producto" as UC_Detail <<browsing>>
+  usecase "Eliminar producto" as UC_Delete <<processing>>
+
+  usecase "Crear producto" as UC_Create <<processing>>
+  usecase "Editar producto" as UC_Edit <<processing>>
+
+  actor "Emprendedor" as Entrepreneur
+
+  UC_Manage ..> UC_List : <<include>>
+  UC_Manage ..> UC_Detail : <<include>>
+  UC_Manage ..> UC_Delete : <<include>>
+  UC_Manage ..> UC_Create : <<include>>
+  UC_Manage ..> UC_Edit : <<include>>
+ 
+ 
+}
+Entrepreneur --> UC_Manage
+
+
+package "Activity Create Product" {
+
+  skinparam circleBackgroundColor black
+
+  circle " " as CP_Start <<start>>
+  circle " " as CP_End <<end>>
+
+  class "Mostrar formulario de producto" as CP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + cantidadExistencia
+  }
+
+  class "Ingresar datos del producto" as CP_Input <<userAction>> {
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + cantidadExistencia
+  }
+
+  class "Validar datos" as CP_Validate <<systemAction>> {
+    {confirmado}
+  }
+
+  class "Guardar producto" as CP_Save <<systemAction>>
+
+  class "Confirmación de creación" as CP_Confirm <<displayAction>>
+
+  class "Error de validación" as CP_Error <<displayAction>> {
+    + message
+  }
+
+  CP_Start --> CP_Form
+  CP_Form --> CP_Input : submit
+  CP_Input --> CP_Validate : validate
+
+  CP_Validate --> CP_Error : error
+  CP_Validate --> CP_Save : success
+
+  CP_Save --> CP_Confirm : created
+  CP_Confirm --> CP_End
+  CP_Error --> CP_Form : retry
+}
+
+
+
+
+package "Activity Edit Product" {
+
+  skinparam circleBackgroundColor black
+
+  circle " " as EP_Start <<start>>
+  circle " " as EP_End <<end>>
+
+  class "Seleccionar producto" as EP_Select <<userAction>>
+
+  class "Cargar datos del producto" as EP_Load <<systemAction>>
+
+  class "Mostrar formulario de edición" as EP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + cantidadExistencia
+  }
+
+  class "Modificar datos del producto" as EP_Edit <<userAction>> {
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + cantidadExistencia
+  }
+
+  class "Validar cambios" as EP_Validate <<systemAction>> {
+    {confirmed}
+  }
+
+  class "Actualizar producto" as EP_Update <<systemAction>>
+
+  class "Confirmación de actualización" as EP_Confirm <<displayAction>>
+
+  class "Error de validación" as EP_Error <<displayAction>> {
+    + message
+  }
+
+  EP_Start --> EP_Select
+  EP_Select --> EP_Load : openEdit
+  EP_Load --> EP_Form : showForm
+
+  EP_Form --> EP_Edit : submit
+  EP_Edit --> EP_Validate : validate
+
+  EP_Validate --> EP_Error : error
+  EP_Validate --> EP_Update : success
+
+  EP_Update --> EP_Confirm : updated
+  EP_Confirm --> EP_End
+  EP_Error --> EP_Form : retry
+}
+
+
+package "Activity Delete Product" {
+
+  skinparam circleBackgroundColor black
+
+  circle " " as DP_Start <<start>>
+  circle " " as DP_End <<end>>
+
+  class "Seleccionar producto" as DP_Select <<userAction>>
+
+  class "Solicitar confirmación" as DP_ConfirmRequest <<displayAction>>
+
+  class "Confirmar eliminación" as DP_Confirm <<userAction>>
+
+  class "Eliminar producto" as DP_Delete <<systemAction>>
+
+  class "Confirmación de eliminación" as DP_Success <<displayAction>>
+
+  class "Cancelación" as DP_Cancel <<displayAction>>
+
+  DP_Start --> DP_Select
+  DP_Select --> DP_ConfirmRequest
+
+  DP_ConfirmRequest --> DP_Confirm : confirmar
+  DP_ConfirmRequest --> DP_Cancel : cancelar
+
+  DP_Confirm --> DP_Delete
+  DP_Delete --> DP_Success
+  DP_Success --> DP_End
+
+  DP_Cancel --> DP_End
+}
+
+@enduml

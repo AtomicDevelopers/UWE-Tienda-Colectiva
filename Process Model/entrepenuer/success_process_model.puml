@@ -1,0 +1,102 @@
+@startuml succes_process_model
+
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Process Manage Products" {
+
+  class "ManageProductsProcessing" <<process>>
+
+  class "ProductListing" <<process>>
+  class "ProductCreation" <<process>>
+  class "ProductUpdate" <<process>>
+  class "ProductDeletion" <<process>>
+
+  class "ProductDataInput" <<process>> {
+    -etiqueta : String
+    -fotoUrl : String
+    -nombre : String
+    -descripcion : String
+    -cantidadExistencia : Int
+    --
+    -validateData()
+  }
+
+  class "CreateConfirmation" <<process>> {
+    -productCreated()
+  }
+  class "UpdateConfirmation" <<process>> {
+    -productUpdated()
+  }
+  class "DeleteConfirmation" <<process>> {
+    -productDeleted()
+  }
+
+  class "ValidationError" <<process>> {
+    -message : String
+  }
+
+  ManageProductsProcessing *-- ProductListing
+  ManageProductsProcessing *-- ProductCreation
+  ManageProductsProcessing *-- ProductUpdate
+  ManageProductsProcessing *-- ProductDeletion
+
+  ProductCreation *-- ProductDataInput
+  ProductCreation *-- CreateConfirmation
+  ProductDataInput --> ValidationError
+
+  ProductUpdate *-- ProductDataInput
+  ProductUpdate *-- UpdateConfirmation
+
+  ProductDeletion *-- DeleteConfirmation
+}
+
+package "Activity - Gestionar productos" {
+
+  start
+  :Mostrar lista de productos;
+
+  if (¿Acción seleccionada?) then (Crear)
+    :Mostrar formulario de creación;
+    :Ingresar datos del producto;
+    if (¿Datos válidos?) then (No)
+      :Mostrar error de validación;
+    else (Sí)
+      :Guardar producto;
+      :Mostrar confirmación;
+    endif
+
+  elseif (Editar)
+    :Seleccionar producto;
+    :Cargar datos del producto;
+    :Modificar datos del producto;
+    if (¿Datos válidos?) then (No)
+      :Mostrar error de validación;
+    else (Sí)
+      :Actualizar producto;
+      :Mostrar confirmación;
+    endif
+
+  elseif (Eliminar)
+    :Seleccionar producto;
+    :Solicitar confirmación;
+    if (¿Confirmar eliminación?) then (No)
+      :Cancelar eliminación;
+    else (Sí)
+      :Eliminar producto;
+      :Mostrar confirmación;
+    endif
+  endif
+
+  :Volver a lista de productos;
+  stop
+}
+@enduml
