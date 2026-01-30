@@ -1,0 +1,47 @@
+@startuml login_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Acceso Emprendedor" {
+
+  class "HomeAcceso" as Home <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "LoginForm" as Login <<navigationClass>>
+  class "RegisterForm" as Register <<navigationClass>>
+  class "RecoverPassword" as Recover <<navigationClass>>
+
+  class "Dashboard" as Dashboard <<navigationClass>>
+  class "LoginError" as LoginError <<navigationClass>>
+
+  ' Entrada principal
+  Home "1" --> "1" Login : <<navigationLink>>\n-openLogin
+  Home "1" --> "1" Register : <<navigationLink>>\n-openRegister
+  Home "1" --> "1" Recover : <<navigationLink>>\n-openRecover
+
+  ' Login
+  Login "1" --> "1" Dashboard : <<navigationLink>>\n-loginOK [cuenta ACTIVA]
+  Login "1" --> "1" LoginError : <<navigationLink>>\n-loginFail
+  LoginError "1" --> "1" Login : <<navigationLink>>\n-retry
+
+  ' Register
+  Register "1" --> "1" Home : <<navigationLink>>\n-requestSent
+
+  ' Recover
+  Recover "1" --> "1" Login : <<navigationLink>>\n-backToLogin
+
+  ' Cancelar / salir
+  Login "1" --> "1" Home : <<navigationLink>>\n-cancel
+  Dashboard "1" --> "1" Home : <<navigationLink>>\n-logout
+}
+@enduml
+
+@enduml

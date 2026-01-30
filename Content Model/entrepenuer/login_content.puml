@@ -1,0 +1,91 @@
+@startuml login_content
+title Content Model - Autenticación (Login)
+
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+
+package "Content login" {
+
+  ' --- Usuarios ---
+  class "Emprendedor" as Entrepreneur <<content>> {
+    +id: UUID
+    +name: String
+    +email: String
+    +celular: String
+    +estadoCuenta: AccountStatus
+  }
+
+  class "Administrador" as Admin <<content>> {
+    +id: UUID
+    +name: String
+    +email: String
+  }
+
+  enum "AccountStatus" as AccountStatus <<content>> {
+    PENDIENTE
+    ACTIVA
+    BLOQUEADA
+  }
+
+  ' --- Autenticación / Sesión ---
+  class "Sesion" as Session <<content>> {
+    +sessionId: UUID
+    +createdAt: DateTime
+    +expiresAt: DateTime
+    +isActive: Boolean
+  }
+
+  class "Token" as Token <<content>> {
+    +accessToken: String
+    +refreshToken: String
+    +expiresAt: DateTime
+  }
+
+  ' --- Ubicación / Espacios ---
+  class "Departamento" as Department <<content>> {
+    +id: UUID
+    +nombre: String
+  }
+
+  class "Local" as Local <<content>> {
+    +id: UUID
+    +nombre: String
+    +areaTotal: Decimal
+    +disponible: Boolean
+  }
+
+  ' --- Solicitud de alquiler (sale del registro) ---
+  class "SolicitudAlquiler" as RentalRequest <<content>> {
+    +id: UUID
+    +cantidadEspacio: Decimal
+    +estado: RequestStatus
+    +fechaSolicitud: DateTime
+    +comentarioAdmin: String
+  }
+
+  enum "RequestStatus" as RequestStatus <<content>> {
+    PENDIENTE
+    APROBADA
+    RECHAZADA
+  }
+
+  ' --- Relaciones ---
+  Entrepreneur "1" -- "0..*" Session : inicia
+  Session "1" o-- "1" Token : contiene
+
+  Department "1" -- "0..*" Local : contiene
+
+  Entrepreneur "1" -- "0..*" RentalRequest : crea
+  RentalRequest "1" --> "1" Local : solicita
+
+  Admin "0..1" -- "0..*" RentalRequest : evalua
+}
+@enduml

@@ -1,0 +1,105 @@
+@startuml login_process_model
+package "Process Login " {
+
+  ' ----- Proceso principal -----
+  class "LoginProcessing" <<process>> {
+  }
+
+  ' ----- Subproceso -----
+  class "LoginAuthentication" <<process>> {
+  }
+
+  ' ----- Entrada de datos -----
+  class "LoginDataInput" <<process>> {
+    -email : String
+    -password : String
+    --
+    -validateData()
+  }
+
+  ' ----- Confirmación -----
+  class "LoginConfirmation" <<process>> {
+    -createSession()
+  }
+
+  ' ----- Error -----
+  class "ValidationError" <<process>> {
+    -message : String
+  }
+
+  ' ----- Relaciones estructurales -----
+  LoginProcessing *-- LoginAuthentication
+  LoginAuthentication *-- LoginDataInput
+  LoginAuthentication *-- LoginConfirmation
+  LoginDataInput --> ValidationError
+}
+
+
+
+package "Process Register" {
+
+  class "RegisterProcessing" <<process>> {
+  }
+
+  class "RegisterRequestCreation" <<process>> {
+  }
+
+  class "RegisterDataInput" <<process>> {
+    -name : String
+    -email : String
+    -celular : String
+    -departamento : String
+    -local : String
+    -cantidadEspacio : Decimal
+    --
+    -validateData()
+  }
+
+  class "RequestConfirmation" <<process>> {
+    -createRentalRequest()
+  }
+
+  class "ValidationError" <<process>> {
+    -message : String
+  }
+
+  ' Estructura
+  RegisterProcessing *-- RegisterRequestCreation
+  RegisterRequestCreation *-- RegisterDataInput
+  RegisterRequestCreation *-- RequestConfirmation
+  RegisterDataInput --> ValidationError
+}
+
+package "Process Recover Password" {
+
+  class "RecoverPasswordProcessing" <<process>> {
+  }
+
+  class "RecoveryRequest" <<process>> {
+  }
+
+  class "RecoveryDataInput" <<process>> {
+    -email : String
+    -celular : String
+    --
+    -validateIdentity()
+  }
+
+  class "RecoveryConfirmation" <<process>> {
+    -sendRecovery()
+  }
+
+  class "ValidationError" <<process>> {
+    -message : String
+  }
+
+  ' Estructura
+  RecoverPasswordProcessing *-- RecoveryRequest
+  RecoveryRequest *-- RecoveryDataInput
+  RecoveryRequest *-- RecoveryConfirmation
+  RecoveryDataInput --> ValidationError
+}
+
+
+
+@enduml

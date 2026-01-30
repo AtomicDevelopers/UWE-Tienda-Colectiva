@@ -1,0 +1,186 @@
+@startuml entrepeneur_login_requirement
+allow_mixing
+
+skinparam shadow false
+
+skinparam roundCorner 15
+
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+
+
+package "Requirement Login" {
+  usecase "Recuperar contraseña" as Recover<<processing>>
+  usecase "Iniciar sesión" as Login<<processing>>
+  usecase "Registrarse" as Register<<processing>>
+
+  actor "Emprendedor" as Entrepenuer
+
+}
+
+Entrepenuer --> Login
+Entrepenuer --> Register
+Entrepenuer --> Recover
+Recover ..> Login : <<extend>>\n[Olvidé mi contraseña]
+
+
+
+package "Activity login"{
+
+  circle " " as AL_Start <<start>>
+  circle " " as AL_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar formulario de login" as AL_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + email
+    + password
+  }
+
+  class "Ingresar credenciales" as AL_Input <<userAction>> {
+    + email
+    + password
+  }
+
+  class "Validar credenciales" as AL_Validate <<systemAction>> {
+    {confirmed}
+  }
+
+  class "Crear sesión" as AL_Session <<systemAction>>
+
+  AL_Start --> AL_Form
+  AL_Form --> AL_Input : submit
+  AL_Input --> AL_Validate : validate
+
+  AL_Validate --> AL_Form : error
+  AL_Validate --> AL_Session : success
+
+  AL_Session --> AL_End
+
+}
+
+package "Activity Register" {
+ skinparam circleBackgroundColor black
+
+  circle " " as AR_Start <<start>>
+  circle " " as AR_End <<end>>
+
+  class "Mostrar formulario de registro" as AR_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + name
+    + email
+    + celular
+    + password
+    + confirmPassword
+    + departamento
+    + local
+    + cantidadEspacio
+  }
+
+  class "Ingresar datos personales" as AR_Input <<userAction>> {
+    + name
+    + email
+    + celular
+    + password
+    + confirmPassword
+  }
+
+  class "Seleccionar departamento" as AR_SelectDept <<userAction>> {
+    + departamento
+  }
+
+  class "Cargar locales por departamento" as AR_LoadLocals <<systemAction>>
+
+  class "Seleccionar local" as AR_SelectLocal <<userAction>> {
+    + local
+  }
+
+  class "Indicar cantidad de espacio a alquilar" as AR_SpaceQty <<userAction>> {
+    + cantidadEspacio
+  }
+
+  class "Validar datos y solicitud" as AR_Validate <<systemAction>> {
+    {confirmado}
+  }
+
+  class "Crear solicitud (pendiente)" as AR_CreateRequest <<systemAction>> {
+    {estado=pendiente}
+  }
+
+  class "Notificar solicitud enviada" as AR_NotifyPending <<systemAction>>
+
+  AR_Start --> AR_Form
+
+  AR_Form --> AR_Input : submitDatos
+  AR_Input --> AR_SelectDept : seleccionarDepartamento
+
+  AR_SelectDept --> AR_LoadLocals : solicitarLocales
+  AR_LoadLocals --> AR_SelectLocal : mostrarOpciones
+
+  AR_SelectLocal --> AR_SpaceQty : definirEspacio
+  AR_SpaceQty --> AR_Validate : enviarSolicitud
+
+  AR_Validate --> AR_Form : error
+  AR_Validate --> AR_CreateRequest : success
+
+  AR_CreateRequest --> AR_NotifyPending
+  AR_NotifyPending --> AR_End : pendingReview
+}
+
+
+package "Activity Recover Password" {
+
+  skinparam circleBackgroundColor black
+
+  circle " " as AP_Start <<start>>
+  circle " " as AP_End <<end>>
+
+  class "Mostrar formulario de recuperación" as AP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + email
+    + celular
+  }
+
+  class "Ingresar email o celular" as AP_Input <<userAction>> {
+    + email
+    + celular
+  }
+
+  class "Validar identidad (email/celular)" as AP_Validate <<systemAction>> {
+    {confirmado}
+  }
+
+  class "Enviar enlace/código de recuperación" as AP_Send <<systemAction>>
+
+  class "Notificar recuperación enviada" as AP_Notify <<systemAction>>
+
+  AP_Start --> AP_Form
+  AP_Form --> AP_Input : submit
+
+  AP_Input --> AP_Validate : validate
+
+  AP_Validate --> AP_Form : error
+  AP_Validate --> AP_Send : success
+
+  AP_Send --> AP_Notify
+  AP_Notify --> AP_End : recoverySent
+}
+
+
+@enduml
