@@ -1,0 +1,40 @@
+@startuml adminPage_requirements
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Admin Page" {
+  actor "Usuario Administrador" as Admin
+
+  usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
+  usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
+  usecase "Agregar Espacios de Tienda" as AddShopSpaces <<processing>>
+  usecase "Ver Espacios de Tienda" as ViewShopSpaces <<browsing>>
+  usecase "Agregar Productos" as AddProduct <<processing>>
+  usecase "Cerrar Sesión" as Logout <<processing>>
+}
+
+Admin --> CreateShop
+Admin --> AddProduct
+Admin --> Logout
+Admin --> ViewShopDetail
+Admin --> ViewShopSpaces
+Admin --> AddShopSpaces
+
+CreateShop <.. ViewShopDetail : <<include>>
+ViewShopDetail <.. ViewShopSpaces : <<include>>
+ViewShopDetail <.. AddShopSpaces : <<extends>>
+
+@enduml

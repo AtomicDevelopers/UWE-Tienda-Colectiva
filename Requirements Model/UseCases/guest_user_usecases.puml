@@ -1,0 +1,64 @@
+@startuml
+allow_mixing
+
+skinparam shadow false
+
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+actor "Usuario Anónimo" as AnonUser
+package "Requirements Landing Page" {
+
+  usecase "Establecer Ubicación" as SetLocation <<processing>>
+  usecase "Ver Catálogo Tiendas" as ViewCatalog <<browsing>>
+  usecase "Ver Detalle Tienda" as ViewShop <<browsing>>
+  usecase "Ver Productos Tienda" as ViewShopProducts <<browsing>>
+  usecase "Buscar Productos (Global)" as SearchGlobal <<browsing>>
+  usecase "Ver Detalle de Producto" as ViewProductDetail <<browsing>>
+  usecase "Guardar Productos de Interés" as SaveFavoriteProducts <<processing>>
+  usecase "Ver Productos de Interes" as ViewFavoriteProducts <<browsing>>
+  usecase "Create Categoria General de Producto" as CreateGeneralCategory <<processing>>
+  usecase "Listar Categorias Generales de Producto" as ListGeneralCategories <<browsing>>
+  usecase "Crear Clasificacion de Emprendimientos" as CreateEntrepreneurClassification <<processing>>
+  usecase "Listar Clasificaciones de Emprendimientos" as ListEntrepreneurClass
+
+  usecase "Ir a Login" as GoLogin <<processing>>
+  usecase "Registrarse" as register <<processing>>
+}
+
+package "Actividades del Sistema" {
+    usecase "Guardar Producto de Interes" as Sys_SaveFavoriteProducts <<systemAction>>
+    usecase "Remover Producto de Interes" as Sys_RemoveFavoriteProducts <<systemAction>>
+    usecase "Filtrar Productos por Ubicación" as Sys_FilterProductsByLocation <<systemAction>>
+    usecase "Guardar Ubicación del Usuario" as Sys_SaveUserLocation <<systemAction>>
+}
+
+AnonUser --> SetLocation
+AnonUser --> ViewCatalog
+AnonUser --> SearchGlobal
+AnonUser --> GoLogin
+AnonUser --> register
+AnonUser --> ViewProductDetail
+AnonUser --> SaveFavoriteProducts
+AnonUser --> ViewFavoriteProducts
+
+'TODO: Discuss with others
+SetLocation <.. ViewCatalog : <<include>>
+SetLocation <.. SearchGlobal : <<include>>
+
+ViewProductDetail <.. SaveFavoriteProducts : <<extends>>
+GoLogin <.. register : <<extends>>
+ViewShopProducts <.. ViewProductDetail : <<extends>>
+SearchGlobal <.. ViewProductDetail : <<extends>>
+ViewCatalog ..> ViewShop : <<include>>
+ViewShop ..> ViewShopProducts : <<include>>
+@enduml
