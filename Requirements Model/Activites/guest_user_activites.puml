@@ -1,0 +1,102 @@
+@startuml landingPage_requirements
+allow_mixing
+
+skinparam shadow false
+
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Ver Catálogo Tiendas" {
+  circle " " as BS_Start <<start>>
+  circle " " as BS_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Lista de Tiendas" as BS_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + nombreTienda
+    + fotoPortada
+  }
+  
+  class "Seleccionar Tienda" as BS_Select <<userAction>> {
+    --
+    + selectedShopId
+  }
+  
+  class "Página de Tienda" as BS_Page <<displayAction>> {
+    --
+    <<displayPin>>
+    + nombre
+    + fotoPortada {type=image}
+    + telefono
+    + direccion
+    + numeroNegocios
+    + listaNegocios {nombre, foto, numProductos}
+    + catalogoProductos {type=list}
+  }
+  
+  class "Seleccionar Producto" as BS_SelectProd <<userAction>> {
+    --
+    + selectedProductId
+  }
+  
+  class "Detalle de Producto" as BS_ProdDetail <<displayAction>> {
+    --
+    <<displayPin>>
+    + nombreProducto
+    + precio
+    + foto {type=image}
+    + cantidad
+  }
+
+  BS_Start --> BS_List
+  BS_List --> BS_Select : click shop
+  BS_Select --> BS_Page : display
+  BS_Page --> BS_SelectProd : click product
+  BS_SelectProd --> BS_ProdDetail : view
+  BS_ProdDetail --> BS_End
+}
+
+package "Activity Buscar Productos" {
+  circle " " as SP_Start <<start>>
+  circle " " as SP_End <<end>>
+
+  class "Barra de Búsqueda" as SP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + nombreProductoinput
+  }
+  
+  class "Ingresar nombre del producto" as SP_Input <<userAction>> {
+    --
+    + nombreProductoinput
+  }
+  
+  class "Filtrar productos" as SP_Filter <<systemAction>> {
+    {filtered}
+  }
+  
+  class "Lista de Resultados" as SP_Results <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + nombreProducto
+    + precio
+    + foto {type=image}
+    + nombreNegocio
+    + nombreTienda
+  }
+  
+  SP_Start --> SP_Form
+  SP_Form --> SP_Input : type
+  SP_Input --> SP_Filter : search
+  SP_Filter --> SP_Results : display
+  SP_Results --> SP_End
+}
+@enduml
