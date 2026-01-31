@@ -18,13 +18,23 @@ skinparam usecase {
 package "Requirements Admin Page" {
   actor "Usuario Administrador" as Admin
 
+  usecase "Login" as Login <<processing>>
   usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
   usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
-  usecase "Agregar Espacios de Tienda" as AddShopSpaces <<processing>>
-  usecase "Ver Espacios de Tienda" as ViewShopSpaces <<browsing>>
+  usecase "Habilidar/Deshabilitar Tienda" as ToggleShop <<processing>>
+  usecase "Eliminar Tienda" as DeleteShop <<processing>>
+  usecase "Listar Encargados de Tienda" as ListShopManagers <<browsing>>
+  usecase "Asignar Encargado de Tienda" as AssignShopManager <<processing>>
+  usecase "Editar Encargado de Tienda" as EditShopManager <<processing>>
+  usecase "Listar Espacios de Tienda" as ViewShopSpaces <<browsing>>
+  usecase "Agregar Espacio" as AddShopSpace <<processing>>
+  usecase "Editar Espacio" as EditShopSpace <<processing>>
+  usecase "Eliminar Espacio" as DeleteShopSpace <<processing>>
+  usecase "Reasignar Productos entre Espacios" as ReassignProducts <<processing>>
   usecase "Agregar Productos" as AddProduct <<processing>>
   usecase "Cerrar Sesión" as Logout <<processing>>
 }
+
 
 Admin --> CreateShop
 Admin --> AddProduct

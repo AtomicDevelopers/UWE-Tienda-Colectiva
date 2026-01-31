@@ -8,18 +8,7 @@ skinparam class {
   BackgroundColor #FEFECE
   BorderColor #A80036
   ArrowColor #A80036
-}=
-
-Admin --> CreateShop
-Admin --> AddProduct
-Admin --> Logout
-Admin --> ViewShopDetail
-Admin --> ViewShopSpaces
-Admin --> AddShopSpaces
-
-CreateShop <.. ViewShopDetail : <<include>>
-ViewShopDetail <.. ViewShopSpaces : <<include>>
-ViewShopDetail <.. AddShopSpaces : <<extends>>
+}
 
 package "Activity crear tienda" {
   circle " " as CS_Start <<start>>
