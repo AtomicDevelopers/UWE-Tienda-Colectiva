@@ -1,102 +1,195 @@
-@startuml landingPage_requirements
+@startuml guest_user_activities
 allow_mixing
 
 skinparam shadow false
-
 skinparam roundCorner 15
 skinparam class {
   BackgroundColor #FEFECE
   BorderColor #A80036
   ArrowColor #A80036
 }
+skinparam circleBackgroundColor black
 
-package "Activity Ver Catálogo Tiendas" {
-  circle " " as BS_Start <<start>>
-  circle " " as BS_End <<end>>
-  skinparam circleBackgroundColor black
+' 1. Selección de Ubicación
+package "Activity Selección de Ubicación" {
+  circle " " as Loc_Start <<start>>
+  circle " " as Loc_End <<end>>
 
-  class "Lista de Tiendas" as BS_List <<displayAction>> {
-    {type=list}
+  class "Detectar Ubicación" as Loc_Detect <<systemAction>> {
     --
-    <<displayPin>>
-    + nombreTienda
-    + fotoPortada
-  }
-  
-  class "Seleccionar Tienda" as BS_Select <<userAction>> {
-    --
-    + selectedShopId
-  }
-  
-  class "Página de Tienda" as BS_Page <<displayAction>> {
-    --
-    <<displayPin>>
-    + nombre
-    + fotoPortada {type=image}
-    + telefono
-    + direccion
-    + numeroNegocios
-    + listaNegocios {nombre, foto, numProductos}
-    + catalogoProductos {type=list}
-  }
-  
-  class "Seleccionar Producto" as BS_SelectProd <<userAction>> {
-    --
-    + selectedProductId
-  }
-  
-  class "Detalle de Producto" as BS_ProdDetail <<displayAction>> {
-    --
-    <<displayPin>>
-    + nombreProducto
-    + precio
-    + foto {type=image}
-    + cantidad
+    + ubicacionDetectada
   }
 
-  BS_Start --> BS_List
-  BS_List --> BS_Select : click shop
-  BS_Select --> BS_Page : display
-  BS_Page --> BS_SelectProd : click product
-  BS_SelectProd --> BS_ProdDetail : view
-  BS_ProdDetail --> BS_End
-}
-
-package "Activity Buscar Productos" {
-  circle " " as SP_Start <<start>>
-  circle " " as SP_End <<end>>
-
-  class "Barra de Búsqueda" as SP_Form <<displayAction>> {
+  class "Formulario Ubicación" as Loc_Form <<displayAction>> {
     {type=form}
     --
     <<interactionPin>>
-    + nombreProductoinput
+    + direccionInput
+    + mapaCoordenadas
   }
-  
-  class "Ingresar nombre del producto" as SP_Input <<userAction>> {
+
+  class "Seleccionar Ubicación" as Loc_Select <<userAction>> {
     --
-    + nombreProductoinput
+    + ubicacionSeleccionada
   }
-  
-  class "Filtrar productos" as SP_Filter <<systemAction>> {
-    {filtered}
+
+  Loc_Start --> Loc_Detect
+  Loc_Detect --> Loc_Form : display
+  Loc_Form --> Loc_Select : confirm
+  Loc_Select --> Loc_End
+}
+
+' 2. Login y Registro
+package "Activity Login y Registro" {
+  circle " " as Log_Start <<start>>
+  circle " " as Log_End <<end>>
+
+  class "Formulario Login" as Log_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + email
+    + password
+    + botonRegistro
   }
+
+  class "Ingresar Credenciales" as Log_Input <<userAction>> {
+    --
+    + email
+    + password
+  }
+
+  class "Validar Credenciales" as Log_Validate <<systemAction>> {
+    --
+    + esValido
+  }
+
+  class "Formulario Registro" as Reg_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + nombre
+    + email
+    + password
+    + confirmarPassword
+  }
+
+  class "Registrar Usuario" as Reg_Action <<userAction>> {
+    --
+    + datosUsuario
+  }
+
+  Log_Start --> Log_Form
+  Log_Form --> Log_Input : login
+  Log_Form --> Reg_Form : register
   
-  class "Lista de Resultados" as SP_Results <<displayAction>> {
+  Log_Input --> Log_Validate
+  Log_Validate --> Log_End : [valid]
+  Log_Validate --> Log_Form : [invalid]
+
+  Reg_Form --> Reg_Action : submit
+  Reg_Action --> Log_End
+}
+
+' 3. Navegación de Productos (Más Vendidos, Búsqueda, Interés)
+package "Activity Navegación de Productos" {
+  circle " " as Prod_Start <<start>>
+  circle " " as Prod_End <<end>>
+
+  class "Lista de Productos" as Prod_List <<displayAction>> {
     {type=list}
     --
     <<displayPin>>
-    + nombreProducto
-    + precio
-    + foto {type=image}
-    + nombreNegocio
-    + nombreTienda
+    + criterio (búsqueda/top/etc)
+    + listaProductos
   }
+
+  class "Seleccionar Producto" as Prod_Select <<userAction>> {
+    --
+    + selectedProductId
+  }
+
+  class "Detalle de Producto" as Prod_Detail <<displayAction>> {
+    --
+    <<displayPin>>
+    + nombre
+    + precio
+    + descripcion
+    + imagenes
+    + botonGuardarInteres
+  }
+
+  class "Guardar Producto Interés" as Prod_Save <<userAction>> {
+    --
+    + productId
+  }
+
+  Prod_Start --> Prod_List
+  Prod_List --> Prod_Select : click
+  Prod_Select --> Prod_Detail : view
   
-  SP_Start --> SP_Form
-  SP_Form --> SP_Input : type
-  SP_Input --> SP_Filter : search
-  SP_Filter --> SP_Results : display
-  SP_Results --> SP_End
+  Prod_Detail --> Prod_Save : interaction
+  Prod_Save --> Prod_Detail : refresh
+  
+  Prod_Detail --> Prod_End : back/exit
 }
+
+' 4. Navegación de Tiendas (Tiendas -> Espacios/Productos)
+package "Activity Navegación de Tiendas" {
+  circle " " as Shop_Start <<start>>
+  circle " " as Shop_End <<end>>
+
+  class "Lista de Tiendas" as Shop_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + listaTiendas
+  }
+
+  class "Seleccionar Tienda" as Shop_Select <<userAction>> {
+    --
+    + selectedShopId
+  }
+
+  class "Detalle Tienda" as Shop_Detail <<displayAction>> {
+    --
+    <<displayPin>>
+    + infoTienda
+    + opcionVerProductos
+    + opcionVerEspacios
+  }
+
+  ' Rama Espacios
+  class "Lista Espacios" as Space_List <<displayAction>> {
+    {type=list}
+    --
+    + listaEspacios
+  }
+
+  class "Seleccionar Espacio" as Space_Select <<userAction>> {
+    --
+    + selectedSpaceId
+  }
+
+  class "Detalle Espacio" as Space_Detail <<displayAction>> {
+    --
+    + infoEspacio
+    + disponibilidad
+  }
+
+  Shop_Start --> Shop_List
+  Shop_List --> Shop_Select : click
+  Shop_Select --> Shop_Detail : view
+
+  ' Ramificación
+  Shop_Detail --> Space_List : ver espacios
+  
+  ' Nota: La rama de productos conecta conceptualmente con "Navegación de Productos"
+  ' pero aquí se modela la decisión de navegación.
+  
+  Space_List --> Space_Select : click
+  Space_Select --> Space_Detail : view
+  Space_Detail --> Shop_End
+}
+
 @enduml
