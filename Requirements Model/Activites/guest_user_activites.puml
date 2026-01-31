@@ -91,8 +91,8 @@ package "Activity Login y Registro" {
   Reg_Action --> Log_End
 }
 
-' 3. Navegación de Productos (Más Vendidos, Búsqueda, Interés)
-package "Activity Navegación de Productos" {
+' 3. Ver Productos (Más Vendidos, Búsqueda, Interés)
+package "Activity Ver Productos" {
   circle " " as Prod_Start <<start>>
   circle " " as Prod_End <<end>>
 
@@ -134,8 +134,8 @@ package "Activity Navegación de Productos" {
   Prod_Detail --> Prod_End : back/exit
 }
 
-' 4. Navegación de Tiendas (Tiendas -> Espacios/Productos)
-package "Activity Navegación de Tiendas" {
+' 4. Ver Tiendas (Tiendas -> Espacios/Productos)
+package "Activity Ver Tiendas" {
   circle " " as Shop_Start <<start>>
   circle " " as Shop_End <<end>>
 

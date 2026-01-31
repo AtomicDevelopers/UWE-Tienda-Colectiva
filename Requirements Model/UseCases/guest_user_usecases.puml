@@ -28,11 +28,13 @@ usecase "Ver Productos Más Vendidos" as ViewMostSold <<browsing>>
 usecase "Buscar Producto" as SearchProduct <<browsing>>
 usecase "Producto de Interés" as InterestProduct <<browsing>>
 usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
+usecase "Ver Productos Favoritos" as ViewFavoriteProducts <<browsing>>
 
 ' Sub-casos reutilizables
 usecase "Ver Lista Producto" as ViewProductList <<browsing>>
 usecase "Ver Detalle Producto" as ViewProductDetail <<browsing>>
-usecase "Guardar Producto de Interés" as SaveInterestProduct <<processing>>
+usecase "Guardar Producto Favorito" as SaveInterestProduct <<processing>>
+
 
 usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
 usecase "Ver Lista de Espacios Disponibles" as ViewSpaceList <<browsing>>
@@ -53,6 +55,10 @@ AnonUser --> ViewMostSold
 ViewMostSold ..> ViewProductList : <<include>>
 ViewProductList ..> ViewProductDetail : <<include>>
 SaveInterestProduct .> ViewProductDetail : <<extends>>
+
+' e. Ver productos favoritos -> Lista -> Detalle -> Guardar
+AnonUser --> ViewFavoriteProducts
+ViewFavoriteProducts ..> ViewProductList : <<include>>
 
 ' c. Buscar producto -> Detalle -> Guardar
 AnonUser --> SearchProduct
