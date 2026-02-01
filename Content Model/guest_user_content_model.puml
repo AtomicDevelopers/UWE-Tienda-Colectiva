@@ -1,0 +1,65 @@
+@startuml guest_user_content_model
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+class Usuario {
+  + nombre: String
+  + email: String
+  + password: String
+}
+
+class Ubicacion {
+  + direccion: String
+  + coordenadas: String
+}
+
+class Tienda {
+  + nombre: String
+  + fotoPortada: Image
+  + telefono: String
+  + direccion: String
+  + numeroNegocios: Integer
+}
+
+class Producto {
+  + nombre: String
+  + precio: Decimal
+  + descripcion: String
+  + imagenes: List<Image>
+  + cantidadVendida: Integer
+  + esFavorito: Boolean
+}
+
+class Espacio {
+  + informacion: String
+  + disponibilidad: String
+  + fechaInicio: Date
+  + fechaFin: Date
+}
+
+' Relación para marcar productos como favoritos
+class Favorito {
+  + fechaAgregado: Date
+}
+
+' Relaciones
+
+' Un usuario selecciona una ubicación
+Usuario "1" -- "1" Ubicacion : selecciona >
+
+' Relación de favoritos (Muchos a Muchos)
+Usuario "0..1" -- "*" Producto : guarda >
+(Usuario, Producto) .. Favorito
+
+' Tienda contiene productos y espacios
+Tienda "1" *-- "*" Producto : ofrece >
+Tienda "1" *-- "*" Espacio : tiene >
+
+
+
+@enduml

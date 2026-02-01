@@ -24,21 +24,20 @@ usecase "Ir a Login" as GoToLogin <<browsing>>
 usecase "Registrarse" as Register <<processing>>
 
 ' b, d, e. Flujos que llevan a Lista de Productos
-usecase "Ver Productos Más Vendidos" as ViewMostSold <<browsing>>
+usecase "Listar Productos Más Vendidos" as ViewMostSold <<browsing>>
 usecase "Buscar Producto" as SearchProduct <<browsing>>
-usecase "Producto de Interés" as InterestProduct <<browsing>>
+usecase "Listar Productos de Interés" as InterestProduct <<browsing>>
 usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
-usecase "Ver Productos Favoritos" as ViewFavoriteProducts <<browsing>>
 
 ' Sub-casos reutilizables
 usecase "Ver Lista Producto" as ViewProductList <<browsing>>
 usecase "Ver Detalle Producto" as ViewProductDetail <<browsing>>
-usecase "Guardar Producto Favorito" as SaveInterestProduct <<processing>>
+usecase "Guardar Producto Interes" as SaveInterestProduct <<processing>>
 
 
 usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
-usecase "Ver Lista de Espacios Disponibles" as ViewSpaceList <<browsing>>
-usecase "Ver Detalle de Espacios Disponibles" as ViewSpaceDetail <<browsing>>
+usecase "Ver Resumen de Espacios Disponibles" as ViewSpaceList <<browsing>>
+
 
 ' Relaciones
 
@@ -50,27 +49,27 @@ AnonUser --> GoToLogin
 Register .> GoToLogin : <<extends>>
 ' Nota: Registrarse extiende la funcionalidad de Login (opción adicional)
 
+' d. Producto de interés -> Lista -> Guardar
+AnonUser --> InterestProduct
+InterestProduct ..> ViewProductDetail : <<include>>
+
 ' b. Producto más vendido -> Lista -> Detalle -> Guardar
 AnonUser --> ViewMostSold
-ViewMostSold ..> ViewProductList : <<include>>
+ViewMostSold ..> ViewProductDetail : <<include>>
 ViewProductList ..> ViewProductDetail : <<include>>
 SaveInterestProduct .> ViewProductDetail : <<extends>>
 
-' e. Ver productos favoritos -> Lista -> Detalle -> Guardar
-AnonUser --> ViewFavoriteProducts
-ViewFavoriteProducts ..> ViewProductList : <<include>>
 
-' c. Buscar producto -> Detalle -> Guardar
+
+
+' c. Buscar producto -> Lista -> Guardar
 AnonUser --> SearchProduct
-SearchProduct ..> ViewProductDetail : <<include>>
-' Nota: Buscar puede llevar directo o vía lista, simplificado a detalle según jerarquía del usuario
+SearchProduct ..> ViewProductList : <<include>>
 
-' d. Producto de interés -> Lista -> Detalle -> Guardar
-AnonUser --> InterestProduct
-InterestProduct ..> ViewProductList : <<include>>
-' (Conecta con flujo existente de Lista -> Detalle -> Guardar)
 
-' e. Ver lista tienda -> Detalle tienda -> Espacios / Lista Productos
+
+
+' e. Ver lista tienda -> Detalle tienda -> Resumen de Espacios / Lista Productos
 AnonUser --> ViewStoreList
 ViewStoreList ..> ViewStoreDetail : <<include>>
 
@@ -78,7 +77,6 @@ ViewStoreList ..> ViewStoreDetail : <<include>>
 ViewStoreDetail ..> ViewSpaceList : <<include>>
 ViewStoreDetail ..> ViewProductList : <<include>>
 
-' Rama Espacios
-ViewSpaceList ..> ViewSpaceDetail : <<include>>
+
 
 @enduml
