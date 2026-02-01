@@ -7,18 +7,27 @@ skinparam class {
   ArrowColor #A80036
 }
 
-class Usuario {
+' ==========================================
+' MODELO DE CONTENIDO (UWE)
+' ==========================================
+' Muestra las clases del dominio y sus relaciones.
+
+class "Usuario" as Usuario {
+  + id: UUID
   + nombre: String
   + email: String
+  + celular: String
   + password: String
 }
 
-class Ubicacion {
+class "Ubicacion" as Ubicacion {
+  + id: UUID
   + direccion: String
   + coordenadas: String
 }
 
-class Tienda {
+class "Tienda" as Tienda {
+  + id: UUID
   + nombre: String
   + fotoPortada: Image
   + telefono: String
@@ -26,16 +35,22 @@ class Tienda {
   + numeroNegocios: Integer
 }
 
-class Producto {
+class "Producto" as Producto {
+  + id: UUID
   + nombre: String
+  + etiqueta: String
   + precio: Decimal
   + descripcion: String
-  + imagenes: List<Image>
+  + fotoUrl: String
+  + cantidadExistencia: Integer
   + cantidadVendida: Integer
-  + esFavorito: Boolean
+  + esInteres: Boolean
+  + createdAt: DateTime
+  + updatedAt: DateTime
 }
 
-class Espacio {
+class "Espacio" as Espacio {
+  + id: UUID
   + informacion: String
   + disponibilidad: String
   + fechaInicio: Date
@@ -43,7 +58,8 @@ class Espacio {
 }
 
 ' Relación para marcar productos como favoritos
-class Favorito {
+class "Interes" as Interes {
+  + id: UUID
   + fechaAgregado: Date
 }
 
@@ -54,12 +70,10 @@ Usuario "1" -- "1" Ubicacion : selecciona >
 
 ' Relación de favoritos (Muchos a Muchos)
 Usuario "0..1" -- "*" Producto : guarda >
-(Usuario, Producto) .. Favorito
+(Usuario, Producto) .. Interes
 
 ' Tienda contiene productos y espacios
 Tienda "1" *-- "*" Producto : ofrece >
 Tienda "1" *-- "*" Espacio : tiene >
-
-
 
 @enduml
