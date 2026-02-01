@@ -146,6 +146,50 @@ package "Activity Listar Productos Más Vendidos" {
   Prod_Detail --> Prod_End : back/exit
 }
 
+' Listar Productos de Interés
+package "Activity Listar Productos de Interés" {
+  circle " " as Interest_Start <<start>>
+  circle " " as Interest_End <<end>>
+
+  class "Lista de Productos de Interés" as Interest_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + listaProductosInteres
+  }
+
+  class "Seleccionar Producto" as Interest_Select <<userAction>> {
+    --
+    + selectedProductId
+  }
+
+  class "Detalle de Producto" as Interest_Detail <<displayAction>> {
+    --
+    <<displayPin>>
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + precio
+    + cantidadExistencia
+    + botonEliminarInteres
+  }
+
+  class "Eliminar Producto Interés" as Interest_Remove <<userAction>> {
+    --
+    + productId
+  }
+
+  Interest_Start --> Interest_List
+  Interest_List --> Interest_Select : click
+  Interest_Select --> Interest_Detail : view
+  
+  Interest_Detail --> Interest_Remove : interaction
+  Interest_Remove --> Interest_Detail : refresh
+  
+  Interest_Detail --> Interest_End : back/exit
+}
+
 ' 4. Ver Tiendas (Tiendas -> Espacios/Productos)
 package "Activity Ver Tiendas" {
   circle " " as Shop_Start <<start>>

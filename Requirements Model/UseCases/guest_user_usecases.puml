@@ -33,7 +33,7 @@ usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
 usecase "Ver Lista Producto" as ViewProductList <<browsing>>
 usecase "Ver Detalle Producto" as ViewProductDetail <<browsing>>
 usecase "Guardar Producto Interes" as SaveInterestProduct <<processing>>
-
+usecase "Eliminar Producto Interes" as DeleteInterestProduct <<processing>>
 
 usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
 usecase "Ver Resumen de Espacios Disponibles" as ViewSpaceList <<browsing>>
@@ -61,6 +61,7 @@ AnonUser --> ViewMostSold
 ViewMostSold ..> ViewProductDetail : <<include>>
 ViewProductList ..> ViewProductDetail : <<include>>
 SaveInterestProduct .> ViewProductDetail : <<extends>>
+DeleteInterestProduct .> ViewProductDetail : <<extends>>
 
 
 
