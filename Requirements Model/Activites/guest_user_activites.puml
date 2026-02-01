@@ -85,6 +85,7 @@ package "Activity Registro Invitado" {
     <<interactionPin>>
     + nombre
     + email
+    + celular
     + password
     + confirmarPassword
   }
@@ -101,16 +102,15 @@ package "Activity Registro Invitado" {
   Reg_Action --> Reg_Form : [invalid]
 }
 
-' 3. Ver Productos (Más Vendidos, Búsqueda, Interés)
-package "Activity Ver Productos" {
+' 3. Listar Productos Más Vendidos
+package "Activity Listar Productos Más Vendidos" {
   circle " " as Prod_Start <<start>>
   circle " " as Prod_End <<end>>
 
-  class "Lista de Productos" as Prod_List <<displayAction>> {
+  class "Lista de Productos Más Vendidos" as Prod_List <<displayAction>> {
     {type=list}
     --
     <<displayPin>>
-    + criterio (búsqueda/top/etc)
     + listaProductos
   }
 
@@ -122,10 +122,12 @@ package "Activity Ver Productos" {
   class "Detalle de Producto" as Prod_Detail <<displayAction>> {
     --
     <<displayPin>>
+    + etiqueta
+    + foto
     + nombre
-    + precio
     + descripcion
-    + imagenes
+    + precio
+    + cantidadExistencia
     + botonGuardarInteres
   }
 

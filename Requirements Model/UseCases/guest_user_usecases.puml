@@ -37,7 +37,7 @@ usecase "Guardar Producto Interes" as SaveInterestProduct <<processing>>
 
 usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
 usecase "Ver Resumen de Espacios Disponibles" as ViewSpaceList <<browsing>>
-
+usecase "Recuperar contraseña" as Recover<<processing>>
 
 ' Relaciones
 
@@ -49,6 +49,8 @@ AnonUser --> GoToLogin
 Register .> GoToLogin : <<extends>>
 AnonUser --> Register
 ' Nota: Registrarse extiende la funcionalidad de Login (opción adicional)
+
+AnonUser --> Recover
 
 ' d. Producto de interés -> Lista -> Guardar
 AnonUser --> InterestProduct
