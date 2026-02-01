@@ -190,8 +190,8 @@ package "Activity Listar Productos de Interés" {
   Interest_Detail --> Interest_End : back/exit
 }
 
-' 4. Ver Tiendas (Tiendas -> Espacios/Productos)
-package "Activity Ver Tiendas" {
+' 4. Ver Lista Tienda (Tiendas -> Espacios/Productos)
+package "Activity Ver Lista Tienda" {
   circle " " as Shop_Start <<start>>
   circle " " as Shop_End <<end>>
 
@@ -212,24 +212,12 @@ package "Activity Ver Tiendas" {
     <<displayPin>>
     + infoTienda
     + opcionVerProductos
-    + opcionVerEspacios
+    + opcionVerResumenEspaciosDisponibles
   }
 
-  ' Rama Espacios
-  class "Lista Espacios" as Space_List <<displayAction>> {
-    {type=list}
+  class "Resumen Espacios Disponibles" as Space_Summary <<displayAction>> {
     --
-    + listaEspacios
-  }
-
-  class "Seleccionar Espacio" as Space_Select <<userAction>> {
-    --
-    + selectedSpaceId
-  }
-
-  class "Detalle Espacio" as Space_Detail <<displayAction>> {
-    --
-    + infoEspacio
+    + infoEspacios
     + disponibilidad
   }
 
@@ -238,14 +226,71 @@ package "Activity Ver Tiendas" {
   Shop_Select --> Shop_Detail : view
 
   ' Ramificación
-  Shop_Detail --> Space_List : ver espacios
+  Shop_Detail --> Space_Summary : ver espacios
   
   ' Nota: La rama de productos conecta conceptualmente con "Navegación de Productos"
   ' pero aquí se modela la decisión de navegación.
   
-  Space_List --> Space_Select : click
-  Space_Select --> Space_Detail : view
-  Space_Detail --> Shop_End
+  Space_Summary --> Shop_End
+}
+
+' 5. Buscar Producto
+package "Activity Buscar Producto" {
+  circle " " as Search_Start <<start>>
+  circle " " as Search_End <<end>>
+
+  class "Formulario Búsqueda" as Search_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + Busqueda
+  }
+
+  class "Buscar Producto" as Search_Action <<userAction>> {
+    --
+    + Busqueda
+  }
+
+  class "Lista Producto" as Search_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + listaProductos
+  }
+
+  class "Seleccionar Producto" as Search_Select <<userAction>> {
+    --
+    + selectedProductId
+  }
+
+  class "Detalle de Producto" as Search_Detail <<displayAction>> {
+    --
+    <<displayPin>>
+    + etiqueta
+    + foto
+    + nombre
+    + descripcion
+    + precio
+    + cantidadExistencia
+    + botonGuardarInteres
+  }
+
+  class "Guardar Producto Interés" as Search_Save <<userAction>> {
+    --
+    + productId
+  }
+
+  Search_Start --> Search_Form
+  Search_Form --> Search_Action : submit
+  Search_Action --> Search_List : show results
+  
+  Search_List --> Search_Select : click
+  Search_Select --> Search_Detail : view
+  
+  Search_Detail --> Search_Save : interaction
+  Search_Save --> Search_Detail : refresh
+  
+  Search_Detail --> Search_End : back/exit
 }
 
 @enduml
