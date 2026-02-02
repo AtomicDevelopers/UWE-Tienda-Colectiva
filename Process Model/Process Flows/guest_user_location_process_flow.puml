@@ -1,0 +1,36 @@
+@startuml guest_user_location_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Proceso Ubicacion
+
+start
+
+:Boton Cambiar Ubicacion pulsado;
+
+repeat :<<userAction>>\nDatos Entrada Ubicacion;
+  
+  :<<systemAction>>\nValidar Ubicacion;
+  
+  if (Ubicacion Valida?) then (no)
+    :<<systemAction>>\nMostrar Error Ubicacion;
+  else (si)
+    :<<userAction>>\nConfirmacion Ubicacion;
+    
+    if (Confirmar?) then (cancelar)
+      :Cancelar;
+    else (ok)
+      :<<systemAction>>\nGuardar Ubicacion;
+    endif
+  endif
+
+backward: Corregir Datos;
+repeat while (Reintentar)
+stop
+@enduml

@@ -1,0 +1,37 @@
+@startuml guest_user_recovery_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Proceso Recuperacion
+
+start
+
+:Boton Recuperar Presionado;
+
+repeat :<<userAction>>\nDatos Entrada Recuperacion;
+  
+  :<<systemAction>>\nValidar Correo;
+  
+  if (Correo Valido?) then (no)
+    :<<systemAction>>\nMostrar Error;
+  else (si)
+    :<<userAction>>\nConfirmacion Envio;
+    
+    if (Confirmar?) then (cancelar)
+      :Cancelar;
+    else (ok)
+      :<<systemAction>>\nEnviar Correo Recuperacion;
+      stop
+    endif
+  endif
+
+backward: Reintentar;
+repeat while (Error)
+
+@enduml

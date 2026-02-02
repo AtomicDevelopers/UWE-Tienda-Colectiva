@@ -1,0 +1,38 @@
+@startuml guest_user_register_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Proceso Registro
+
+start
+
+:Boton Registro Presionado;
+
+repeat :<<userAction>>\nDatos Entrada Registro;
+  
+  :<<systemAction>>\nValidar Datos;
+  
+  if (Datos Validos?) then (no)
+    :<<systemAction>>\nMostrar Error Validacion;
+  else (si)
+    :<<userAction>>\nConfirmacion Registro;
+    
+    if (Confirmar?) then (cancelar)
+      :Cancelar;
+    else (ok)
+      :<<systemAction>>\nGuardar Usuario;
+      :<<systemAction>>\nIniciar Sesion;
+      stop
+    endif
+  endif
+
+backward: Corregir Datos;
+repeat while (Reintentar)
+
+@enduml

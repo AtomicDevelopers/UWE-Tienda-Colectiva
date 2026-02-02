@@ -1,0 +1,31 @@
+@startuml guest_user_login_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Proceso Login
+
+start
+
+:Boton Login Presionado;
+
+repeat :<<userAction>>\nDatos Entrada Login;
+  
+  :<<systemAction>>\nValidar Credenciales;
+  
+  if (Credenciales Validas?) then (no)
+    :<<systemAction>>\nMostrar Error Login;
+  else (si)
+    :<<systemAction>>\nIniciar Sesion;
+    stop
+  endif
+
+backward: Reintentar;
+repeat while (Error)
+
+@enduml

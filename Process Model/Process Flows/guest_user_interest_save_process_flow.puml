@@ -1,0 +1,26 @@
+@startuml guest_user_interest_save_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Proceso Guardar Interes
+
+start
+
+:Boton Guardar Interes pulsado;
+
+:<<userAction>>\nDatos Entrada Interes;
+
+if (Confirmar Guardado?) then (cancelar)
+  :Cancelar;
+else (ok)
+  :<<systemAction>>\nGuardar Interes;
+  :<<systemAction>>\nActualizar Vista; 
+endif
+stop
+@enduml

@@ -1,0 +1,32 @@
+@startuml guest_user_interest_delete_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam activity {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Eliminar Interes
+
+start
+
+:Boton Eliminar Interes pulsado;
+
+:<<userAction>>\nConfirmacion Eliminacion;
+
+if (Confirmar Eliminacion?) then (cancelar)
+  :Cancelar;
+else (ok)
+  :<<systemAction>>\nEliminar Interes;
+  
+  if (Error?) then (si)
+      :<<systemAction>>\nMostrar Error;
+  else (no)
+      :<<systemAction>>\nRecargar Lista;
+      
+  endif
+endif
+stop
+@enduml
