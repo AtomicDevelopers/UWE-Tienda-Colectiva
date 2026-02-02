@@ -16,128 +16,137 @@ skinparam class {
 ' Este diagrama describe la estructura estática de los procesos, incluyendo 
 ' clases de entrada de datos, validación y ventanas de confirmación.
 
-package "Proceso" {
+package "Procesamiento de Usuario Invitado" {
 
   ' --- Clases Base ---
-  class "Confirmacion" as Confirmation <<processClass>> {
-    - pregunta : String
-  }
-  
-  class "ErrorValidacion" as ValidationError <<processClass>> {
-    - mensaje : String
+  package "Base" {
+    class "Confirmacion" as Confirmation <<processClass>> {
+      - pregunta : String
+    }
+    
+    class "ErrorValidacion" as ValidationError <<processClass>> {
+      - mensaje : String
+    }
+
+    ' Una clase base abstracta para el procesamiento común
+    class "ProcesamientoInvitado" as GuestProcessing <<processClass>> {
+      ' Lógica común
+    }
   }
 
-  ' Una clase base abstracta para el procesamiento común (opcional, basado en ContactProcessing)
-  class "ProcesamientoInvitado" as GuestProcessing <<processClass>> {
-    ' Lógica común
+
+  ' ==========================================
+  ' 1. PROCESO DE REGISTRO
+  ' ==========================================
+  package "Proceso de Registro" {
+    class "DatosEntradaRegistro" as RegisterInput <<processClass>> {
+      - nombre : String
+      - email : String
+      - celular : String
+      - password : String
+      - validarDatos()
+    }
+    
+    class "ProcesoRegistro" as RegisterProcess <<processClass>>
+    
+    class "ConfirmacionRegistro" as RegisterConfirm <<processClass>> {
+      - guardarUsuario()
+    }
+    
+    ' Relaciones
+    RegisterProcess -up-|> GuestProcessing
+    RegisterProcess *-- RegisterInput
+    RegisterInput *-- ValidationError
+    RegisterConfirm -up-|> Confirmation
+    RegisterProcess ..> RegisterConfirm : result
   }
 
 
   ' ==========================================
-  ' 1. PROCESO DE REGISTRO (Similar a ContactCreation)
+  ' 2. PROCESO DE LOGIN
   ' ==========================================
-  
-  class "DatosEntradaRegistro" as RegisterInput <<processClass>> {
-    - nombre : String
-    - email : String
-    - celular : String
-    - password : String
-    - validarDatos()
+  package "Proceso de Login" {
+    class "DatosEntradaLogin" as LoginInput <<processClass>> {
+      - email : String
+      - password : String
+      - validarCredenciales()
+    }
+    
+    class "ProcesoLogin" as LoginProcess <<processClass>>
+    
+    class "ConfirmacionLogin" as LoginConfirm <<processClass>> {
+      - iniciarSesion()
+    }
+    
+    ' Relaciones
+    LoginProcess -up-|> GuestProcessing
+    LoginProcess *-- LoginInput
+    LoginInput *-- ValidationError
+    LoginConfirm -up-|> Confirmation
+    LoginProcess ..> LoginConfirm : result
   }
   
-  class "ProcesoRegistro" as RegisterProcess <<processClass>>
   
-  class "ConfirmacionRegistro" as RegisterConfirm <<processClass>> {
-    - guardarUsuario()
-  }
-  
-  ' Relaciones
-  RegisterProcess -up-|> GuestProcessing
-  RegisterProcess *-- RegisterInput
-  RegisterInput *-- ValidationError
-  RegisterConfirm -up-|> Confirmation
-  RegisterProcess ..> RegisterConfirm : result
+  ' ==========================================
+  ' 3. PROCESAMIENTO DE INTERESES
+  ' ==========================================
+  package "Gestión de Intereses" {
+    ' Guardar Interés
+    class "DatosEntradaInteres" as InterestInput <<processClass>> {
+      - productoId : UUID
+      - fecha : DateTime
+    }
+    
+    class "ProcesoGuardarInteres" as SaveInterestProcess <<processClass>>
+    class "ConfirmacionGuardado" as SaveConfirm <<processClass>>
 
+    SaveInterestProcess -up-|> GuestProcessing
+    SaveInterestProcess *-- InterestInput
+    SaveInterestProcess ..> SaveConfirm : result
 
-  ' ==========================================
-  ' 2. PROCESO DE LOGIN (Similar a ContactUpdate/Processing)
-  ' ==========================================
-  
-  class "DatosEntradaLogin" as LoginInput <<processClass>> {
-    - email : String
-    - password : String
-    - validarCredenciales()
+    ' Eliminar Interés
+    class "EliminarInteres" as InterestDelete <<processClass>>
+    class "ConfirmacionEliminacion" as DeleteConfirm <<processClass>>
+    
+    InterestDelete ..> DeleteConfirm : result
+    DeleteConfirm -up-|> Confirmation
   }
-  
-  class "ProcesoLogin" as LoginProcess <<processClass>>
-  
-  class "ConfirmacionLogin" as LoginConfirm <<processClass>> {
-    - iniciarSesion()
-  }
-  
-  ' Relaciones
-  LoginProcess -up-|> GuestProcessing
-  LoginProcess *-- LoginInput
-  LoginInput *-- ValidationError
-  LoginConfirm -up-|> Confirmation
-  LoginProcess ..> LoginConfirm : result
-  
-  
-  ' ==========================================
-  ' 3. PROCESAMIENTO DE INTERESES (Guardar y Eliminar)
-  ' ==========================================
-  
-  ' Guardar Interés
-  class "DatosEntradaInteres" as InterestInput <<processClass>> {
-    - productoId : UUID
-    - fecha : DateTime
-  }
-  
-  class "ProcesoGuardarInteres" as SaveInterestProcess <<processClass>>
-  class "ConfirmacionGuardado" as SaveConfirm <<processClass>>
-
-  SaveInterestProcess -up-|> GuestProcessing
-  SaveInterestProcess *-- InterestInput
-  SaveInterestProcess ..> SaveConfirm : result
-
-  ' Eliminar Interés
-  class "EliminarInteres" as InterestDelete <<processClass>>
-  class "ConfirmacionEliminacion" as DeleteConfirm <<processClass>>
-  
-  InterestDelete ..> DeleteConfirm : result
-  DeleteConfirm -up-|> Confirmation
 
 
   ' ==========================================
   ' 4. GESTIÓN DE UBICACIÓN
   ' ==========================================
-  class "DatosEntradaUbicacion" as LocationInput <<processClass>> {
-    - direccion : String
-    - coordenadas : String
-    - validarUbicacion()
+  package "Gestión de Ubicación" {
+    class "DatosEntradaUbicacion" as LocationInput <<processClass>> {
+      - direccion : String
+      - coordenadas : String
+      - validarUbicacion()
+    }
+
+    class "ProcesoUbicacion" as LocationProcess <<processClass>>
+    class "ConfirmacionUbicacion" as LocationConfirm <<processClass>>
+
+    LocationProcess -up-|> GuestProcessing
+    LocationProcess *-- LocationInput
+    LocationProcess ..> LocationConfirm : result
   }
-
-  class "ProcesoUbicacion" as LocationProcess <<processClass>>
-  class "ConfirmacionUbicacion" as LocationConfirm <<processClass>>
-
-  LocationProcess -up-|> GuestProcessing
-  LocationProcess *-- LocationInput
-  LocationProcess ..> LocationConfirm : result
 
 
   ' ==========================================
   ' 5. RECUPERACIÓN DE CONTRASEÑA
   ' ==========================================
-  class "DatosEntradaRecuperacion" as RecoveryInput <<processClass>> {
-    - email : String
+  package "Recuperación de Contraseña" {
+    class "DatosEntradaRecuperacion" as RecoveryInput <<processClass>> {
+      - email : String
+    }
+
+    class "ProcesoRecuperacion" as RecoveryProcess <<processClass>>
+    class "ConfirmacionEnvioRecuperacion" as RecoveryConfirm <<processClass>>
+
+    RecoveryProcess -up-|> GuestProcessing
+    RecoveryProcess *-- RecoveryInput
+    RecoveryProcess ..> RecoveryConfirm : result
   }
-
-  class "ProcesoRecuperacion" as RecoveryProcess <<processClass>>
-  class "ConfirmacionEnvioRecuperacion" as RecoveryConfirm <<processClass>>
-
-  RecoveryProcess -up-|> GuestProcessing
-  RecoveryProcess *-- RecoveryInput
-  RecoveryProcess ..> RecoveryConfirm : result
 
 }
 

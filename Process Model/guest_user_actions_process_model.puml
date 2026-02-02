@@ -1,0 +1,80 @@
+@startuml guest_user_actions_process_model
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+' ==========================================
+' MODELO DE PROCESO (UWE) - ACCIONES
+' ==========================================
+' Este diagrama describe la estructura de los procesos de 
+' negocio y acciones (Ubicación, Gestión de Intereses).
+
+package "Procesamiento de Acciones - Usuario Invitado" {
+
+  ' --- Clases Base ---
+  package "Base" {
+    class "Confirmacion" as Confirmation <<processClass>> {
+      - pregunta : String
+    }
+    
+    class "Error Validacion" as ValidationError <<processClass>> {
+      - mensaje : String
+    }
+
+    class "Procesamiento Invitado" as GuestProcessing <<processClass>>
+  }
+  
+  ' ==========================================
+  ' 1. GESTIÓN DE UBICACIÓN
+  ' ==========================================
+  package "Gestión de Ubicación" {
+    class "Datos Entrada Ubicacion" as LocationInput <<processClass>> {
+      - direccion : String
+      - coordenadas : String
+      - validarUbicacion()
+    }
+
+    class "Proceso Ubicacion" as LocationProcess <<processClass>>
+    class "Confirmacion Ubicacion" as LocationConfirm <<processClass>>
+
+    LocationProcess -up-|> GuestProcessing
+    LocationProcess *-- LocationInput
+    LocationInput *-- ValidationError
+    LocationProcess ..> LocationConfirm : result
+  }
+
+  ' ==========================================
+  ' 2. PROCESAMIENTO DE INTERESES
+  ' ==========================================
+  package "Gestión de Intereses" {
+    ' Guardar Interés
+    class "Datos Entrada Interes" as InterestInput <<processClass>> {
+      - productoId : UUID
+      - fecha : DateTime
+    }
+    
+    class "Proceso Guardar Interes" as SaveInterestProcess <<processClass>>
+    class "Confirmacion Guardado" as SaveConfirm <<processClass>>
+
+    SaveInterestProcess -up-|> GuestProcessing
+    SaveInterestProcess *-- InterestInput
+    SaveInterestProcess ..> SaveConfirm : result
+
+    ' Eliminar Interés
+    class "Eliminar Interes" as InterestDelete <<processClass>>
+    class "Confirmacion Eliminacion" as DeleteConfirm <<processClass>>
+    
+    InterestDelete ..> DeleteConfirm : result
+    DeleteConfirm -up-|> Confirmation
+  }
+
+}
+
+@enduml
