@@ -38,7 +38,6 @@ class "Tienda" as Tienda {
 class "Producto" as Producto {
   + id: UUID
   + nombre: String
-  + etiqueta: String
   + precio: Decimal
   + descripcion: String
   + fotoUrl: String
@@ -47,6 +46,11 @@ class "Producto" as Producto {
   + esInteres: Boolean
   + createdAt: DateTime
   + updatedAt: DateTime
+}
+
+class "Etiqueta" as Etiqueta <<content class>> {
+  + id: UUID
+  + nombre: String
 }
 
 class "Espacio" as Espacio {
@@ -71,6 +75,9 @@ Usuario "1" -- "1" Ubicacion : selecciona >
 ' Relación de favoritos (Muchos a Muchos)
 Usuario "0..1" -- "*" Producto : guarda >
 (Usuario, Producto) .. Interes
+
+' Producto tiene una etiqueta
+Producto "*" -- "1" Etiqueta : tiene >
 
 ' Tienda contiene productos y espacios
 Tienda "1" *-- "*" Producto : ofrece >
