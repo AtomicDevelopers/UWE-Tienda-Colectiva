@@ -19,32 +19,70 @@ package "Requirements Admin Page" {
   actor "Usuario Administrador" as Admin
 
   usecase "Login" as Login <<processing>>
-  usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
-  usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
-  usecase "Habilidar/Deshabilitar Tienda" as ToggleShop <<processing>>
-  usecase "Eliminar Tienda" as DeleteShop <<processing>>
-  usecase "Listar Encargados de Tienda" as ListShopManagers <<browsing>>
-  usecase "Asignar Encargado de Tienda" as AssignShopManager <<processing>>
-  usecase "Editar Encargado de Tienda" as EditShopManager <<processing>>
-  usecase "Listar Espacios de Tienda" as ViewShopSpaces <<browsing>>
-  usecase "Agregar Espacio" as AddShopSpace <<processing>>
-  usecase "Editar Espacio" as EditShopSpace <<processing>>
-  usecase "Eliminar Espacio" as DeleteShopSpace <<processing>>
-  usecase "Reasignar Productos entre Espacios" as ReassignProducts <<processing>>
-  usecase "Agregar Productos" as AddProduct <<processing>>
   usecase "Cerrar Sesión" as Logout <<processing>>
+
+  rectangle "Catalogos" {
+    usecase "Listar Tipos de Emprendimientos" as ListBusinessTypes <<browsing>>
+    usecase "Crear/Editar Tipo de Emprendimiento" as EditBusinessType <<processing>>
+    usecase "Listar Tipos de Productos" as ListProductTypes <<browsing>>
+    usecase "Crear/Editar Tipo de Producto" as EditProductType <<processing>>
+
+    ListBusinessTypes <.. EditBusinessType : <<extends>>
+    ListProductTypes <.. EditProductType : <<extends>>
+  }
+
+  usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
+  usecase "Listar Encargados de Tiendas" as ListShopManagers <<browsing>>
+  usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
+  usecase "Listar Espacios de Tienda" as ViewShopSpaces <<browsing>>
+
+  usecase "Habilidar/Deshabilitar Tienda" as ToggleShop <<processing>>
+  usecase "Ver Detalle de Encargado de Tienda" as ViewShopManagerDetail <<browsing>>
+  usecase "Editar Encargado de Tienda" as EditShopManager <<processing>>
+  usecase "Asignar/Reasignar Encargado de Tienda" as AssignShopManager <<processing>>
+  usecase "Eliminar Tienda" as DeleteShop <<processing>>
+  usecase "Ver Detalle de Emprendimiento" as ViewShopEntrepreneurDetail <<browsing>>
+  usecase "Habilitar/Deshabilitar Emprendimiento" as ToggleEntrepreneur <<processing>>
+
+    rectangle "Acciones dentro de Tiendas" {
+      usecase "Agregar Espacio" as AddShopSpace <<processing>>
+      usecase "Editar Espacio" as EditShopSpace <<processing>>
+      usecase "Eliminar Espacio" as DeleteShopSpace <<processing>>
+    }
+  note top of "Acciones dentro de Tiendas"
+    Estas acciones solo seran realizadas por peticion
+    explicita de los encargados de Tiendas o para corregir errores.
+  end note
+
+  usecase "Listar Emprendimientos" as ViewShopEntrepreneurs <<browsing>>
+
+  Admin --> Login
+  Admin --> CreateShop
+  Admin --> Logout
+  Admin --> ViewShopDetail
+  Admin --> ViewShopEntrepreneurs
+  Admin --> ListShopManagers
+
+  CreateShop <.. ViewShopDetail : <<include>>
+  ViewShopDetail <.. ViewShopSpaces : <<include>>
+  ViewShopDetail <.. AddShopSpace : <<extends>>
+  ViewShopDetail <.. DeleteShopSpace : <<extends>>
+  ViewShopDetail <.. EditShopSpace : <<extends>>
+  ViewShopDetail <.. DeleteShop : <<extends>>
+  ViewShopDetail <.. ToggleShop : <<extends>>
+  ViewShopDetail <.. AssignShopManager : <<extends>>
+  ViewShopDetail <.. ViewShopEntrepreneurs : <<include>>
+  ViewShopEntrepreneurs <.. ViewShopEntrepreneurDetail : <<extends>>
+  ViewShopEntrepreneurDetail <.. ToggleEntrepreneur : <<extends>>
+  AssignShopManager <.. ViewShopManagerDetail : <<extends>>
+  ListShopManagers <.. ViewShopManagerDetail : <<extends>>
+  ViewShopManagerDetail <.. EditShopManager : <<extends>>
+
+  Admin --> ListBusinessTypes
+  Admin --> ListProductTypes
 }
 
 
-Admin --> CreateShop
-Admin --> AddProduct
-Admin --> Logout
-Admin --> ViewShopDetail
-Admin --> ViewShopSpaces
-Admin --> AddShopSpaces
 
-CreateShop <.. ViewShopDetail : <<include>>
-ViewShopDetail <.. ViewShopSpaces : <<include>>
-ViewShopDetail <.. AddShopSpaces : <<extends>>
 
 @enduml
