@@ -1,4 +1,4 @@
-@startuml guest_user_usecases
+﻿@startuml customer_user_usecases
 allow_mixing
 
 skinparam shadow false
@@ -14,7 +14,7 @@ skinparam usecase {
   ArrowColor #A80036
 }
 
-actor "Usuario Invitado" as AnonUser
+actor "Usuario Cliente" as AnonUser
 
 ' ==========================================
 ' MODELO DE REQUISITOS (UWE) - CASOS DE USO
@@ -24,20 +24,20 @@ actor "Usuario Invitado" as AnonUser
 ' <<processing>> : Casos de uso de proceso (lógica de negocio o cambio de estado).
 
 ' ------------------------------------------
-' 1. GESTIÓN DE UBICACIÓN
+' 1. GESTIÃ“N DE UBICACIÃ“N
 ' ------------------------------------------
 usecase "Selección de Ubicación" as SelectLocation <<processing>>
 
 
 ' ------------------------------------------
-' 3. NAVEGACIÓN Y BÚSQUEDA DE PRODUCTOS
+' 3. NAVEGACIÃ“N Y BÃšSQUEDA DE PRODUCTOS
 ' ------------------------------------------
 usecase "Listar Productos Más Vendidos" as ViewMostSold <<browsing>>
 usecase "Buscar Producto" as SearchProduct <<browsing>>
 usecase "Listar Productos de Interés" as InterestProduct <<browsing>>
 
 ' ------------------------------------------
-' 4. NAVEGACIÓN POR TIENDAS
+' 4. NAVEGACIÃ“N POR TIENDAS
 ' ------------------------------------------
 usecase "Ver Lista Tienda" as ViewStoreList <<browsing>>
 usecase "Ver Detalle Tienda" as ViewStoreDetail <<browsing>>
@@ -89,3 +89,4 @@ ViewStoreDetail ..> ViewSpaceList : <<include>>
 ViewStoreDetail ..> ViewProductList : <<include>>
 
 @enduml
+

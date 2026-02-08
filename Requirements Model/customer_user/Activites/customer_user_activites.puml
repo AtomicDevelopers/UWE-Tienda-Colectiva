@@ -1,4 +1,4 @@
-@startuml guest_user_activities
+﻿@startuml customer_user_activities
 allow_mixing
 
 skinparam shadow false
@@ -13,7 +13,7 @@ skinparam circleBackgroundColor black
 ' ==========================================
 ' MODELO DE REQUISITOS (UWE) - DIAGRAMAS DE ACTIVIDAD
 ' ==========================================
-' Este diagrama modela el flujo de trabajo para las actividades del usuario invitado.
+' Este diagrama modela el flujo de trabajo para las actividades del Usuario Cliente.
 ' Se utiliza la sintaxis de clases de PlantUML para representar las acciones UWE.
 '
 ' Stereotypes utilizados:
@@ -62,7 +62,7 @@ package "Activity Selección de Ubicación" {
 
 
 ' ------------------------------------------
-' 4. LISTAR PRODUCTOS MÁS VENDIDOS
+' 4. LISTAR PRODUCTOS MÃS VENDIDOS
 ' ------------------------------------------
 package "Activity Listar Productos Más Vendidos" {
   circle " " as Prod_Start <<start>>
@@ -108,7 +108,7 @@ package "Activity Listar Productos Más Vendidos" {
 }
 
 ' ------------------------------------------
-' 5. LISTAR PRODUCTOS DE INTERÉS
+' 5. LISTAR PRODUCTOS DE INTERÃ‰S
 ' ------------------------------------------
 package "Activity Listar Productos de Interés" {
   circle " " as Interest_Start <<start>>
@@ -297,3 +297,5 @@ package "Activity Buscar Producto" {
 }
 
 @enduml
+
+

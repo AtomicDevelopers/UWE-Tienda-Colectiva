@@ -1,4 +1,4 @@
-@startuml guest_user_interest_delete_process_flow
+﻿@startuml customer_user_interest_delete_process_flow
 skinparam shadow false
 skinparam packageStyle rectangle
 skinparam roundCorner 15
@@ -8,18 +8,18 @@ skinparam activity {
   ArrowColor #A80036
 }
 
-title Eliminar Interes
+title Eliminar Interés
 
 start
 
-:Boton Eliminar Interes pulsado;
+:Boton Eliminar Interés pulsado;
 
-:<<userAction>>\nConfirmacion Eliminacion;
+:<<userAction>>\nConfirmacion Eliminación;
 
-if (Confirmar Eliminacion?) then (cancelar)
+if (Confirmar Eliminación?) then (cancelar)
   :Cancelar;
 else (ok)
-  :<<systemAction>>\nEliminar Interes;
+  :<<systemAction>>\nEliminar Interés;
   
   if (Error?) then (si)
       :<<systemAction>>\nMostrar Error;
@@ -30,3 +30,5 @@ else (ok)
 endif
 stop
 @enduml
+
+

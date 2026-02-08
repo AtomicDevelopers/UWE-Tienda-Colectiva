@@ -1,4 +1,4 @@
-@startuml guest_user_process_model
+﻿@startuml customer_user_process_model
 allow_mixing
 
 skinparam shadow false
@@ -16,7 +16,7 @@ skinparam class {
 ' Este diagrama describe la estructura estática de los procesos, incluyendo 
 ' clases de entrada de datos, validación y ventanas de confirmación.
 
-package "Procesamiento de Usuario Invitado" {
+package "Procesamiento de Usuario Cliente" {
 
   ' --- Clases Base ---
   package "Base" {
@@ -26,7 +26,7 @@ package "Procesamiento de Usuario Invitado" {
     
 
     ' Una clase base abstracta para el procesamiento común
-    class "ProcesamientoInvitado" as GuestProcessing <<processClass>> {
+    class "ProcesamientoCliente" as CustomerProcessing <<processClass>> {
       ' Lógica común
     }
   }
@@ -47,7 +47,7 @@ package "Procesamiento de Usuario Invitado" {
     class "ProcesoGuardarInteres" as SaveInterestProcess <<processClass>>
     class "ConfirmacionGuardado" as SaveConfirm <<processClass>>
 
-    SaveInterestProcess -up-|> GuestProcessing
+    SaveInterestProcess -up-|> CustomerProcessing
     SaveInterestProcess *-- InterestInput
     SaveInterestProcess ..> SaveConfirm : result
 
@@ -61,7 +61,7 @@ package "Procesamiento de Usuario Invitado" {
 
 
   ' ==========================================
-  ' 4. GESTIÓN DE UBICACIÓN
+  ' 4. GESTIÃ“N DE UBICACIÃ“N
   ' ==========================================
   package "Gestión de Ubicación" {
     class "DatosEntradaUbicacion" as LocationInput <<processClass>> {
@@ -73,7 +73,7 @@ package "Procesamiento de Usuario Invitado" {
     class "ProcesoUbicacion" as LocationProcess <<processClass>>
     class "ConfirmacionUbicacion" as LocationConfirm <<processClass>>
 
-    LocationProcess -up-|> GuestProcessing
+    LocationProcess -up-|> CustomerProcessing
     LocationProcess *-- LocationInput
     LocationProcess ..> LocationConfirm : result
   }
@@ -82,3 +82,5 @@ package "Procesamiento de Usuario Invitado" {
 }
 
 @enduml
+
+

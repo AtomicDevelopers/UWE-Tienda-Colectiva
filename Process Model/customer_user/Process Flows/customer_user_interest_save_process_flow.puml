@@ -1,4 +1,4 @@
-@startuml guest_user_interest_save_process_flow
+﻿@startuml customer_user_interest_save_process_flow
 skinparam shadow false
 skinparam packageStyle rectangle
 skinparam roundCorner 15
@@ -12,15 +12,17 @@ title Proceso Guardar Interes
 
 start
 
-:Boton Guardar Interes pulsado;
+:Boton Guardar Interés pulsado;
 
-:<<userAction>>\nDatos Entrada Interes;
+:<<userAction>>\nDatos Entrada Interés;
 
 if (Confirmar Guardado?) then (cancelar)
   :Cancelar;
 else (ok)
-  :<<systemAction>>\nGuardar Interes;
+  :<<systemAction>>\nGuardar Interés;
   :<<systemAction>>\nActualizar Vista; 
 endif
 stop
 @enduml
+
+

@@ -1,4 +1,4 @@
-@startuml guest_user_content_model
+﻿@startuml customer_user_content_model
 skinparam shadow false
 skinparam roundCorner 15
 skinparam class {
@@ -80,3 +80,5 @@ Tienda "1" *-- "*" Producto : ofrece >
 Tienda "1" *-- "*" Espacio : tiene >
 
 @enduml
+
+

@@ -1,4 +1,4 @@
-@startuml guest_user_navigation_model
+﻿@startuml customer_user_navigation_model
 allow_mixing
 
 skinparam shadow false
@@ -11,9 +11,9 @@ skinparam class {
 }
 
 ' ==========================================
-' MODELO DE NAVEGACIÓN (UWE) - USUARIO INVITADO
+' MODELO DE NAVEGACIÃ“N (UWE) - Usuario Cliente
 ' ==========================================
-' Este modelo define la estructura de navegación y las rutas de acceso para el usuario invitado.
+' Este modelo define la estructura de navegación y las rutas de acceso para el Usuario Cliente.
 '
 ' Estereotipos utilizados:
 ' <<navigationClass>> : Nodo de navegación principal (representa una vista o página).
@@ -25,10 +25,10 @@ skinparam class {
 ' <<processLink>>     : Enlace hacia o desde una Query o ProcessClass (unidireccional, implica flujo de control).
 ' <<externalLink>>    : Enlace a un proceso o modelo externo.
 
-package "Navegación de Usuario Invitado" {
+package "Navegación de Usuario Cliente" {
 
   ' --- Inicio y Puntos de Entrada ---
-  class "Inicio Invitado" as Home <<navigationClass>> {
+  class "Inicio Cliente" as Home <<navigationClass>> {
     {tag=isHome}
   }
 
@@ -64,7 +64,7 @@ package "Navegación de Usuario Invitado" {
 
 
   ' ==========================================
-  ' ENLACES DE NAVEGACIÓN
+  ' ENLACES DE NAVEGACIÃ“N
   ' ==========================================
 
   ' 1. Flujo de Ubicación
@@ -126,3 +126,5 @@ package "Navegación de Usuario Invitado" {
 }
 
 @enduml
+
+

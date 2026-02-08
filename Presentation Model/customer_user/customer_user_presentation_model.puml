@@ -1,4 +1,4 @@
-@startuml guest_user_presentation_model
+﻿@startuml customer_user_presentation_model
 skinparam shadow false
 skinparam packageStyle rectangle
 skinparam roundCorner 15
@@ -17,7 +17,7 @@ skinparam rectangle {
 }
 
 ' ==========================================
-' MODELO DE PRESENTACIÓN (UWE) - GUEST USER
+' MODELO DE PRESENTACIÃ“N (UWE) - Customer USER
 ' ==========================================
 
 package "Presentation Model" {
@@ -143,3 +143,5 @@ package "Presentation Model" {
 }
 
 @enduml
+
+
