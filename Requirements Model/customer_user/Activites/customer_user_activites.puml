@@ -44,9 +44,8 @@ package "Activity Selección de Ubicación" {
   class "Formulario Ubicación" as Loc_Form <<displayAction>> {
     {type=form}
     --
-    <<interactionPin>>
-    + direccionInput
-    + mapaCoordenadas
+    + direccionInput <<interactionPin>>
+    + mapaCoordenadas <<displayPin>>
   }
 
   class "Seleccionar Ubicación" as Loc_Select <<userAction>> {
@@ -71,8 +70,7 @@ package "Activity Listar Productos Más Vendidos" {
   class "Lista de Productos Más Vendidos" as Prod_List <<displayAction>> {
     {type=list}
     --
-    <<displayPin>>
-    + listaProductos
+    + listaProductos <<displayPin>>
   }
 
   class "Seleccionar Producto" as Prod_Select <<userAction>> {
@@ -82,14 +80,13 @@ package "Activity Listar Productos Más Vendidos" {
 
   class "Detalle de Producto" as Prod_Detail <<displayAction>> {
     --
-    <<displayPin>>
-    + etiqueta
-    + foto
-    + nombre
-    + descripcion
-    + precio
-    + cantidadExistencia
-    + botonGuardarInteres
+    + etiqueta <<displayPin>>
+    + foto <<displayPin>>
+    + nombre <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + botonGuardarInteres <<interactionPin>>
   }
 
   class "Guardar Producto Interés" as Prod_Save <<userAction>> {
@@ -117,8 +114,8 @@ package "Activity Listar Productos de Interés" {
   class "Lista de Productos de Interés" as Interest_List <<displayAction>> {
     {type=list}
     --
-    <<displayPin>>
-    + listaProductosInteres
+    
+    + listaProductosInteres <<displayPin>>
   }
 
   class "Seleccionar Producto" as Interest_Select <<userAction>> {
@@ -128,14 +125,13 @@ package "Activity Listar Productos de Interés" {
 
   class "Detalle de Producto" as Interest_Detail <<displayAction>> {
     --
-    <<displayPin>>
-    + etiqueta
-    + foto
-    + nombre
-    + descripcion
-    + precio
-    + cantidadExistencia
-    + botonEliminarInteres
+    + etiqueta <<displayPin>>
+    + foto <<displayPin>>
+    + nombre <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + botonEliminarInteres <<interactionPin>>
   }
 
   class "Eliminar Producto Interés" as Interest_Remove <<userAction>> {
@@ -163,8 +159,7 @@ package "Activity Ver Lista Tienda" {
   class "Lista de Tiendas" as Shop_List <<displayAction>> {
     {type=list}
     --
-    <<displayPin>>
-    + listaTiendas
+    + listaTiendas <<displayPin>>
   }
 
   class "Seleccionar Tienda" as Shop_Select <<userAction>> {
@@ -174,16 +169,15 @@ package "Activity Ver Lista Tienda" {
 
   class "Detalle Tienda" as Shop_Detail <<displayAction>> {
     --
-    <<displayPin>>
-    + infoTienda
-    + opcionVerListaProductos
-    + opcionVerResumenEspaciosDisponibles
+    + infoTienda <<displayPin>>
+    + opcionVerListaProductos <<interactionPin>>
+    + opcionVerResumenEspaciosDisponibles <<interactionPin>>
   }
 
   class "Resumen Espacios Disponibles" as Space_Summary <<displayAction>> {
     --
-    + infoEspacios
-    + disponibilidad
+    + infoEspacios <<displayPin>>
+    + disponibilidad <<displayPin>>
   }
 
   Shop_Start --> Shop_List
@@ -197,8 +191,7 @@ package "Activity Ver Lista Tienda" {
   class "Lista Producto" as Shop_Prod_List <<displayAction>> {
     {type=list}
     --
-    <<displayPin>>
-    + listaProductos
+    + listaProductos <<displayPin>>
   }
 
   class "Seleccionar Producto" as Shop_Prod_Select <<userAction>> {
@@ -208,14 +201,13 @@ package "Activity Ver Lista Tienda" {
 
   class "Detalle de Producto" as Shop_Prod_Detail <<displayAction>> {
     --
-    <<displayPin>>
-    + etiqueta
-    + foto
-    + nombre
-    + descripcion
-    + precio
-    + cantidadExistencia
-    + botonGuardarInteres
+    + etiqueta <<displayPin>>
+    + foto <<displayPin>>
+    + nombre <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + botonGuardarInteres <<interactionPin>>
   }
 
   class "Guardar Producto Interés" as Shop_Prod_Save <<userAction>> {
@@ -245,8 +237,7 @@ package "Activity Buscar Producto" {
   class "Formulario Búsqueda" as Search_Form <<displayAction>> {
     {type=form}
     --
-    <<interactionPin>>
-    + Busqueda
+    + Busqueda <<interactionPin>>
   }
 
   class "Buscar Producto" as Search_Action <<userAction>> {
@@ -257,8 +248,7 @@ package "Activity Buscar Producto" {
   class "Lista Producto" as Search_List <<displayAction>> {
     {type=list}
     --
-    <<displayPin>>
-    + listaProductos
+    + listaProductos <<displayPin>>
   }
 
   class "Seleccionar Producto" as Search_Select <<userAction>> {
@@ -268,14 +258,13 @@ package "Activity Buscar Producto" {
 
   class "Detalle de Producto" as Search_Detail <<displayAction>> {
     --
-    <<displayPin>>
-    + etiqueta
-    + foto
-    + nombre
-    + descripcion
-    + precio
-    + cantidadExistencia
-    + botonGuardarInteres
+    + etiqueta <<displayPin>>
+    + foto <<displayPin>>
+    + nombre <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + botonGuardarInteres <<interactionPin>>
   }
 
   class "Guardar Producto Interés" as Search_Save <<userAction>> {

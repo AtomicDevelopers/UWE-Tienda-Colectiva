@@ -41,37 +41,11 @@ package "Presentation Model" {
             class ": BuscarProducto" <<button>>
         }
 
-        rectangle "MenuAcceso" <<presentationGroup>> {
-            class ": IniciarSesion" <<anchor>>
-            class ": Registrarse" <<anchor>>
-        }
     }
 
-    ' --- AUTHENTICATION ---
-    rectangle "PaginaLogin" <<presentationPage>> {
-        rectangle ": FormularioLogin" <<inputForm>> {
-            class ": Correo" <<textInput>> {
-                {liveValidation}
-            }
-            class ": Contrasena" <<textInput>>
-            class ": EnviarLogin" <<button>>
-        }
-        note right of ": FormularioLogin" 
-            Mostrar error si falla la validación
-        end note
-    }
 
-    rectangle "PaginaRegistro" <<presentationPage>> {
-        rectangle ": FormularioRegistro" <<inputForm>> {
-            class ": Nombre" <<textInput>>
-            class ": Correo" <<textInput>> {
-                {liveValidation}
-            }
-            class ": Telefono" <<textInput>>
-            class ": Contrasena" <<textInput>>
-            class ": EnviarRegistro" <<button>>
-        }
-    }
+
+
 
     ' --- PRODUCT LISTING ---
     rectangle "PaginaListaProductos" <<presentationPage>> {
@@ -123,8 +97,7 @@ package "Presentation Model" {
     
     ' From Home
     ": BuscarProducto" --> "PaginaListaProductos"
-    ": IniciarSesion" --> "PaginaLogin"
-    ": Registrarse" --> "PaginaRegistro"
+
     
     ' From Lists
     ": Inspeccionar" --> "PaginaDetalleProducto"
@@ -134,11 +107,7 @@ package "Presentation Model" {
     ": AgregarInteres" ..> "DialogoConfirmacion"
     
     ' From Forms
-    ": EnviarLogin" ..> "PaginaInicio" : "Exito"
-    ": EnviarLogin" ..> "DialogoError" : "Fallo"
-    
-    ": EnviarRegistro" ..> "PaginaInicio" : "Exito"
-    ": EnviarRegistro" ..> "DialogoError" : "Fallo"
+
     
 }
 
