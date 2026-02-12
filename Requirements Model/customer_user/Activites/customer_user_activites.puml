@@ -36,27 +36,20 @@ package "Activity Selección de Ubicación" {
   circle " " as Loc_Start <<start>>
   circle " " as Loc_End <<end>>
 
-  class "Detectar Ubicación" as Loc_Detect <<systemAction>> {
+  class "Lista de Ciudades" as City_List <<displayAction>> {
+    {type=list}
     --
-    + ubicacionDetectada
+    + nombreCiudad <<displayPin>>
   }
 
-  class "Formulario Ubicación" as Loc_Form <<displayAction>> {
-    {type=form}
+  class "Seleccionar Ciudad" as City_Select <<userAction>> {
     --
-    + direccionInput <<interactionPin>>
-    + mapaCoordenadas <<displayPin>>
+    + selectedCityId
   }
 
-  class "Seleccionar Ubicación" as Loc_Select <<userAction>> {
-    --
-    + ubicacionSeleccionada
-  }
-
-  Loc_Start --> Loc_Detect
-  Loc_Detect --> Loc_Form : display
-  Loc_Form --> Loc_Select : confirm
-  Loc_Select --> Loc_End
+  Loc_Start --> City_List
+  City_List --> City_Select : click
+  City_Select --> Loc_End
 }
 
 
