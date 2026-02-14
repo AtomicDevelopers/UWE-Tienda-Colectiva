@@ -20,6 +20,7 @@ package "Requirements Admin Page" {
 
   usecase "Login" as Login <<processing>>
   usecase "Cerrar Sesión" as Logout <<processing>>
+  usecase "Recuperar Contraseña" as RecoverPassword <<processing>>
 
   rectangle "Catalogos" {
     usecase "Gestionar Tipos de Emprendimientos" as ManageBusinessTypes <<browsing>>
@@ -70,6 +71,7 @@ package "Requirements Admin Page" {
   usecase "Listar Emprendimientos" as ViewShopEntrepreneurs <<browsing>>
 
   Admin --> Login
+  Admin --> RecoverPassword
   Admin --> CreateShop
   Admin --> Logout
   Admin --> ViewShopDetail
