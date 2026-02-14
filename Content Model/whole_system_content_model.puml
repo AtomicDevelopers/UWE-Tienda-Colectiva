@@ -139,6 +139,43 @@ class "Administrador" as Administrador {
   + activo: Boolean
 }
 
+class "Solicitud Registro Tienda" as SolicitudRegistroTienda {
+  + id: UUID
+  + fechaSolicitud: DateTime
+  + estado: String
+  + observaciones: String
+}
+
+class "Venta" as Venta {
+  + id: UUID
+  + fecha: DateTime
+  + total: Decimal
+  + estado: String
+}
+
+class "Detalle Venta" as DetalleVenta {
+  + id: UUID
+  + cantidad: Integer
+  + precioUnitario: Decimal
+}
+
+class "Reporte" as Reporte {
+  + id: UUID
+  + tipo: String
+  + fechaInicio: Date
+  + fechaFin: Date
+  + formato: String
+  + generadoEn: DateTime
+}
+
+class "Movimiento Inventario" as MovimientoInventario {
+  + id: UUID
+  + tipo: String
+  + cantidad: Integer
+  + fecha: DateTime
+  + motivo: String
+}
+
 ' =====================
 ' Relaciones y multiplicidades
 ' =====================
@@ -157,6 +194,10 @@ Tienda "1" -- "1" TipoTienda : es_de_tipo >
 ' Tienda agrega Espacios y Encargados
 Tienda "1" *-- "0..*" Espacio : contiene >
 Tienda "1" *-- "0..*" Encargado : emplea >
+
+' Solicitud de registro de tienda por Encargado
+Encargado "1" -- "0..*" SolicitudRegistroTienda : solicita >
+SolicitudRegistroTienda "1" -- "0..1" Tienda : crea >
 
 ' Espacio asignado a Emprendimiento (un espacio puede contener un emprendimiento)
 Espacio "0..1" -- "0..1" Emprendimiento : asignado_a >
@@ -184,9 +225,29 @@ Administrador "1" -- "0..*" TipoEmprendimiento : gestiona >
 Administrador "1" -- "0..*" Ciudad : gestiona >
 Administrador "1" -- "0..*" TipoTienda : gestiona >
 
+' Reportes
+Encargado "1" -- "0..*" Reporte : genera >
+Reporte "1" ..> Tienda : de_tienda >
+Reporte "1" ..> Emprendimiento : por_emprendimiento >
+Reporte "1" ..> Venta : ventas >
+Reporte "1" ..> Producto : stock >
+Reporte "1" ..> MovimientoInventario : movimientos >
+
+' Ventas y detalle
+Tienda "1" -- "0..*" Venta : registra >
+Emprendimiento "1" -- "0..*" Venta : participa >
+Venta "1" *-- "1..*" DetalleVenta : detalle >
+DetalleVenta "*" -- "1" Producto : producto >
+
+' Movimientos de inventario
+Producto "1" -- "0..*" MovimientoInventario : movimientos >
+Encargado "1" -- "0..*" MovimientoInventario : registra >
+MovimientoInventario "0..1" ..> Venta : origen_venta >
+
 ' Reglas destacadas (usar en documentación):
 ' - No eliminar Tipo si existen entidades asociadas (productos, emprendimientos)
 ' - No eliminar Ciudad si existen tiendas asociadas
-' - Validación de stock antes de permitir venta
+' - Registro de ventas para reducir stock (sin POS)
+' - Movimientos de inventario cubren ventas, ajustes y devoluciones
 
 @enduml
