@@ -1,47 +1,48 @@
-@startuml login_navigation_model
-
+@startuml
 skinparam shadow false
-skinparam packageStyle rectangle
 skinparam roundCorner 15
-skinparam class {
-  BackgroundColor #FEFECE
-  BorderColor #A80036
-  ArrowColor #A80036
+
+package "Navigation Diagram: Sistema de Acceso" {
+
+    ' La "Clase de Navegación" principal que agrupa todo
+    class "SistemaAcceso" as Nav_System <<navigationClass>>
+
+    ' El Menú (como el MainMenu de tu imagen)
+    class "MenuAcceso" as Menu <<menu>>
+
+    ' Clases de Navegación (Páginas)
+    class "Login" as Nav_Login <<navigationClass>>
+    class "Registro" as Nav_Register <<navigationClass>>
+    class "RecuperarPassword" as Nav_Recover <<navigationClass>>
+    class "CompletarPerfil" as Nav_Setup <<navigationClass>>
+    class "Dashboard" as Nav_Home <<navigationClass>>
+
+    ' Clases de Proceso (Como el ContactCreation de tu imagen)
+    ' Estas manejan la lógica que "mueve" al usuario
+    class "Autenticacion" as Proc_Auth <<processClass>>
+    class "VerificacionPerfil" as Proc_Check <<processClass>>
+
+    ' --- RELACIONES ---
+
+    ' El sistema tiene un menú principal
+    Nav_System *-- Menu
+
+    ' El menú da acceso a las páginas de entrada
+    Menu --> Nav_Login : <<navigationLink>>
+    Menu --> Nav_Register : <<navigationLink>>
+    Menu --> Nav_Recover : <<navigationLink>>
+
+    ' Flujo de Login hacia el proceso (Igual que MainMenu -> ContactCreation)
+    Nav_Login --> Proc_Auth : <<processLink>>
+    
+    ' El proceso de autenticación dispara la verificación
+    Proc_Auth --> Proc_Check : <<processLink>>
+
+    ' La verificación redirige según el estado (Navegación dirigida)
+    Proc_Check --> Nav_Setup : <<processLink>> : [incompleto]
+    Proc_Check --> Nav_Home : <<processLink>> : [completo]
+
+    ' El proceso de completar perfil termina en el Home
+    Nav_Setup --> Nav_Home : <<processLink>>
 }
-
-package "Navigation - Acceso Emprendedor" {
-
-  class "HomeAcceso" as Home <<navigationClass>> {
-    {tag=isHome}
-  }
-
-  class "LoginForm" as Login <<navigationClass>>
-  class "RegisterForm" as Register <<navigationClass>>
-  class "RecoverPassword" as Recover <<navigationClass>>
-
-  class "Dashboard" as Dashboard <<navigationClass>>
-  class "LoginError" as LoginError <<navigationClass>>
-
-  ' Entrada principal
-  Home "1" --> "1" Login : <<navigationLink>>\n-openLogin
-  Home "1" --> "1" Register : <<navigationLink>>\n-openRegister
-  Home "1" --> "1" Recover : <<navigationLink>>\n-openRecover
-
-  ' Login
-  Login "1" --> "1" Dashboard : <<navigationLink>>\n-loginOK [cuenta ACTIVA]
-  Login "1" --> "1" LoginError : <<navigationLink>>\n-loginFail
-  LoginError "1" --> "1" Login : <<navigationLink>>\n-retry
-
-  ' Register
-  Register "1" --> "1" Home : <<navigationLink>>\n-requestSent
-
-  ' Recover
-  Recover "1" --> "1" Login : <<navigationLink>>\n-backToLogin
-
-  ' Cancelar / salir
-  Login "1" --> "1" Home : <<navigationLink>>\n-cancel
-  Dashboard "1" --> "1" Home : <<navigationLink>>\n-logout
-}
-@enduml
-
 @enduml
