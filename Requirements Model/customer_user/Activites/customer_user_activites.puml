@@ -37,9 +37,9 @@ package "Activity Selección de Ubicación" {
   circle " " as Loc_End <<end>>
 
   class "Lista de Ciudades" as City_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
-    + nombreCiudad <<displayPin>>
+    + nombreCiudad <<displayPin>> {widget=select}
   }
 
   class "Seleccionar Ciudad" as City_Select <<userAction>> {
@@ -54,16 +54,19 @@ package "Activity Selección de Ubicación" {
 
 
 ' ------------------------------------------
-' 4. LISTAR PRODUCTOS MÃS VENDIDOS
+' 4. LISTAR PRODUCTOS MAS VENDIDOS
 ' ------------------------------------------
 package "Activity Listar Productos Más Vendidos" {
   circle " " as Prod_Start <<start>>
   circle " " as Prod_End <<end>>
 
   class "Lista de Productos Más Vendidos" as Prod_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
-    + listaProductos <<displayPin>>
+    + nombreProducto <<displayPin>> {widget=select}
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + foto <<displayPin>>
   }
 
   class "Seleccionar Producto" as Prod_Select <<userAction>> {
@@ -105,10 +108,13 @@ package "Activity Listar Productos de Interés" {
   circle " " as Interest_End <<end>>
 
   class "Lista de Productos de Interés" as Interest_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
     
-    + listaProductosInteres <<displayPin>>
+    + nombreProducto <<displayPin>> {widget=select}
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + foto <<displayPin>>
   }
 
   class "Seleccionar Producto" as Interest_Select <<userAction>> {
@@ -150,9 +156,12 @@ package "Activity Ver Lista Tienda" {
   circle " " as Shop_End <<end>>
 
   class "Lista de Tiendas" as Shop_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
-    + listaTiendas <<displayPin>>
+    + nombreTienda <<displayPin>> {widget=select}
+    + direccion <<displayPin>>
+    + telefono <<displayPin>>
+    + correoElectronico <<displayPin>>
   }
 
   class "Seleccionar Tienda" as Shop_Select <<userAction>> {
@@ -182,9 +191,12 @@ package "Activity Ver Lista Tienda" {
   
   ' Rama Productos (Reuse struct)
   class "Lista Producto" as Shop_Prod_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
-    + listaProductos <<displayPin>>
+    + nombreProducto <<displayPin>> {widget=select}
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + foto <<displayPin>>
   }
 
   class "Seleccionar Producto" as Shop_Prod_Select <<userAction>> {
@@ -239,9 +251,12 @@ package "Activity Buscar Producto" {
   }
 
   class "Lista Producto" as Search_List <<displayAction>> {
-    {type=list}
+    {type=iteration}
     --
-    + listaProductos <<displayPin>>
+    + nombreProducto <<displayPin>> {widget=select}
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + foto <<displayPin>>
   }
 
   class "Seleccionar Producto" as Search_Select <<userAction>> {
