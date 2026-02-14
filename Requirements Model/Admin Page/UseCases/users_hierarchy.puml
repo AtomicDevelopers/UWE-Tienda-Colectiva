@@ -1,0 +1,14 @@
+@startuml
+
+
+package "Users Hierarchy" {
+    actor AnonymousUser <<Human>> as anonymous
+    rectangle "Registered Users" {
+        actor "Administrator"  <<Human>> as admin
+        actor "Store Administrator" <<Human>> as storeAdmin
+        actor "Store Delegate" <<Human>> as storeDelegate
+        actor "Entrepreneur" <<Human>> as entrepreneur
+    }
+}
+
+@enduml

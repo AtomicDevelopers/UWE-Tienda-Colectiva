@@ -1,0 +1,104 @@
+@startuml adminPage_requirements
+allow_mixing
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Admin Page" {
+  actor "Usuario Administrador" as Admin
+
+  usecase "Login" as Login <<processing>>
+  usecase "Cerrar Sesión" as Logout <<processing>>
+  usecase "Recuperar Contraseña" as RecoverPassword <<processing>>
+
+  rectangle "Catalogos" {
+    usecase "Gestionar Tipos de Emprendimientos" as ManageBusinessTypes <<browsing>>
+    usecase "Listar Tipos de Emprendimientos" as ListBusinessTypes <<browsing>>
+    usecase "Crear/Editar Tipo de Emprendimiento" as EditBusinessType <<processing>>
+    usecase "Gestionar Tipos de Productos" as ManageProductTypes <<browsing>>
+    usecase "Listar Tipos" as ListProductTypes <<browsing>>
+    usecase "Crear/Editar Tipo de Producto" as EditProductType <<processing>>
+    usecase "Gestionar Ciudades Disponibles" as ManageCities <<browsing>>
+    usecase "Listar Ciudades" as ListCities <<browsing>>
+    usecase "Crear/Editar Ciudad" as EditCity <<processing>>
+    usecase "Eliminar Ciudad" as DeleteCity <<processing>>
+
+    ManageBusinessTypes <.. ListBusinessTypes : <<include>>
+    ManageBusinessTypes <.. EditBusinessType : <<extends>>
+    ManageProductTypes <.. ListProductTypes : <<include>>
+    ManageProductTypes <.. EditProductType : <<extends>>
+    ManageCities <.. ListCities : <<include>>
+    ManageCities <.. EditCity : <<extends>>
+    ManageCities <.. DeleteCity : <<extends>>
+  }
+
+  usecase "Crear Tienda Colectiva" as CreateShop <<processing>>
+  usecase "Listar Encargados de Tiendas" as ListShopManagers <<browsing>>
+  usecase "Ver Detalle Tienda" as ViewShopDetail <<browsing>>
+
+  usecase "Habilidar/Deshabilitar Tienda" as ToggleShop <<processing>>
+  usecase "Listar Encargados de Tienda" as ListShopManagers <<browsing>>
+  usecase "Ver Detalle de Encargado de Tienda" as ViewShopManagerDetail <<browsing>>
+  usecase "Editar Encargado de Tienda" as EditShopManager <<processing>>
+  usecase "Agregar Encargado de Tienda" as AddShopManager <<processing>>
+  usecase "Eliminar Encargado de Tienda" as DeleteShopManager <<processing>>
+  usecase "Eliminar Tienda" as DeleteShop <<processing>>
+  usecase "Ver Detalle de Emprendimiento" as ViewShopEntrepreneurDetail <<browsing>>
+  usecase "Habilitar/Deshabilitar Emprendimiento" as ToggleEntrepreneur <<processing>>
+
+    rectangle "Acciones dentro de Tiendas" {
+      usecase "Listar Espacios de Tienda" as ViewShopSpaces <<browsing>>
+      usecase "Agregar Espacio" as AddShopSpace <<processing>>
+      usecase "Editar Espacio" as EditShopSpace <<processing>>
+      usecase "Eliminar Espacio" as DeleteShopSpace <<processing>>
+    }
+  note top of "Acciones dentro de Tiendas"
+    Estas acciones solo seran realizadas por peticion
+    explicita de los encargados de Tiendas o para corregir errores.
+  end note
+
+  usecase "Listar Emprendimientos" as ViewShopEntrepreneurs <<browsing>>
+
+  Admin --> Login
+  Admin --> RecoverPassword
+  Admin --> CreateShop
+  Admin --> Logout
+  Admin --> ViewShopDetail
+  Admin --> ViewShopEntrepreneurs
+
+  CreateShop <.. ViewShopDetail : <<include>>
+  ViewShopDetail <.. ViewShopSpaces : <<include>>
+  ViewShopSpaces <.. AddShopSpace : <<extends>>
+  ViewShopSpaces <.. DeleteShopSpace : <<extends>>
+  ViewShopSpaces <.. EditShopSpace : <<extends>>
+  ViewShopDetail <.. DeleteShop : <<extends>>
+  ViewShopDetail <.. ToggleShop : <<extends>>
+  ListShopManagers <.. AddShopManager : <<extends>>
+  ListShopManagers <.. DeleteShopManager : <<extends>>
+  ViewShopDetail <.. ViewShopEntrepreneurs : <<include>>
+  ViewShopEntrepreneurs <.. ViewShopEntrepreneurDetail : <<extends>>
+  ViewShopEntrepreneurDetail <.. ToggleEntrepreneur : <<extends>>
+  ViewShopDetail <.. ListShopManagers : <<include>>
+  ListShopManagers <.. ViewShopManagerDetail : <<extends>>
+  ViewShopManagerDetail <.. EditShopManager : <<extends>>
+
+  Admin --> ManageBusinessTypes
+  Admin --> ManageProductTypes
+  Admin --> ManageCities
+}
+
+
+
+
+@enduml

@@ -1,0 +1,26 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Navigation Model/admin_user/access_navigation_model.puml
+@startuml admin_access_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navegación - Acceso Administrador" {
+
+  class "Inicio" as Home <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "Formulario de Inicio de Sesión" as Login <<navigationClass>>
+  class "Recuperar Contraseña" as Recover <<navigationClass>>
+
+  ' Entrada principal
+  Home "1" --> "1" Login : <<navigationLink>>\n-abrirInicioSesion
+  Login "1" --> "1" Recover : <<navigationLink>>\n-abrirRecuperar
+}
+@enduml

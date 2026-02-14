@@ -1,0 +1,46 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Navigation Model/admin_user/login_navigation_model.puml
+@startuml admin_login_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navegación - Acceso Administrador" {
+
+  class "Inicio Administrador" as Home <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "Formulario de Inicio de Sesión" as Login <<navigationClass>>
+  class "Error de Inicio de Sesión" as LoginError <<navigationClass>>
+  class "Recuperar Contraseña" as Recover <<navigationClass>>
+  class "Panel" as Dashboard <<navigationClass>>
+  class "Registrar Administrador" as Register <<navigationClass>>
+
+  ' Entrada principal
+  Home "1" --> "1" Login : <<navigationLink>>\n-abrirInicioSesion
+  Home "1" --> "1" Register : <<navigationLink>>\n-abrirRegistro
+  Home "1" --> "1" Recover : <<navigationLink>>\n-abrirRecuperar
+
+  ' Inicio de sesión
+  Login "1" --> "1" Dashboard : <<navigationLink>>\n-inicioOK [cuenta ADMIN activa & permisos adecuados]
+  Login "1" --> "1" LoginError : <<navigationLink>>\n-inicioFail
+  Login "1" --> "1" Recover : <<navigationLink>>\n-olvidoContrasena
+  LoginError "1" --> "1" Login : <<navigationLink>>\n-reintentar
+
+  ' Registro (usualmente restringido)
+  Register "1" --> "1" Home : <<navigationLink>>\n-solicitudEnviada
+
+  ' Recuperar
+  Recover "1" --> "1" Login : <<navigationLink>>\n-volverAlLogin
+
+  ' Cancelar / salir
+  Login "1" --> "1" Home : <<navigationLink>>\n-cancelar
+  Dashboard "1" --> "1" Home : <<navigationLink>>\n-cerrarSesion
+}
+@enduml

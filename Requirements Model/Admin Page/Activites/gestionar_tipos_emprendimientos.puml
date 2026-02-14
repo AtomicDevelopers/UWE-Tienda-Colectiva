@@ -1,0 +1,148 @@
+@startuml
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam circleBackgroundColor black
+skinparam PackageStereotypeFontSize<<invisible>> 34
+skinparam PackageStereotypeFontSize 344
+hide <<invisible>> stereotype
+
+skinparam package {
+  BorderColor<<invisible>> transparent
+  BackgroundColor<<invisible>> transparent
+  FontColor<<invisible>> transparent
+  PackageFontColor<<invisible>> transparent
+}
+
+package "Gestionar Tipos de Emprendimientos" {
+    circle " " as BT_Start <<start>>
+
+    class ":Nuevo Tipo de Emprendimiento" as btn_New_BType <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Tipo de Emprendimiento Form" as Form_BType <<displayAction>>  {
+      {type=modal form}
+        --
+        + nombreTipoEmprendimiento <<interactionPin>>
+        + descripcionTipo <<interactionPin>>
+        - habilitado <<interactionPin>> {type=checkbox}
+        + categoriasPermitidas <<interactionPin>>
+    }
+
+    class "Ingresar datos de tipo de emprendimiento" as Input_BType <<userAction>> {
+        --
+        + nombreTipoEmprendimiento
+        + descripcionTipo
+        + habilitado {type=checkbox}
+        + categoriasPermitidas
+    }
+
+    class "Validar Datos" as Validate_BType <<systemAction>> {
+        {validated}
+    }
+
+    diamond "¿Datos válidos?" as BType_Validate_Decision <<decision>>
+
+    class "Mostrar Errores de Validación" as BType_Display_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Por favor, corrija los errores en el formulario."
+    }
+
+    class "Guardar Cambios" as Save_BType <<systemAction>> {
+        {confirmed}
+        {saved}
+    }
+
+    class "Confirmar Guardado" as Confirm_Save_BType <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Tipo de emprendimiento guardado correctamente."
+    }
+
+    rectangle "Lista de Tipos de Emprendimientos\n{type=iteration}" <<displayAction>> as BType_List {
+        class "Tipo de Emprendimiento" as BType <<displayAction>> {
+        {type=detail}
+            --
+            + nombreTipoEmprendimiento <<displayPin>>
+            + descripcionTipo <<displayPin>>
+            + numeroEmprendimientosAsociados <<displayPin>>
+            + habilitado <<displayPin>>
+            + categoriasPermitidas <<displayPin>>
+        }
+    }
+
+    class ":Editar Tipo de Emprendimiento" as btn_Edit_BType <<navigationAction>> {
+        {type=button}
+    }
+
+    class ":Eliminar Tipo de Emprendimiento" as btn_Delete_BType <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Confirmación de Eliminación" as Confirm_Delete_BType <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "¿Está seguro que desea eliminar este tipo de emprendimiento?"
+    }
+
+    class "Validar Eliminación" as Validate_Delete_BType <<systemAction>> {
+        {confirmed}
+    }
+
+    diamond "¿Este tipo tiene emprendimientos asociados?" as Delete_BType_Decision <<decision>>
+
+    class "Mostrar Error en Eliminación" as Delete_BType_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "No se puede eliminar el tipo porque tiene emprendimientos asociados."
+    }
+
+    class "El Tipo fue eliminado correctamente" as Delete_BType_Success <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Tipo de emprendimiento eliminado correctamente."
+    }
+
+    btn_Delete_BType --> Confirm_Delete_BType : click eliminar
+    Confirm_Delete_BType --> Validate_Delete_BType : confirmar eliminación
+    Validate_Delete_BType --> Delete_BType_Decision : validación de eliminación
+    Delete_BType_Decision --> Delete_BType_Success : [no emprendimientos asociados]
+    Delete_BType_Decision --> Delete_BType_Error : [sí, tiene emprendimientos]
+
+    BType_List --> btn_Edit_BType : click editar
+    BType_List --> btn_Delete_BType : click eliminar
+
+    circle " " as BT_End <<end>>
+
+    BT_Start --> btn_New_BType
+    btn_New_BType --> Form_BType : click
+    Form_BType --> Input_BType : ingresar datos
+    BT_Start --> BType_List
+    btn_Edit_BType --> Form_BType : Cargar Formulario con Datos del Tipo
+    Input_BType --> Validate_BType : validar
+    Validate_BType --> BType_Validate_Decision : resultado validación
+    BType_Validate_Decision --> BType_Display_Error : [no] mostrar errores
+    BType_Display_Error --> Form_BType : Reingresar datos
+    BType_Validate_Decision --> Save_BType : [sí] Guardar cambios y mostrar mensaje de éxito
+
+    Save_BType --> Confirm_Save_BType : éxito
+    Confirm_Save_BType --> BType_List : actualizar lista
+    Delete_BType_Success --> BT_End
+    Confirm_Save_BType --> BT_End
+}
+
+@enduml
+

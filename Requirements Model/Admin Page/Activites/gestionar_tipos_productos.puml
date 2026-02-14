@@ -1,0 +1,148 @@
+@startuml
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam circleBackgroundColor black
+skinparam PackageStereotypeFontSize<<invisible>> 34
+skinparam PackageStereotypeFontSize 344
+hide <<invisible>> stereotype
+
+skinparam package {
+  BorderColor<<invisible>> transparent
+  BackgroundColor<<invisible>> transparent
+  FontColor<<invisible>> transparent
+  PackageFontColor<<invisible>> transparent
+}
+
+package "Gestionar Tipos de Productos" {
+    circle " " as TP_Start <<start>>
+
+    class ":Nuevo Tipo de Producto" as btn_New_Type <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Tipo de Producto Form" as Form_Type <<displayAction>>  {
+      {type=modal form}
+        --
+        + nombreTipo <<interactionPin>>
+        + descripcionTipo <<interactionPin>>
+        - activo <<interactionPin>> {type=checkbox}
+        + categoria <<interactionPin>>
+    }
+
+    class "Ingresar datos de tipo de producto" as Input_Type <<userAction>> {
+        --
+        + nombreTipo
+        + descripcionTipo
+        + activo {type=checkbox}
+        + categoria
+    }
+
+    class "Validar Datos" as Validate_Type <<systemAction>> {
+        {validated}
+    }
+
+    diamond "¿Datos válidos?" as Type_Validate_Decision <<decision>>
+
+    class "Mostrar Errores de Validación" as Type_Display_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Por favor, corrija los errores en el formulario."
+    }
+
+    class "Guardar Cambios" as Save_Type <<systemAction>> {
+        {confirmed}
+        {saved}
+    }
+
+    class "Confirmar Guardado" as Confirm_Save_Type <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Tipo de producto guardado correctamente."
+    }
+
+    rectangle "Lista de Tipos de Productos\n{type=iteration}" <<displayAction>> as Type_List {
+        class "Tipo de Producto" as Type <<displayAction>> {
+        {type=detail}
+            --
+            + nombreTipo <<displayPin>>
+            + descripcionTipo <<displayPin>>
+            + numeroProductosAsociados <<displayPin>>
+            + activo <<displayPin>>
+            + categoria <<displayPin>>
+        }
+    }
+
+    class ":Editar Tipo" as btn_Edit_Type <<navigationAction>> {
+        {type=button}
+    }
+
+    class ":Eliminar Tipo" as btn_Delete_Type <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Confirmación de Eliminación" as Confirm_Delete_Type <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "¿Está seguro que desea eliminar este tipo de producto?"
+    }
+
+    class "Validar Eliminación" as Validate_Delete_Type <<systemAction>> {
+        {confirmed}
+    }
+
+    diamond "¿Este tipo tiene productos asociados?" as Delete_Type_Decision <<decision>>
+
+    class "Mostrar Error en Eliminación" as Delete_Type_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "No se puede eliminar el tipo porque tiene productos asociados."
+    }
+
+    class "El Tipo fue eliminado correctamente" as Delete_Type_Success <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Tipo de producto eliminado correctamente."
+    }
+
+    btn_Delete_Type --> Confirm_Delete_Type : click eliminar
+    Confirm_Delete_Type --> Validate_Delete_Type : confirmar eliminación
+    Validate_Delete_Type --> Delete_Type_Decision : validación de eliminación
+    Delete_Type_Decision --> Delete_Type_Success : [no productos asociados]
+    Delete_Type_Decision --> Delete_Type_Error : [sí, tiene productos]
+
+    Type_List --> btn_Edit_Type : click editar
+    Type_List --> btn_Delete_Type : click eliminar
+
+    circle " " as TP_End <<end>>
+
+    TP_Start --> btn_New_Type
+    btn_New_Type --> Form_Type : click
+    Form_Type --> Input_Type : ingresar datos
+    TP_Start --> Type_List
+    btn_Edit_Type --> Form_Type : Cargar Formulario con Datos del Tipo
+    Input_Type --> Validate_Type : validar
+    Validate_Type --> Type_Validate_Decision : resultado validación
+    Type_Validate_Decision --> Type_Display_Error : [no] mostrar errores
+    Type_Display_Error --> Form_Type : Reingresar datos
+    Type_Validate_Decision --> Save_Type : [sí] Guardar cambios y mostrar mensaje de éxito
+
+    Save_Type --> Confirm_Save_Type : éxito
+    Confirm_Save_Type --> Type_List : actualizar lista
+    Delete_Type_Success --> TP_End
+    Confirm_Save_Type --> TP_End
+}
+
+@enduml
+

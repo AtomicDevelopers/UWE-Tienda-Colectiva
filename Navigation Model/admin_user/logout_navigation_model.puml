@@ -1,0 +1,23 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Navigation Model/admin_user/logout_navigation_model.puml
+@startuml admin_logout_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Logout Administrador" {
+  class "Dashboard" as Dashboard <<navigationClass>>
+  class "LogoutConfirm" as Logout <<navigationClass>>
+  class "Home" as Home <<navigationClass>>
+
+  Dashboard "1" --> "1" Logout : <<navigationLink>>\n-logout
+  Logout "1" --> "1" Home : <<navigationLink>>\n-loggedOut
+  Logout "1" --> "1" Dashboard : <<navigationLink>>\n-cancel
+}
+@enduml
+

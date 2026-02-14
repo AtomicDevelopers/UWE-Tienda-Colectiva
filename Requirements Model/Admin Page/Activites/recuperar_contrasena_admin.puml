@@ -1,0 +1,168 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Requirements Model/Admin Page/Activites/recuperar_contrasena_admin.puml
+@startuml
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam circleBackgroundColor black
+
+' Activity: Recuperar contraseña - Admin
+package "Activity Recuperar Contraseña (Admin) - Solicitar restablecimiento" {
+  circle " " as Req_Start <<start>>
+  circle " " as Req_End <<end>>
+
+  class "Formulario: Solicitar restablecimiento" as Show_Request_Form <<displayAction>> {
+    {type=form}
+    --
+    + email <<interactionPin>>
+  }
+
+  class "Ingresar correo electrónico" as Input_Email <<userAction>> {
+    --
+    + email
+  }
+
+  class "Validar formato de email" as Validate_Email_Format <<systemAction>> {
+    {validated}
+  }
+
+  diamond "¿Formato válido?" as EmailFormat_Decision <<decision>>
+
+  class "Buscar administrador por email" as Find_Admin <<systemAction>> {
+    {type=processing}
+    --
+    + encontrado: Boolean
+  }
+
+  diamond "¿Email registrado?" as EmailRegistered_Decision <<decision>>
+
+  class "Mostrar mensaje: Email no encontrado" as Show_Email_NotFound <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "No existe una cuenta de administrador con ese correo."
+  }
+
+  class "Generar token de restablecimiento" as Generate_Token <<systemAction>> {
+    {type=processing}
+    --
+    + token
+    + expiracion
+  }
+
+  class "Enviar correo con enlace de restablecimiento" as Send_Reset_Email <<systemAction>> {
+    {type=processing}
+    --
+    + enviarEmail
+  }
+
+  class "Mostrar mensaje: Correo enviado" as Show_Email_Sent <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Se ha enviado un correo con instrucciones para restablecer la contraseña."
+  }
+
+  ' Flujo
+  Req_Start --> Show_Request_Form
+  Show_Request_Form --> Input_Email : data
+  Input_Email --> Validate_Email_Format : validar
+  Validate_Email_Format --> EmailFormat_Decision
+  EmailFormat_Decision --> Show_Request_Form : [no] mostrar error y reintentar
+  EmailFormat_Decision --> Find_Admin : [yes]
+
+  Find_Admin --> EmailRegistered_Decision
+  EmailRegistered_Decision --> Show_Email_NotFound : [no]
+  Show_Email_NotFound --> Show_Request_Form : reintentar
+
+  EmailRegistered_Decision --> Generate_Token : [yes]
+  Generate_Token --> Send_Reset_Email
+  Send_Reset_Email --> Show_Email_Sent
+  Show_Email_Sent --> Req_End
+}
+
+' Activity: Recuperar contraseña - Restablecer mediante token (cuando el admin abre el enlace)
+package "Activity Recuperar Contraseña (Admin) - Restablecer contraseña" {
+  circle " " as Reset_Start <<start>>
+  circle " " as Reset_End <<end>>
+
+  class "Verificar token desde enlace" as Verify_Token <<systemAction>> {
+    {type=processing}
+    --
+    + token
+    + valido: Boolean
+    + expirado: Boolean
+  }
+
+  diamond "¿Token válido y no expirado?" as Token_Valid_Decision <<decision>>
+
+  class "Mostrar mensaje: Token inválido/expirado" as Show_Token_Error <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "El enlace es inválido o ha expirado. Solicite un nuevo restablecimiento."
+  }
+
+  class "Formulario: Nueva contraseña" as Show_NewPassword_Form <<displayAction>> {
+    {type=form}
+    --
+    + nuevaPassword <<interactionPin>>
+    + confirmarPassword <<interactionPin>>
+  }
+
+  class "Ingresar nueva contraseña" as Input_NewPassword <<userAction>> {
+    --
+    + nuevaPassword
+    + confirmarPassword
+  }
+
+  class "Validar contraseñas (coinciden y cumplen política)" as Validate_Passwords <<systemAction>> {
+    {validated}
+  }
+
+  diamond "¿Contraseñas válidas?" as Passwords_Decision <<decision>>
+
+  class "Actualizar contraseña (hash y guardar)" as Update_Password <<systemAction>> {
+    {type=processing}
+    --
+    + contraseñaHash
+  }
+
+  class "Mostrar mensaje: Contraseña actualizada" as Show_Reset_Success <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Contraseña restablecida correctamente. Ahora puede iniciar sesión."
+  }
+
+  ' Flujo
+  Reset_Start --> Verify_Token
+  Verify_Token --> Token_Valid_Decision
+  Token_Valid_Decision --> Show_Token_Error : [no]
+  Show_Token_Error --> Reset_End
+
+  Token_Valid_Decision --> Show_NewPassword_Form : [yes]
+  Show_NewPassword_Form --> Input_NewPassword : datos
+  Input_NewPassword --> Validate_Passwords : validar
+  Validate_Passwords --> Passwords_Decision
+  Passwords_Decision --> Show_NewPassword_Form : [no] mostrar error y reintentar
+  Passwords_Decision --> Update_Password : [yes]
+  Update_Password --> Show_Reset_Success
+  Show_Reset_Success --> Reset_End
+
+  ' Seguridad / notas
+  note top of Generate_Token
+    Consideraciones de seguridad:
+    - Token de un solo uso con expiración corta (ej. 1 hora).
+    - Registrar intentos de recuperación y aplicar rate limiting.
+    - Invalidar tokens al cambiar la contraseña.
+  end note
+}
+
+@enduml
+

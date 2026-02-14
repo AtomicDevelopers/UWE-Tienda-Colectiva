@@ -1,0 +1,406 @@
+@startuml
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam circleBackgroundColor black
+skinparam PackageStereotypeFontSize<<invisible>> 34
+skinparam PackageStereotypeFontSize 344
+hide <<invisible>> stereotype
+
+skinparam package {
+  BorderColor<<invisible>> transparent
+  BackgroundColor<<invisible>> transparent
+  FontColor<<invisible>> transparent
+  PackageFontColor<<invisible>> transparent
+}
+
+' ------------------------------------------
+' 1. Iniciar Sesion (Login) Admin
+' ------------------------------------------
+package "Activity Login (Iniciar Sesion) Admin" {
+  circle " " as Log_Start <<start>>
+  circle " " as Log_End <<end>>
+
+  class "Formulario Login" as Show_Login_Form <<displayAction>> {
+    {type=form}
+    --
+    + email <<interactionPin>>
+    + password <<interactionPin>>
+  }
+
+  class "Mostrar Error" as Log_Error <<systemAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Credenciales inválidas. Intente nuevamente."
+  }
+
+  class "Ingresar Credenciales" as Log_Input <<userAction>> {
+    --
+    + email
+    + password
+  }
+
+  class "Validar Credenciales" as Log_Validate <<systemAction>> {
+    --
+    + {validated}
+  }
+
+  diamond "¿Credenciales válidas?" as Credentials_Check <<decision>>
+
+
+  class "Crear sesión" as Log_Session <<systemAction>>
+
+  Log_Start --> Show_Login_Form
+  Show_Login_Form --> Log_Input : data
+  Log_Input --> Log_Validate:validate
+  Log_Session --> Log_End
+  Log_Validate --> Credentials_Check : Credenciales Validas?
+  Credentials_Check --> Log_Session : [yes]
+  Credentials_Check --> Log_Error : [no]
+  Log_Error --> Show_Login_Form : Reingresar credenciales
+}
+
+package "Activity Cerrar Sesión Admin" {
+  circle " " as Logout_Start <<start>>
+  circle " " as Logout_End <<end>>
+
+  class "Cerrar sesión" as Logout_Action <<userAction>> {
+    --
+    + {confirmed}
+  }
+
+  Logout_Start --> Logout_Action
+  Logout_Action --> Logout_End
+}
+
+package "Activity Crear Tienda Colectiva" {
+    circle " " as CT_Start <<start>>
+    circle " " as CT_End <<end>>
+
+    class "Formulario Tienda Colectiva" as CT_Form <<displayAction>> {
+        {type=form}
+        --
+        + nombre <<interactionPin>>
+        + descripcion <<interactionPin>>
+        + ubicacion <<interactionPin>>
+        + horario <<interactionPin>> {calendarSelection}
+        + telefono <<interactionPin>>
+        + correo <<interactionPin>> {inlineValidation}
+        + nombre_representante <<interactionPin>>
+        + imagen_upload <<interactionPin>> {type = file_upload}
+        + imagen <<displayPin>> {type = image}
+    }
+
+    class "Ingresar datos de la tienda" as CT_Input <<userAction>> {
+        --
+        + nombre
+        + descripcion
+        + ubicacion
+        + horario {calendarSelection}
+        + telefono
+        + correo {inlineValidation}
+        + nombre_representante
+        + imagen_upload {type = file_upload}
+    }
+
+    class "Mostrar Errores de Validación" as CT_Display_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Por favor, corrija los errores en el formulario."
+    }
+
+    class "Validar Datos" as CT_Validate <<systemAction>> {
+        {validated}
+    }
+
+    diamond "¿Datos válidos?" as CT_Validate_Decision <<decision>>
+
+    class "Guardar Tienda Colectiva" as CT_Save <<systemAction>> {
+        {confirmed}
+        {saved}
+    }
+
+    CT_Start --> CT_Form
+    CT_Form --> CT_Input : input data
+    CT_Input --> CT_Validate : validate
+    CT_Validate --> CT_Validate_Decision : validation result
+    CT_Validate_Decision --> CT_Display_Error : [no] show error message
+    CT_Display_Error --> CT_Form : retry input
+    CT_Validate_Decision --> CT_Save : [yes] save data and show success message
+    CT_Save --> CT_End
+}
+
+package "Ver Detalle Tienda Colectiva" {
+    circle " " as VD_Start <<start>>
+    circle " " as VD_End <<end>>
+
+    class "Seleccionar tienda colectiva" as VD_Select <<userAction>> {
+        --
+        + tienda_id
+    }
+
+    rectangle "Información de Tienda Colectiva" <<displayAction>> as Collective_Store_Info {
+        class "Mostrar detalle de la tienda colectiva" as VD_Display <<displayAction>> {
+            {type=detail}
+            --
+            + nombre <<displayPin>>
+            + descripcion <<displayPin>>
+            + ubicacion <<displayPin>>
+            + horario <<displayPin>>
+            + telefono <<displayPin>>
+            + correo <<displayPin>>
+            + nombre_representante <<displayPin>>
+            + imagen {type=image} <<displayPin>>
+        }
+
+        object Spacer1
+        object Spacer2
+        hide Spacer1
+        hide Spacer2
+        Spacer1 -right[hidden]-> VD_Display
+        Spacer2 -left[hidden]-> VD_Display
+
+        rectangle " " <<invisible>> as HiddenGroup1 {
+         rectangle "Listar Encargados de Tienda Colectiva\n{type=iteration}" <<displayAction>> as List_Store_Managers {
+                class ":Actualizar Encargado" as Update_Manager <<navigationAction>> {
+                    {type=button}
+                }
+                class ":Eliminar Encargado" as Remove_Manager <<navigationAction>> {
+                    {type=button}
+                }
+
+                class "Encargado de Tienda Colectiva" as Store_Manager <<displayAction>> {
+                        {type=detail}
+                        --
+                        + nombre <<displayPin>>
+                        + telefonoContacto <<displayPin>>
+                        + fotoEncargado {type=image} <<displayPin>>
+                    }
+                }
+
+                Store_Manager -left-> Remove_Manager
+                Store_Manager -left-> Update_Manager
+        }
+        VD_Display -down[hidden]-> HiddenGroup1
+
+        rectangle " " <<invisible>> as HiddenGroup2{
+            rectangle "Listar Emprendimientos Asociados\n{type=iteration}" <<displayAction>> as List_Emprendimientos {
+                class "Emprendimiento" as Detail_Emprendimiento <<displayAction>> {
+                    {type=detail}
+                    --
+                    + nombre <<displayPin>>
+                    + imagenReferencia <<displayPin>>
+                    + fechaAsociacion <<displayPin>>
+                }
+            }
+
+            class ":Ver Detalle Emprendimiento" as btn_View_entrepreneurship_detail <<navigationAction>> {
+                        {type=button}
+            }
+
+            List_Emprendimientos -right-> btn_View_entrepreneurship_detail
+       }
+       VD_Display -down[hidden]-> HiddenGroup2
+
+
+        object Spacer3
+         rectangle "Listar Espacios Disponibles\n{type=iteration}" <<displayAction>> as List_Available_Spaces {
+                    class "Espacio Disponible" as Available_Space <<displayAction>> {
+                        {type=detail}
+                        --
+                        + descripcion <<displayPin>>
+                        + imagenReferencia <<displayPin>>
+                        + nombreNegocioAsignado <<displayPin>>
+                        + textoReferencia <<displayPin>>
+                        + numeroEstante <<displayPin>>
+                    }
+        }
+
+        object Spacer4
+        HiddenGroup1 -down[hidden]-> Spacer3
+        HiddenGroup2 -down[hidden]-> Spacer4
+        Spacer3 -right-> List_Available_Spaces
+        Spacer4 -left-> List_Available_Spaces
+        hide Spacer3
+        hide Spacer4
+
+        class ":Agregar Espacio" as btn_Add_Space <<navigationAction>> {
+            {type=button}
+        }
+
+        class ":Editar Espacio" as btn_Edit_Space <<navigationAction>> {
+                {type=button}
+        }
+
+        class ":Eliminar Espacio" as btn_Remove_Space <<navigationAction>> {
+                {type=button}
+        }
+    }
+
+    class ":Agregar Encargado" as Assign_Manager <<navigationAction>> {
+        {type=button}
+    }
+
+    class ":Eliminar Tienda Colectiva" as Remove_Store <<navigationAction>> {
+        {type=button}
+    }
+
+    class ":Editar Tienda Colectiva" as Edit_Store <<navigationAction>> {
+                {type=button}
+    }
+    Assign_Manager -down[hidden]-> Remove_Store
+    Remove_Store -down[hidden]-> Edit_Store
+
+    VD_Start --> VD_Select
+    VD_Select --> VD_Display : load details
+    VD_Display -d-> List_Store_Managers
+    VD_Display -d-> List_Emprendimientos
+
+    List_Emprendimientos --> List_Available_Spaces
+    List_Store_Managers --> List_Available_Spaces
+
+    Collective_Store_Info --> Edit_Store : click editar
+    Collective_Store_Info --> Remove_Store : click eliminar
+    Collective_Store_Info --> Assign_Manager : click asignar encargado
+
+    Available_Space --> btn_Add_Space : click agregar espacio
+    Available_Space --> btn_Edit_Space : click editar espacio
+    Available_Space --> btn_Remove_Space : click eliminar espacio
+    List_Available_Spaces --> VD_End
+
+    Edit_Store -down[hidden]-> VD_End
+    Collective_Store_Info -down[hidden]-> VD_End
+}
+
+package "Gestionar Ciudades" {
+    circle " " as VD_Start <<start>>
+
+    class ":Nueva Ciudad" as btn_New_City <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Ciudad Form" as Form_City <<displayAction>>  {
+    {type=modal form}
+        --
+        + nombreCiudad <<interactionPin>>
+        + descripcionCiudad <<interactionPin>>
+        - habilitada <<interactionPin>> {type=checkbox}
+    }
+
+    class "Ingresar datos de ciudad" as Input_City <<userAction>> {
+        --
+        + nombreCiudad
+        + descripcionCiudad
+        + habilitada {type=checkbox}
+    }
+
+    class "Validar Datos" as Validate_City <<systemAction>> {
+        {validated}
+    }
+
+    diamond "¿Datos válidos?" as City_Validate_Decision <<decision>>
+
+    class "Mostrar Errores de Validación" as City_Display_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Por favor, corrija los errores en el formulario."
+    }
+
+    class "Guardar Cambios" as Save_City <<systemAction>> {
+        {confirmed}
+        {saved}
+    }
+
+    class "Confirmar Guardado" as Confirm_Save <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Ciudad guardada correctamente."
+    }
+
+    rectangle "Lista de Ciudades\n{type=iteration}" <<displayAction>> as City_List {
+        class "Ciudad" as City <<displayAction>> {
+        {type=detail}
+            --
+            + nombreCiudad <<displayPin>>
+            + descripcionCiudad <<displayPin>>
+            + numeroTiendasAsociadas <<displayPin>>
+            + habilitada <<displayPin>>
+        }
+    }
+
+    class ":Editar Ciudad" as btn_Edit_City <<navigationAction>> {
+        {type=button}
+    }
+
+    class ":Eliminar Ciudad" as btn_Delete_City <<navigationAction>> {
+        {type=button}
+    }
+
+    class "Confirmacion de Eliminación" as Confirm_Delete <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "¿Está seguro que desea eliminar esta ciudad?"
+    }
+
+    class "Validar Eliminación" as Validate_Delete <<systemAction>> {
+        {confirmed}
+    }
+
+    diamond "Esta ciudad tiene tiendas asociadas?" as Delete_Decision <<decision>>
+
+    class "Mostrar Error en Eliminación" as Delete_Error <<systemAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "No se puede eliminar la ciudad porque tiene tiendas asociadas."
+    }
+
+    class "La Ciudad fue eliminada correctamente" as Delete_Success <<displayAction>> {
+        {type=message}
+        --
+        <<displayPin>>
+        + text "Ciudad eliminada correctamente."
+    }
+
+    btn_Delete_City --> Confirm_Delete : click eliminar
+    Confirm_Delete --> Validate_Delete : confirmar eliminación
+    Validate_Delete --> Delete_Decision : validación de eliminación
+    Delete_Decision --> Delete_Success : [yes] mostrar mensaje de éxito
+    Delete_Decision --> Delete_Error : [no] mostrar mensaje de error
+
+    City_List --> btn_Edit_City : click editar
+    City_List --> btn_Delete_City : click eliminar
+
+    circle " " as VD_End <<end>>
+
+    VD_Start --> btn_New_City
+    btn_New_City --> Form_City : click
+    Form_City --> Input_City : ingresar datos
+    VD_Start --> City_List
+    btn_Edit_City --> Form_City : Cargar Formulario con Datos de Ciudad
+    Input_City --> Validate_City : validar
+    Validate_City --> City_Validate_Decision : validation result
+    City_Validate_Decision --> City_Display_Error : [no] show error message
+    City_Display_Error --> Form_City : Reingresar datos
+    City_Validate_Decision --> Save_City : [yes] Guardar cambios y mostrar mensaje de éxito
+
+    Save_City --> Confirm_Save : éxito
+    Confirm_Save --> City_List : actualizar lista
+    Delete_Success --> VD_End
+    Confirm_Save --> VD_End
+}
+
+
+
+@enduml

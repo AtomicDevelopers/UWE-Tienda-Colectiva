@@ -1,0 +1,79 @@
+// filepath: /home/gtinoco/repos/UWE-Tienda-Colectiva/Navigation Model/admin_user/dashboard_navigation_model.puml
+@startuml admin_dashboard_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navegación - Panel Administrador" {
+
+  class "Panel" as Dashboard <<navigationClass>> {
+    {tag=isDashboard}
+  }
+
+  class "Gestionar Catálogos" as Catalogs <<navigationClass>>
+  class "Catalogo_TipoProducto_Listado" as TipoProductoList <<navigationClass>>
+  class "Catalogo_TipoProducto_Editar" as TipoProductoEdit <<navigationClass>>
+  class "Catalogo_TipoEmprendimiento_Listado" as TipoEmprList <<navigationClass>>
+  class "Catalogo_TipoEmprendimiento_Editar" as TipoEmprEdit <<navigationClass>>
+
+  class "Gestionar Ciudades" as Cities <<navigationClass>>
+  class "Ciudad_Listado" as CityList <<navigationClass>>
+  class "Ciudad_Editar" as CityEdit <<navigationClass>>
+
+  class "Gestionar Tipos de Tienda" as TiendaTipos <<navigationClass>>
+  class "TiendaTipo_Listado" as TiendaTipoList <<navigationClass>>
+  class "TiendaTipo_Editar" as TiendaTipoEdit <<navigationClass>>
+
+  class "Gestionar Tiendas" as Stores <<navigationClass>>
+  class "Gestionar Administradores" as Admins <<navigationClass>>
+  class "Administrador_Listado" as AdminList <<navigationClass>>
+  class "Administrador_Editar" as AdminEdit <<navigationClass>>
+
+  class "Registros de Auditoría" as Logs <<navigationClass>>
+
+  ' Puntos de entrada del panel
+  Dashboard "1" --> "1" Catalogs : <<navigationLink>>\n-abrirCatalogos
+  Dashboard "1" --> "1" Cities : <<navigationLink>>\n-abrirCiudades
+  Dashboard "1" --> "1" TiendaTipos : <<navigationLink>>\n-abrirTiposTienda
+  Dashboard "1" --> "1" Stores : <<navigationLink>>\n-abrirTiendas
+  Dashboard "1" --> "1" Admins : <<navigationLink>>\n-abrirAdministradores
+  Dashboard "1" --> "1" Logs : <<navigationLink>>\n-abrirRegistros
+
+  ' Catálogos -> TipoProducto
+  Catalogs "1" --> "1" TipoProductoList : <<navigationLink>>\n-abrirListadoTipoProducto
+  TipoProductoList "1" --> "1" TipoProductoEdit : <<navigationLink>>\n-crear / -editar
+  TipoProductoEdit "1" --> "1" TipoProductoList : <<navigationLink>>\n-guardado / -cancelar
+
+  ' Catálogos -> TipoEmprendimiento
+  Catalogs "1" --> "1" TipoEmprList : <<navigationLink>>\n-abrirListadoTipoEmprendimiento
+  TipoEmprList "1" --> "1" TipoEmprEdit : <<navigationLink>>\n-crear / -editar
+  TipoEmprEdit "1" --> "1" TipoEmprList : <<navigationLink>>\n-guardado / -cancelar
+
+  ' Gestión de Ciudades
+  Cities "1" --> "1" CityList : <<navigationLink>>\n-abrirListadoCiudades
+  CityList "1" --> "1" CityEdit : <<navigationLink>>\n-crear / -editar
+  CityEdit "1" --> "1" CityList : <<navigationLink>>\n-guardado / -cancelar
+
+  ' Tipos de Tienda
+  TiendaTipos "1" --> "1" TiendaTipoList : <<navigationLink>>\n-abrirListadoTiposTienda
+  TiendaTipoList "1" --> "1" TiendaTipoEdit : <<navigationLink>>\n-crear / -editar
+  TiendaTipoEdit "1" --> "1" TiendaTipoList : <<navigationLink>>\n-guardado / -cancelar
+
+  ' Gestión de Administradores
+  Admins "1" --> "1" AdminList : <<navigationLink>>\n-abrirListadoAdministradores
+  AdminList "1" --> "1" AdminEdit : <<navigationLink>>\n-crear / -editar
+  AdminEdit "1" --> "1" AdminList : <<navigationLink>>\n-guardado / -cancelar
+
+  ' Registros de auditoría
+  Logs "1" --> "1" Dashboard : <<navigationLink>>\n-volver
+
+  ' Navegación común
+  Dashboard "1" --> "1" Inicio : <<navigationLink>>\n-cerrarSesion
+}
+@enduml

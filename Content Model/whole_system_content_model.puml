@@ -1,0 +1,192 @@
+@startuml whole_system_content_model
+' Modelo de Contenido (Content Model) - Sistema Tiendas Colectivas
+' Representa las principales entidades del sistema, atributos clave y relaciones.
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+' =====================
+' Clases principales
+' =====================
+class "Usuario" as Usuario {
+  + id: UUID
+  + nombre: String
+  + email: String
+  + contraseñaHash: String
+  + rol: String  ' (EMPRENDEDOR, ENCARGADO, USUARIO)
+  + fechaRegistro: DateTime
+  + activo: Boolean
+}
+
+class "Usuario Anónimo" as UsuarioAnonimo {
+  + sessionId: String
+  + preferencias: String
+  + fechaCreacion: DateTime
+  + userAgent: String ' Información del navegador/dispositivo
+  ' Nota: Usuarios anónimos NO forman parte de la tabla `Usuario` definida más arriba.
+  ' Se identifican por sessionId o token temporal; no comparten el mismo id que Usuario.
+}
+
+class "Ciudad" as Ciudad {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + habilitada: Boolean
+}
+
+class "Tipo de Tienda" as TipoTienda <<content class>> {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + activo: Boolean
+}
+
+class "Tienda Colectiva" as Tienda {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + telefono: String
+  + direccion: String
+  + horario: String
+  + habilitada: Boolean
+  + fechaCreacion: DateTime
+}
+
+class "Espacio / Estante" as Espacio {
+  + id: UUID
+  + codigo: String
+  + descripcion: String
+  + ubicacion: String
+  + estado: String
+}
+
+class "Emprendimiento" as Emprendimiento {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + propietarioId: UUID
+  + estado: String
+  + fechaAlta: DateTime
+}
+
+class "Tipo de Emprendimiento" as TipoEmprendimiento <<content class>> {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + activo: Boolean
+}
+
+class "Producto" as Producto {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + precio: Decimal
+  + stock: Integer
+  + disponible: Boolean
+  + fechaPublicacion: DateTime
+}
+
+class "Tipo de Producto" as TipoProducto <<content class>> {
+  + id: UUID
+  + nombre: String
+  + descripcion: String
+  + activo: Boolean
+}
+
+class "Imagen" as Imagen {
+  + id: UUID
+  + url: String
+  + tipo: String
+  + referenciaId: UUID
+}
+
+class "Lista de Interés" as ListaInteres {
+  + id: UUID
+  + propietarioUsuarioId: UUID  ' nullable: FK a Usuario.id si es un usuario registrado
+  + propietarioAnonimoSessionId: String  ' nullable: sessionId si es un usuario anónimo
+  + fechaCreacion: DateTime
+}
+
+class "Entrada de Lista" as ListaEntrada {
+  + id: UUID
+  + listaId: UUID
+  + productoId: UUID
+  + fechaAgregado: DateTime
+}
+
+class "Encargado" as Encargado {
+  + id: UUID
+  + nombre: String
+  + telefono: String
+  + email: String
+}
+
+class "Administrador" as Administrador {
+  + id: UUID
+  + nombre: String
+  + nombreUsuario: String
+  + email: String
+  + contraseñaHash: String
+  + telefono: String
+  + fechaAsignacion: DateTime
+  + ultimoLogin: DateTime
+  + permisos: String  ' e.g., GESTION_CATALOGOS,GESTION_CIUDADES,SUPER
+  + activo: Boolean
+}
+
+' =====================
+' Relaciones y multiplicidades
+' =====================
+' Usuarios
+Usuario "1" -- "0..*" Tienda : administra >
+Usuario "1" -- "0..*" Emprendimiento : crea / administra >
+UsuarioAnonimo "0..*" -- "0..*" Producto : consulta >
+
+' Relacion entre Usuario y Encargado (p.e. un usuario con rol administrativo local puede crear/gestionar encargados)
+Usuario "1" -- "0..*" Encargado : crea / gestiona >
+
+' Tienda - Ciudad - TipoTienda
+Tienda "1" -- "0..1" Ciudad : ubicada_en >
+Tienda "1" -- "1" TipoTienda : es_de_tipo >
+
+' Tienda agrega Espacios y Encargados
+Tienda "1" *-- "0..*" Espacio : contiene >
+Tienda "1" *-- "0..*" Encargado : emplea >
+
+' Espacio asignado a Emprendimiento (un espacio puede contener un emprendimiento)
+Espacio "0..1" -- "0..1" Emprendimiento : asignado_a >
+
+' Emprendimiento y Tipos
+Emprendimiento "*" -- "1" TipoEmprendimiento : clasificado_como >
+Emprendimiento "1" -- "0..*" Producto : ofrece >
+
+' Producto y Tipos / Imagenes
+Producto "*" -- "1" TipoProducto : clasificado_como >
+Producto "1" -- "0..*" Imagen : tiene >
+Emprendimiento "1" -- "0..*" Imagen : tiene >
+Tienda "1" -- "0..*" Imagen : tiene >
+
+' Listas de interes (wishlist)
+Usuario "1" -- "0..1" ListaInteres : posee >
+UsuarioAnonimo "0..1" -- "0..1" ListaInteres : posee >
+ListaInteres "1" *-- "0..*" ListaEntrada : contiene >
+ListaEntrada "*" -- "1" Producto : apunta_a >
+
+' Notas administrativas
+' Los administradores gestionan los catálogos de Tipos (TipoTienda, TipoProducto, TipoEmprendimiento) y Ciudades
+Administrador "1" -- "0..*" TipoProducto : gestiona >
+Administrador "1" -- "0..*" TipoEmprendimiento : gestiona >
+Administrador "1" -- "0..*" Ciudad : gestiona >
+Administrador "1" -- "0..*" TipoTienda : gestiona >
+
+' Reglas destacadas (usar en documentación):
+' - No eliminar Tipo si existen entidades asociadas (productos, emprendimientos)
+' - No eliminar Ciudad si existen tiendas asociadas
+' - Validación de stock antes de permitir venta
+
+@enduml
