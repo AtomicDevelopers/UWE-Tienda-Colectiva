@@ -18,171 +18,232 @@ skinparam usecase {
 }
 
 
-package "Requerimientos - Inventario" {
 
-  usecase "Gestionar productos" as UC_Manage <<processing>>
-
-  usecase "Listar productos" as UC_List <<browsing>>
-  usecase "Ver detalle de producto" as UC_Detail <<browsing>>
-  usecase "Eliminar producto" as UC_Delete <<processing>>
-
-  usecase "Crear producto" as UC_Create <<processing>>
-  usecase "Editar producto" as UC_Edit <<processing>>
-
-  actor "Emprendedor" as Entrepreneur
-
-  UC_Manage ..> UC_List : <<include>>
-  UC_Manage ..> UC_Detail : <<include>>
-  UC_Manage ..> UC_Delete : <<include>>
-  UC_Manage ..> UC_Create : <<include>>
-  UC_Manage ..> UC_Edit : <<include>>
- 
- 
-}
-Entrepreneur --> UC_Manage
 
 
 package "Activity Create Product" {
-
-  skinparam circleBackgroundColor black
-
   circle " " as CP_Start <<start>>
   circle " " as CP_End <<end>>
 
-  class "Mostrar formulario de producto" as CP_Form <<displayAction>> {
+  class "Mostrar Formulario de Producto" as CP_Form <<displayAction>> {
     {type=form}
     --
-    <<interactionPin>>
-    + etiqueta
-    + foto
+    + correo <<interactionPin>>
+    + nombre <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + precio <<interactionPin>>
+    + cantidadExistencia <<interactionPin>>
+    + foto <<interactionPin>>
+  }
+
+  class "Ingresar Datos de producto" as CP_Input <<userAction>> {
+    + correo
     + nombre
     + descripcion
-    + cantidadExistencia
-  }
-
-  class "Ingresar datos del producto" as CP_Input <<userAction>> {
-    + etiqueta
+    + precio
     + foto
-    + nombre
-    + descripcion
-    + cantidadExistencia
+    + cantidad
   }
 
-  class "Validar datos" as CP_Validate <<systemAction>> {
-    {confirmado}
+  class "Validar Datos" as CP_Validate <<systemAction>> {
+    {validar}
   }
 
-  class "Guardar producto" as CP_Save <<systemAction>>
+  class "Guardar en Inventario" as CP_Save <<systemAction>> {
+    {confirmar}
+    {guardar}
+  }
 
-  class "Confirmación de creación" as CP_Confirm <<displayAction>>
-
-  class "Error de validación" as CP_Error <<displayAction>> {
-    + message
+  class "Mostrar Error" as CP_Error <<displayAction>> {
+    {type=message}
+    --
+    + textoError <<displayPin>>
   }
 
   CP_Start --> CP_Form
-  CP_Form --> CP_Input : submit
-  CP_Input --> CP_Validate : validate
+  CP_Form --> CP_Input
+  CP_Input --> CP_Validate : submit
 
-  CP_Validate --> CP_Error : error
-  CP_Validate --> CP_Save : success
+  ' Bifurcación tras validar
+  CP_Validate --> CP_Error : datos inválidos
+  CP_Error --> CP_Form : reintentar
 
-  CP_Save --> CP_Confirm : created
-  CP_Confirm --> CP_End
-  CP_Error --> CP_Form : retry
+  CP_Validate --> CP_Save : datos válidos
+  CP_Save --> CP_End : éxito
 }
 
+package "Activity Assign Existing Products" {
+  circle " " as AE_Start <<start>>
+  circle " " as AE_End <<end>>
 
+  class "Obtener Catálogo y Colectivos" as AE_GetData <<systemAction>> {
+    + listaMisProductos
+    + listaColectivosDisponibles
+  }
+
+  class "Mostrar Formulario de Asignación" as AE_Form <<displayAction>> {
+    {type=double-selector}
+    --
+    + listaMisProductos <<displayPin>>
+    + listaColectivosDisponibles <<displayPin>>
+  }
+
+  class "Seleccionar Producto y Colectivo" as AE_Select <<userAction>> {
+    + productId
+    + colectivoId
+  }
+
+  class "Vincular en Sistema" as AE_Link <<systemAction>> {
+    + productId
+    + colectivoId
+  }
+
+  ' Nueva clase para el manejo de errores
+  class "Mostrar Error de Vinculación" as AE_Error <<displayAction>> {
+    {type=message}
+    --
+    + mensajeError <<displayPin>>
+  }
+
+  class "Notificar Éxito" as AE_Msg <<displayAction>> {
+    {type=message}
+    --
+    + textoConfirmacion <<displayPin>>
+  }
+
+  AE_Start --> AE_GetData
+  AE_GetData --> AE_Form
+  AE_Form --> AE_Select
+  AE_Select --> AE_Link : [asignar]
+  
+  AE_Link --> AE_Error : [error]
+  AE_Error --> AE_Form : [reintentar]
+
+  AE_Link --> AE_Msg : [éxito]
+  AE_Msg --> AE_End
+}
 
 
 package "Activity Edit Product" {
-
-  skinparam circleBackgroundColor black
-
   circle " " as EP_Start <<start>>
   circle " " as EP_End <<end>>
 
-  class "Seleccionar producto" as EP_Select <<userAction>>
+  class "Seleccionar producto" as EP_Select <<userAction>> {
+    +productoId
+  }
 
-  class "Cargar datos del producto" as EP_Load <<systemAction>>
 
-  class "Mostrar formulario de edición" as EP_Form <<displayAction>> {
+  class "Mostrar Formulario de Edición" as EP_Form <<displayAction>> {
     {type=form}
     --
-    <<interactionPin>>
-    + etiqueta
-    + foto
+    + nombre <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + cantidadExistencia <<displayPin>>
+    + foto <<displayPin>>
+    + etiqueta <<displayPin>>
+  }
+
+  class "Modificar Datos" as EP_Edit <<userAction>> {
+    + nombre <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + precio <<interactionPin>>
+    + cantidadExistencia <<interactionPin>>
+    + foto <<interactionPin>>
+    + etiqueta <<interactionPin>>
+  }
+
+  class "Validar Cambios" as EP_Validate <<systemAction>> {
+    {validar}
+  }
+
+  class "Actualizar en Inventario" as EP_Update <<systemAction>> {
     + nombre
     + descripcion
+    + precio
     + cantidadExistencia
-  }
-
-  class "Modificar datos del producto" as EP_Edit <<userAction>> {
-    + etiqueta
     + foto
-    + nombre
-    + descripcion
-    + cantidadExistencia
+    + etiqueta
   }
 
-  class "Validar cambios" as EP_Validate <<systemAction>> {
-    {confirmed}
+  class "Mostrar Error de Edición" as EP_Error <<displayAction>> {
+    {type=message}
+    --
+    + mensajeError <<displayPin>>
   }
 
-  class "Actualizar producto" as EP_Update <<systemAction>>
-
-  class "Confirmación de actualización" as EP_Confirm <<displayAction>>
-
-  class "Error de validación" as EP_Error <<displayAction>> {
-    + message
+  class "Notificar Actualización" as EP_Msg <<displayAction>> {
+    {type=toast}
+    --
+    + textoExito <<displayPin>>
   }
 
+  ' Flujo de control
   EP_Start --> EP_Select
-  EP_Select --> EP_Load : openEdit
-  EP_Load --> EP_Form : showForm
+  EP_Select --> EP_Form
+  EP_Form --> EP_Edit
+  EP_Edit --> EP_Validate : submit
 
-  EP_Form --> EP_Edit : submit
-  EP_Edit --> EP_Validate : validate
+  EP_Validate --> EP_Error : [datos inválidos]
+  EP_Error --> EP_Form : [reintentar]
 
-  EP_Validate --> EP_Error : error
-  EP_Validate --> EP_Update : success
-
-  EP_Update --> EP_Confirm : updated
-  EP_Confirm --> EP_End
-  EP_Error --> EP_Form : retry
+  EP_Validate --> EP_Update : [datos válidos]
+  EP_Update --> EP_Msg : [éxito]
+  EP_Msg --> EP_End
 }
 
-
 package "Activity Delete Product" {
-
-  skinparam circleBackgroundColor black
 
   circle " " as DP_Start <<start>>
   circle " " as DP_End <<end>>
 
-  class "Seleccionar producto" as DP_Select <<userAction>>
+  class "Seleccionar Producto" as DP_Select <<userAction>> {
+    + productoId
+  }
 
-  class "Solicitar confirmación" as DP_ConfirmRequest <<displayAction>>
+  class "Mostrar Modal de Confirmación" as DP_ConfirmRequest <<displayAction>> {
+    {type=modal}
+    --
+    + nombreProducto <<displayPin>>
+  }
 
-  class "Confirmar eliminación" as DP_Confirm <<userAction>>
+  ' Representamos las dos acciones posibles del usuario
+  class "Click en Confirmar" as DP_ConfirmBtn <<userAction>>{
+    {confirmar}
+  }
+  class "Click en Cancelar" as DP_CancelBtn <<userAction>>{
+    {cancelar}
+  }
 
-  class "Eliminar producto" as DP_Delete <<systemAction>>
+  class "Eliminar de Inventario" as DP_Delete <<systemAction>> {
+    + productoId
+  }
 
-  class "Confirmación de eliminación" as DP_Success <<displayAction>>
+  class "Mostrar Error" as DP_Error <<displayAction>> {
+    + mensajeError <<displayPin>>
+  }
 
-  class "Cancelación" as DP_Cancel <<displayAction>>
+  class "Notificar Éxito" as DP_Success <<displayAction>> {
+    + mensajeExito <<displayPin>>
+  }
 
   DP_Start --> DP_Select
   DP_Select --> DP_ConfirmRequest
 
-  DP_ConfirmRequest --> DP_Confirm : confirmar
-  DP_ConfirmRequest --> DP_Cancel : cancelar
+  ' El flujo se bifurca aquí por la acción del usuario
+  DP_ConfirmRequest --> DP_ConfirmBtn
+  DP_ConfirmRequest --> DP_CancelBtn
 
-  DP_Confirm --> DP_Delete
-  DP_Delete --> DP_Success
+  ' Camino 1: Confirmación
+  DP_ConfirmBtn --> DP_Delete
+  DP_Delete --> DP_Error : [error]
+  DP_Delete --> DP_Success : [éxito]
+
+  ' Camino 2: Cancelación
+  DP_CancelBtn --> DP_End
+
+  DP_Error --> DP_End
   DP_Success --> DP_End
-
-  DP_Cancel --> DP_End
 }
 
 @enduml

@@ -1,91 +1,90 @@
-@startuml login_content
-title Content Model - Autenticación (Login)
-
-
+@startuml entrepreneur_login_content_model
+skinparam classAttributeIconSize 0
 skinparam shadow false
-skinparam packageStyle rectangle
 skinparam roundCorner 15
+
 skinparam class {
   BackgroundColor #FEFECE
   BorderColor #A80036
   ArrowColor #A80036
 }
 
+package "Content Model - Acceso" {
 
-package "Content login" {
-
-  ' --- Usuarios ---
-  class "Emprendedor" as Entrepreneur <<content>> {
-    +id: UUID
-    +name: String
-    +email: String
-    +celular: String
-    +estadoCuenta: AccountStatus
+  class Usuario {
+    + userId : UUID
+    + name : String
+    + email : String
+    + phone : String
+    + activeFlag : Boolean
+    + createdDate : DateTime
+    + lastLogin: DateTime
   }
 
-  class "Administrador" as Admin <<content>> {
-    +id: UUID
-    +name: String
-    +email: String
+  class Credencial {
+    + credentialId : UUID
+    + userId : UUID
+    + passwordHas : String
+    + passwordSalt : String
+    + status : String  'ACTIVE | LOCKED | RESET_REQUIRED
+    + failedAttempts : int
+    + lastPasswordChange : DateTime
   }
 
-  enum "AccountStatus" as AccountStatus <<content>> {
-    PENDIENTE
-    ACTIVA
-    BLOQUEADA
+  class Sesion {
+    + sessionId : UUID
+    + userId : UUID
+    + token : String
+    + createdAt : DateTime
+    + expiresAt : DateTime
+    + revoked : Boolean
   }
 
-  ' --- Autenticación / Sesión ---
-  class "Sesion" as Session <<content>> {
-    +sessionId: UUID
-    +createdAt: DateTime
-    +expiresAt: DateTime
-    +isActive: Boolean
+  class SolicitudRegistro {
+    + request_id : UUID
+    + name : String
+    + email : String
+    + phone : String
+    + password_hash : String
+    + city : UUID
+    + colectivoId : UUID
+    + cantidadEspacio : int
+    + estado : String  'PENDIENTE | APROBADA | RECHAZADA
+    + created_at : DateTime
   }
 
-  class "Token" as Token <<content>> {
-    +accessToken: String
-    +refreshToken: String
-    +expiresAt: DateTime
+  class Ciudad {
+    + cityId : UUID
+    + nombre : String
   }
 
-  ' --- Ubicación / Espacios ---
-  class "Departamento" as Department <<content>> {
-    +id: UUID
-    +nombre: String
+  class Colectivo {
+    + colectivoId : UUID
+    + nombre : String
+    + cityId : UUID
+    + activeFlag : Boolean
   }
 
-  class "Local" as Local <<content>> {
-    +id: UUID
-    +nombre: String
-    +areaTotal: Decimal
-    +disponible: Boolean
+  class RecuperacionAcceso {
+    + recoveryId : UUID
+    + identificador : String  'email o celular
+    + canal : String          'EMAIL | SMS
+    + codigo : String
+    + expIn : DateTime
+    + used : Boolean
+    + created_at : DateTime
   }
 
-  ' --- Solicitud de alquiler (sale del registro) ---
-  class "SolicitudAlquiler" as RentalRequest <<content>> {
-    +id: UUID
-    +cantidadEspacio: Decimal
-    +estado: RequestStatus
-    +fechaSolicitud: DateTime
-    +comentarioAdmin: String
-  }
+  Usuario "1" -- "1" Credencial : posee >
+  Usuario "1" -- "0..*" Sesion : inicia >
 
-  enum "RequestStatus" as RequestStatus <<content>> {
-    PENDIENTE
-    APROBADA
-    RECHAZADA
-  }
+  SolicitudRegistro "0..*" --> "1" Ciudad : selecciona >
+  SolicitudRegistro "0..*" --> "1" Colectivo : solicita >
+  Ciudad "1" -- "0..*" Colectivo : contiene >
 
-  ' --- Relaciones ---
-  Entrepreneur "1" -- "0..*" Session : inicia
-  Session "1" o-- "1" Token : contiene
-
-  Department "1" -- "0..*" Local : contiene
-
-  Entrepreneur "1" -- "0..*" RentalRequest : crea
-  RentalRequest "1" --> "1" Local : solicita
-
-  Admin "0..1" -- "0..*" RentalRequest : evalua
+  RecuperacionAcceso "0..*" --> "0..1" Usuario : (si existe) >
 }
 @enduml
+
+
+
