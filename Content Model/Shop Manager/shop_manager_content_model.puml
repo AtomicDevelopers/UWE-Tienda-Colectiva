@@ -1,0 +1,114 @@
+@startuml shop_manager_content_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Content - Encargado de Tienda" {
+  class "Encargado" as Encargado <<content>> {
+    + id: UUID
+    + nombre: String
+    + telefono: String
+    + email: String
+  }
+
+  class "Tienda Colectiva" as Tienda <<content>> {
+    + id: UUID
+    + nombre: String
+    + descripcion: String
+    + telefono: String
+    + direccion: String
+    + horario: String
+    + habilitada: Boolean
+  }
+
+  class "Solicitud Registro Tienda" as SolicitudRegistroTienda <<content>> {
+    + id: UUID
+    + fechaSolicitud: DateTime
+    + estado: String
+    + observaciones: String
+  }
+
+  class "Espacio" as Espacio <<content>> {
+    + id: UUID
+    + codigo: String
+    + descripcion: String
+    + ubicacion: String
+    + estado: String
+  }
+
+  class "Emprendimiento" as Emprendimiento <<content>> {
+    + id: UUID
+    + nombre: String
+    + descripcion: String
+    + estado: String
+  }
+
+  class "Producto" as Producto <<content>> {
+    + id: UUID
+    + nombre: String
+    + descripcion: String
+    + precio: Decimal
+    + stock: Integer
+    + disponible: Boolean
+  }
+
+  class "Movimiento Inventario" as MovimientoInventario <<content>> {
+    + id: UUID
+    + tipo: String
+    + cantidad: Integer
+    + fecha: DateTime
+    + motivo: String
+  }
+
+  class "Venta" as Venta <<content>> {
+    + id: UUID
+    + fecha: DateTime
+    + total: Decimal
+    + estado: String
+  }
+
+  class "Detalle Venta" as DetalleVenta <<content>> {
+    + id: UUID
+    + cantidad: Integer
+    + precioUnitario: Decimal
+  }
+
+  class "Reporte" as Reporte <<content>> {
+    + id: UUID
+    + tipo: String
+    + fechaInicio: Date
+    + fechaFin: Date
+    + formato: String
+  }
+
+  Encargado "1" -- "0..*" SolicitudRegistroTienda : solicita >
+  SolicitudRegistroTienda "1" -- "0..1" Tienda : crea >
+
+  Encargado "1" -- "0..*" Tienda : gestiona >
+  Tienda "1" *-- "0..*" Espacio : contiene >
+  Espacio "0..1" -- "0..1" Emprendimiento : asignado_a >
+
+  Emprendimiento "1" -- "0..*" Producto : ofrece >
+
+  Tienda "1" -- "0..*" Venta : registra >
+  Emprendimiento "1" -- "0..*" Venta : participa >
+  Venta "1" *-- "1..*" DetalleVenta : detalle >
+  DetalleVenta "*" -- "1" Producto : producto >
+
+  Producto "1" -- "0..*" MovimientoInventario : movimientos >
+  Encargado "1" -- "0..*" MovimientoInventario : registra >
+  MovimientoInventario "0..1" ..> Venta : origen_venta >
+
+  Encargado "1" -- "0..*" Reporte : genera >
+  Reporte "1" ..> Venta : ventas >
+  Reporte "1" ..> Producto : stock >
+  Reporte "1" ..> Emprendimiento : por_emprendimiento >
+  Reporte "1" ..> MovimientoInventario : movimientos >
+}
+@enduml

@@ -1,0 +1,276 @@
+@startuml shop_manager_activities
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam circleBackgroundColor black
+
+package "Activity Registrar Tienda" {
+  circle " " as RS_Start <<start>>
+  circle " " as RS_End <<end>>
+
+  class "Formulario Registro Tienda" as RS_Form <<displayAction>> {
+    {type=form}
+    --
+    + nombre <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + telefono <<interactionPin>>
+    + direccion <<interactionPin>>
+    + horario <<interactionPin>>
+    + foto <<interactionPin>>
+  }
+
+  class "Ingresar Datos" as RS_Input <<userAction>> {
+    --
+    + datosTienda
+  }
+
+  class "Validar Datos" as RS_Validate <<systemAction>> {
+    --
+    + {validated}
+  }
+
+  diamond "Datos validos?" as RS_Check <<decision>>
+
+  class "Enviar Solicitud" as RS_Submit <<systemAction>> {
+    {saved}
+  }
+
+  class "Mostrar Error" as RS_Error <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Revise los campos requeridos"
+  }
+
+  RS_Start --> RS_Form
+  RS_Form --> RS_Input : submit
+  RS_Input --> RS_Validate : validate
+  RS_Validate --> RS_Check
+  RS_Check --> RS_Submit : [yes]
+  RS_Check --> RS_Error : [no]
+  RS_Error --> RS_Form : retry
+  RS_Submit --> RS_End
+}
+
+package "Activity Gestionar Espacios" {
+  circle " " as SP_Start <<start>>
+  circle " " as SP_End <<end>>
+
+  class "Listar Espacios" as SP_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + espacios
+  }
+
+  class "Seleccionar Accion" as SP_Action <<userAction>> {
+    --
+    + accion (crear/editar/eliminar/asignar)
+  }
+
+  class "Formulario Espacio" as SP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + codigo
+    + descripcion
+    + ubicacion
+    + estado
+  }
+
+  class "Seleccionar Emprendimiento" as SP_Assign <<userAction>> {
+    --
+    + emprendimientoId
+  }
+
+  class "Confirmar Eliminacion" as SP_Delete <<userAction>> {
+    --
+    + {confirmed}
+  }
+
+  class "Guardar Cambios" as SP_Save <<systemAction>> {
+    {saved}
+  }
+
+  SP_Start --> SP_List
+  SP_List --> SP_Action
+  SP_Action --> SP_Form : crear/editar
+  SP_Action --> SP_Assign : asignar
+  SP_Action --> SP_Delete : eliminar
+
+  SP_Form --> SP_Save : submit
+  SP_Assign --> SP_Save : submit
+  SP_Delete --> SP_Save : confirm
+  SP_Save --> SP_List : refresh
+  SP_List --> SP_End
+}
+
+package "Activity Consultar Stock" {
+  circle " " as ST_Start <<start>>
+  circle " " as ST_End <<end>>
+
+  class "Filtros de Stock" as ST_Filter <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + emprendimiento
+    + criterio
+  }
+
+  class "Seleccionar Filtros" as ST_Select <<userAction>> {
+    --
+    + filtroSeleccionado
+  }
+
+  class "Lista Productos" as ST_List <<displayAction>> {
+    {type=list}
+    --
+    <<displayPin>>
+    + productos
+  }
+
+  ST_Start --> ST_Filter
+  ST_Filter --> ST_Select : submit
+  ST_Select --> ST_List : show
+  ST_List --> ST_End
+}
+
+package "Activity Generar Reportes" {
+  circle " " as RP_Start <<start>>
+  circle " " as RP_End <<end>>
+
+  class "Formulario Reportes" as RP_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + tipoReporte
+    + fechaInicio
+    + fechaFin
+    + emprendimiento (opcional)
+  }
+
+  class "Seleccionar Parametros" as RP_Select <<userAction>> {
+    --
+    + parametros
+  }
+
+  class "Compilar Reporte" as RP_Build <<systemAction>> {
+    {generated}
+  }
+
+  class "Descargar PDF" as RP_Download <<userAction>> {
+    --
+    + formatoPDF
+  }
+
+  RP_Start --> RP_Form
+  RP_Form --> RP_Select : submit
+  RP_Select --> RP_Build : build
+  RP_Build --> RP_Download : ready
+  RP_Download --> RP_End
+}
+
+package "Activity Registrar Venta" {
+  circle " " as SV_Start <<start>>
+  circle " " as SV_End <<end>>
+
+  class "Formulario Venta" as SV_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + emprendimiento
+    + itemsVenta
+  }
+
+  class "Ingresar Items" as SV_Input <<userAction>> {
+    --
+    + items
+  }
+
+  class "Validar Venta" as SV_Validate <<systemAction>> {
+    --
+    + {validated}
+  }
+
+  diamond "Venta valida?" as SV_Check <<decision>>
+
+  class "Guardar Venta" as SV_Save <<systemAction>> {
+    {saved}
+  }
+
+  class "Reducir Stock" as SV_Stock <<systemAction>> {
+    {updated}
+  }
+
+  class "Mostrar Error" as SV_Error <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Revise los items de la venta"
+  }
+
+  SV_Start --> SV_Form
+  SV_Form --> SV_Input : submit
+  SV_Input --> SV_Validate : validate
+  SV_Validate --> SV_Check
+  SV_Check --> SV_Save : [yes]
+  SV_Check --> SV_Error : [no]
+  SV_Error --> SV_Form : retry
+  SV_Save --> SV_Stock
+  SV_Stock --> SV_End
+}
+
+package "Activity Registrar Movimiento de Inventario" {
+  circle " " as MV_Start <<start>>
+  circle " " as MV_End <<end>>
+
+  class "Formulario Movimiento" as MV_Form <<displayAction>> {
+    {type=form}
+    --
+    <<interactionPin>>
+    + producto
+    + tipoMovimiento
+    + cantidad
+    + motivo
+  }
+
+  class "Ingresar Movimiento" as MV_Input <<userAction>> {
+    --
+    + datosMovimiento
+  }
+
+  class "Validar Movimiento" as MV_Validate <<systemAction>> {
+    --
+    + {validated}
+  }
+
+  diamond "Movimiento valido?" as MV_Check <<decision>>
+
+  class "Aplicar Movimiento" as MV_Apply <<systemAction>> {
+    {updated}
+  }
+
+  class "Mostrar Error" as MV_Error <<displayAction>> {
+    {type=message}
+    --
+    <<displayPin>>
+    + text "Revise los datos del movimiento"
+  }
+
+  MV_Start --> MV_Form
+  MV_Form --> MV_Input : submit
+  MV_Input --> MV_Validate : validate
+  MV_Validate --> MV_Check
+  MV_Check --> MV_Apply : [yes]
+  MV_Check --> MV_Error : [no]
+  MV_Error --> MV_Form : retry
+  MV_Apply --> MV_End
+}
+@enduml
+

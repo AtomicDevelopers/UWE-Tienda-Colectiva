@@ -1,0 +1,85 @@
+@startuml shop_manager_usecases
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements - Encargado de Tienda" {
+  actor "Encargado de Tienda" as Manager
+
+  usecase "Login" as Login <<processing>>
+  usecase "Cerrar Sesion" as Logout <<processing>>
+
+  usecase "Registrar Tienda" as RegisterShop <<processing>>
+  usecase "Enviar Solicitud de Registro" as SubmitRequest <<processing>>
+  usecase "Ver Estado de Solicitud" as ViewRequestStatus <<browsing>>
+
+  usecase "Gestionar Espacios" as ManageSpaces <<browsing>>
+  usecase "Listar Espacios" as ListSpaces <<browsing>>
+  usecase "Crear Espacio" as CreateSpace <<processing>>
+  usecase "Editar Espacio" as EditSpace <<processing>>
+  usecase "Eliminar Espacio" as DeleteSpace <<processing>>
+  usecase "Asignar Espacio a Emprendimiento" as AssignSpace <<processing>>
+  usecase "Ver Detalle de Espacio" as ViewSpaceDetail <<browsing>>
+
+  usecase "Consultar Stock de Emprendedores" as ViewEntrepreneurStock <<browsing>>
+  usecase "Ver Productos en Tienda" as ViewProductsInStore <<browsing>>
+
+  usecase "Registrar Movimiento de Inventario" as RegisterInventoryMove <<processing>>
+  usecase "Ajuste de Stock" as StockAdjustment <<processing>>
+  usecase "Devolucion" as StockReturn <<processing>>
+
+  usecase "Registrar Venta" as RegisterSale <<processing>>
+  usecase "Agregar Items de Venta" as AddSaleItems <<processing>>
+  usecase "Confirmar Venta" as ConfirmSale <<processing>>
+  usecase "Ver Historial de Ventas" as ViewSalesHistory <<browsing>>
+
+  usecase "Generar Reportes" as GenerateReports <<processing>>
+  usecase "Reporte de Ventas Totales" as ReportTotalSales <<browsing>>
+  usecase "Reporte de Ventas por Emprendimiento" as ReportSalesByEntrepreneur <<browsing>>
+  usecase "Reporte de Stock" as ReportStock <<browsing>>
+  usecase "Reporte de Movimientos de Inventario" as ReportInventoryMoves <<browsing>>
+  usecase "Descargar PDF" as DownloadPdf <<processing>>
+
+  Manager --> Login
+  Manager --> Logout
+  Manager --> RegisterShop
+  Manager --> ManageSpaces
+  Manager --> ViewEntrepreneurStock
+  Manager --> RegisterSale
+  Manager --> GenerateReports
+  Manager --> RegisterInventoryMove
+  Manager --> ViewSalesHistory
+
+  RegisterShop <.. SubmitRequest : <<include>>
+  RegisterShop <.. ViewRequestStatus : <<extends>>
+
+  ManageSpaces <.. ListSpaces : <<include>>
+  ManageSpaces <.. CreateSpace : <<extends>>
+  ManageSpaces <.. EditSpace : <<extends>>
+  ManageSpaces <.. DeleteSpace : <<extends>>
+  ManageSpaces <.. AssignSpace : <<extends>>
+  ManageSpaces <.. ViewSpaceDetail : <<extends>>
+
+  ViewEntrepreneurStock <.. ViewProductsInStore : <<include>>
+
+  RegisterSale <.. AddSaleItems : <<include>>
+  RegisterSale <.. ConfirmSale : <<include>>
+
+  GenerateReports <.. ReportTotalSales : <<include>>
+  GenerateReports <.. ReportSalesByEntrepreneur : <<include>>
+  GenerateReports <.. ReportStock : <<include>>
+  GenerateReports <.. ReportInventoryMoves : <<include>>
+  GenerateReports <.. DownloadPdf : <<include>>
+}
+@enduml

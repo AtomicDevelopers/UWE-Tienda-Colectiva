@@ -1,0 +1,98 @@
+@startuml shop_manager_navigation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Encargado de Tienda" {
+  class "Panel" as Dashboard <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "Menu Encargado Tienda" as Menu <<menu>>
+
+  class "Formulario Registro Tienda" as ShopRegister <<navigationClass>>
+  class "Estado Registro Tienda" as ShopStatus <<navigationClass>>
+
+  class "Lista Tiendas" as ShopList <<navigationClass>>
+  class "Detalle Tienda" as ShopDetail <<navigationClass>>
+
+  class "Lista Espacios" as SpacesList <<navigationClass>>
+  class "Formulario Crear Espacio" as SpaceCreate <<navigationClass>>
+  class "Formulario Editar Espacio" as SpaceEdit <<navigationClass>>
+  class "Formulario Asignar Espacio" as SpaceAssign <<navigationClass>>
+  class "Detalle Espacio" as SpaceDetail <<navigationClass>>
+  class "Confirmar Eliminar Espacio" as SpaceDelete <<navigationClass>>
+
+  class "Lista Emprendedores" as EntrepreneurList <<navigationClass>>
+  class "Stock Emprendedor" as EntrepreneurStock <<navigationClass>>
+  class "Detalle Producto" as ProductDetail <<navigationClass>>
+
+  class "Panel Reportes" as Reports <<navigationClass>>
+  class "Filtros Reporte" as ReportFilters <<navigationClass>>
+  class "Vista Previa Reporte" as ReportPreview <<navigationClass>>
+  class "Descargar Reporte" as ReportDownload <<processClass>>
+
+  class "Cerrar Sesion" as Logout <<processClass>>
+
+  class "Registro Ventas" as SalesRegister <<navigationClass>>
+  class "Historial Ventas" as SalesHistory <<navigationClass>>
+  class "Detalle Venta" as SaleDetail <<navigationClass>>
+
+  class "Movimiento Inventario" as InventoryMovement <<navigationClass>>
+
+  Dashboard --> Menu : <<navigationLink>>
+
+  Menu --> ShopRegister : <<navigationLink>>
+  Menu --> ShopList : <<navigationLink>>
+  Menu --> SpacesList : <<navigationLink>>
+  Menu --> EntrepreneurList : <<navigationLink>>
+  Menu --> Reports : <<navigationLink>>
+  Menu --> SalesRegister : <<navigationLink>>
+  Menu --> SalesHistory : <<navigationLink>>
+  Menu --> InventoryMovement : <<navigationLink>>
+  Menu --> Logout : <<navigationLink>>
+
+  ShopRegister --> ShopStatus : <<navigationLink>>
+  ShopStatus --> Dashboard : <<navigationLink>>
+
+  ShopList --> ShopDetail : <<navigationLink>>
+  ShopDetail --> SpacesList : <<navigationLink>>
+  ShopDetail --> EntrepreneurList : <<navigationLink>>
+  ShopDetail --> Reports : <<navigationLink>>
+
+  SpacesList --> SpaceCreate : <<navigationLink>>
+  SpacesList --> SpaceEdit : <<navigationLink>>
+  SpacesList --> SpaceAssign : <<navigationLink>>
+  SpacesList --> SpaceDetail : <<navigationLink>>
+  SpacesList --> SpaceDelete : <<navigationLink>>
+
+  SpaceCreate --> SpacesList : <<navigationLink>>
+  SpaceEdit --> SpacesList : <<navigationLink>>
+  SpaceAssign --> SpacesList : <<navigationLink>>
+  SpaceDelete --> SpacesList : <<navigationLink>>
+  SpaceDetail --> SpacesList : <<navigationLink>>
+
+  EntrepreneurList --> EntrepreneurStock : <<navigationLink>>
+  EntrepreneurStock --> ProductDetail : <<navigationLink>>
+  ProductDetail --> EntrepreneurStock : <<navigationLink>>
+
+  Reports --> ReportFilters : <<navigationLink>>
+  ReportFilters --> ReportPreview : <<navigationLink>>
+  ReportPreview --> ReportDownload : <<navigationLink>>
+  ReportDownload --> Reports : <<navigationLink>>
+
+  Logout --> "Login" : <<navigationLink>>
+
+  SalesRegister --> SalesHistory : <<navigationLink>>
+  SalesHistory --> SaleDetail : <<navigationLink>>
+  SaleDetail --> SalesHistory : <<navigationLink>>
+
+  InventoryMovement --> EntrepreneurStock : <<navigationLink>>
+}
+@enduml

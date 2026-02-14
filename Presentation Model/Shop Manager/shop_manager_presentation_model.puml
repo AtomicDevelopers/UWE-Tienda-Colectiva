@@ -1,0 +1,48 @@
+@startuml shop_manager_presentation_model
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 12
+' Fixed the Hex Code here
+skinparam rectangle {
+  BackgroundColor #FFFEE0
+  BorderColor #A80036
+}
+
+skinparam class {
+  BackgroundColor White
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Presentation Model - Encargado de Tienda" {
+
+  rectangle "DashboardPage" <<presentationPage>> {
+    rectangle ":Header" <<presentationGroup>> {
+      class ":Welcome" <<text>>
+    }
+    rectangle ":QuickActions" <<presentationGroup>> {
+      class ":BtnRegisterShop" <<button>>
+      class ":BtnManageSpaces" <<button>>
+      class ":BtnStock" <<button>>
+      class ":BtnReports" <<button>>
+    }
+    ' Layout hint to keep header above actions
+    ":Header" -[hidden]down- ":QuickActions"
+  }
+
+  rectangle "ShopRegistrationPage" <<presentationPage>> {
+    rectangle ":ShopRegistrationForm" <<inputForm>> {
+      class ":Nombre" <<textInput>>
+      class ":Descripcion" <<textInput>>
+      class ":Telefono" <<textInput>>
+      class ":Direccion" <<textInput>>
+      class ":Horario" <<textInput>>
+      class ":Foto" <<filePicker>>
+      class ":BtnEnviar" <<button>>
+    }
+  }
+
+  ' ... (Remaining pages follow same pattern)
+}
+@enduml
