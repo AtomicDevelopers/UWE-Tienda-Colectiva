@@ -1,23 +1,44 @@
 @startuml
-package "Process" {
-  class "LoginFlow" as Process <<processClass>>
-  class "RecoveryFlow" as RecProcess <<processClass>>
-  
-  class "LoginInput" <<userAction>>
-  class "Validation" <<systemAction>>
-  class "ErrorDisplay" <<displayAction>>
-  
-  class "EmailInput" <<userAction>>
-  class "SendToken" <<systemAction>>
-  
-  Process *-- LoginInput
-  Process *-- Validation
-  Process *-- ErrorDisplay
-  
-  RecProcess *-- EmailInput
-  RecProcess *-- SendToken
-  
-  LoginInput --> Validation : submit
-  Validation --> ErrorDisplay : invalid
+skinparam class {
+    BackgroundColor<<navigationClass>> #E1F5FE
+    BackgroundColor<<processClass>> #FFF9C4
+    BorderColor black
 }
+
+package "Navegación Login & Onboarding" {
+
+    ' Nodos de Navegación (Páginas/Vistas)
+    class "Vista Login" as LoginView <<navigationClass>>
+    class "Vista Recuperación" as RecoveryView <<navigationClass>>
+    class "Vista Onboarding" as OnboardingView <<navigationClass>>
+    class "Panel Principal" as DashboardView <<navigationClass>>
+
+    ' Clases de Proceso (Lógica de transición)
+    class "LoginFlow" as LoginFlow <<processClass>> {
+        + validarCredenciales()
+        + verificarEstadoPerfil()
+    }
+
+    class "RecoveryFlow" as RecFlow <<processClass>> {
+        + enviarToken()
+    }
+
+    ' Relaciones de Navegación
+    LoginView --> LoginFlow : <<use>>
+    LoginFlow --> DashboardView : [éxito & perfil completo]
+    LoginFlow --> OnboardingView : [éxito & perfil nuevo]
+    LoginFlow --> LoginView : [error / reintentar]
+
+    LoginView <--> RecoveryView : <<navigationLink>>
+    RecoveryView --> RecFlow : <<use>>
+    RecFlow --> LoginView : [token enviado]
+
+}
+
+note right of LoginFlow
+  UWE define que la navegación
+  está condicionada por una
+  clase de proceso.
+end note
+
 @enduml

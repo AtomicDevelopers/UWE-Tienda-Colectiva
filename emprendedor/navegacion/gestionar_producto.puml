@@ -1,0 +1,50 @@
+@startuml modelo_navegacion_productos
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Productos" {
+
+  class "PanelPrincipal" as Panel <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "SelectorColectivo" as SelectorColectivo <<navigationClass>>
+  class "ListaProductos" as ListaProductos <<navigationClass>>
+  class "DetalleProducto" as DetalleProducto <<navigationClass>>
+  class "FormularioCrearProducto" as CrearProducto <<navigationClass>>
+  class "FormularioEditarProducto" as EditarProducto <<navigationClass>>
+  class "FormularioActualizarStock" as ActualizarStock <<navigationClass>>
+  class "ConfirmacionEliminacion" as ConfirmarEliminacion <<navigationClass>>
+  class "FormularioBusquedaFiltro" as BuscarFiltrar <<navigationClass>>
+  class "OperacionExitosa" as Exito <<navigationClass>>
+
+  Panel "1" --> "1" SelectorColectivo : <<navigationLink>>
+  SelectorColectivo "1" --> "1" ListaProductos : <<navigationLink>>
+
+  ListaProductos "1" --> "*" DetalleProducto : <<navigationLink>>
+  ListaProductos "1" --> "1" CrearProducto : <<navigationLink>>
+  ListaProductos "1" --> "1" BuscarFiltrar : <<navigationLink>>
+
+  DetalleProducto "1" --> "1" EditarProducto : <<navigationLink>>
+  DetalleProducto "1" --> "1" ActualizarStock : <<navigationLink>>
+  DetalleProducto "1" --> "1" ConfirmarEliminacion : <<navigationLink>>
+  DetalleProducto "1" --> "1" ListaProductos : <<navigationLink>>
+
+  CrearProducto "1" --> "1" Exito : <<navigationLink>>
+  EditarProducto "1" --> "1" Exito : <<navigationLink>>
+  ActualizarStock "1" --> "1" Exito : <<navigationLink>>
+  Exito "1" --> "1" ListaProductos : <<navigationLink>>
+
+  ConfirmarEliminacion "1" --> "1" Exito : <<navigationLink>>
+  ConfirmarEliminacion "1" --> "1" DetalleProducto : <<navigationLink>>
+
+  BuscarFiltrar "1" --> "1" ListaProductos : <<navigationLink>>
+}
+@enduml

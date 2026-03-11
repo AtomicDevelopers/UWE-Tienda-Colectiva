@@ -1,0 +1,53 @@
+@startuml gestionar_perfil_reportes
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Perfil y Reportes" {
+  actor "Emprendedor" as Entrepreneur
+
+  usecase "Editar Perfil" as EditProfile <<processing>>
+  usecase "Actualizar Datos\nPersonales" as UpdatePersonalData <<processing>>
+  usecase "Cambiar Foto\nde Perfil" as ChangePhoto <<processing>>
+  usecase "Cambiar Contrasena" as ChangePassword <<processing>>
+
+  usecase "Consultar Reportes\nde Ventas" as ViewSalesReports <<browsing>>
+  usecase "Filtrar Reportes\npor Fechas" as FilterByDate <<processing>>
+  usecase "Filtrar Reportes\npor Producto" as FilterByProduct <<processing>>
+
+  usecase "Visualizar Stock" as ViewStock <<browsing>>
+  usecase "Filtrar Stock\npor Producto" as FilterStockByProduct <<processing>>
+  usecase "Filtrar Stock\npor Categoria" as FilterStockByCategory <<processing>>
+
+  usecase "Descargar Reporte\nPDF" as DownloadPDF <<processing>>
+  usecase "Descargar Reporte\nExcel" as DownloadExcel <<processing>>
+}
+
+Entrepreneur --> EditProfile
+Entrepreneur --> ViewSalesReports
+Entrepreneur --> ViewStock
+
+EditProfile ..> UpdatePersonalData : <<include>>
+EditProfile ..> ChangePhoto : <<extend>>
+EditProfile ..> ChangePassword : <<extend>>
+
+ViewSalesReports ..> FilterByDate : <<include>>
+ViewSalesReports ..> FilterByProduct : <<extend>>
+ViewSalesReports ..> DownloadPDF : <<extend>>
+ViewSalesReports ..> DownloadExcel : <<extend>>
+
+ViewStock ..> FilterStockByProduct : <<extend>>
+ViewStock ..> FilterStockByCategory : <<extend>>
+
+@enduml

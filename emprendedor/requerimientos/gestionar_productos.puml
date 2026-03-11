@@ -1,0 +1,58 @@
+@startuml gestionar_productos
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Productos" {
+  actor "Emprendedor" as Entrepreneur
+
+  usecase "Seleccionar Colectivo" as SelectCollective <<processing>>
+
+  usecase "Agregar Producto" as AddProduct <<processing>>
+  usecase "Subir Imagen\ndel Producto" as UploadImage <<processing>>
+  usecase "Registrar Stock\nInicial" as InitialStock <<processing>>
+
+  usecase "Editar Producto" as EditProduct <<processing>>
+  usecase "Actualizar Informacion\ndel Producto" as UpdateProduct <<processing>>
+  usecase "Actualizar Stock" as UpdateStock <<processing>>
+  usecase "Activar/Inactivar\nProducto" as ToggleProduct <<processing>>
+  usecase "Eliminar Producto" as DeleteProduct <<processing>>
+
+  usecase "Visualizar Productos" as ViewProducts <<browsing>>
+  usecase "Buscar Producto" as SearchProduct <<browsing>>
+  usecase "Filtrar Productos\npor Categoria" as FilterByCategory <<browsing>>
+  usecase "Filtrar Productos\npor Nombre" as FilterByName <<browsing>>
+  usecase "Visualizar Detalle\ndel Producto" as ViewProductDetail <<browsing>>
+}
+
+Entrepreneur --> SelectCollective
+
+SelectCollective ..> AddProduct : <<include>>
+SelectCollective ..> EditProduct : <<include>>
+SelectCollective ..> DeleteProduct : <<include>>
+SelectCollective ..> ViewProducts : <<include>>
+
+AddProduct ..> UploadImage : <<extend>>
+AddProduct ..> InitialStock : <<include>>
+
+EditProduct ..> UpdateProduct : <<include>>
+EditProduct ..> UpdateStock : <<extend>>
+EditProduct ..> ToggleProduct : <<extend>>
+
+ViewProducts ..> SearchProduct : <<extend>>
+SearchProduct ..> FilterByCategory : <<extend>>
+SearchProduct ..> FilterByName : <<extend>>
+SearchProduct ..> ViewProductDetail : <<extend>>
+
+@enduml

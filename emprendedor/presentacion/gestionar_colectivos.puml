@@ -1,0 +1,82 @@
+@startuml gestion_colectivos_presentacion
+title Presentation - Gestionar Colectivos [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Colectivos" {
+
+  rectangle "ListaColectivos" as P_List <<presentationClass>> {
+    rectangle ":Header" as PL_Header
+    rectangle ":ColectivosAsignados" as PL_Items {
+      rectangle ":ColectivoCard" as PL_Card1
+      rectangle ":ColectivoCard" as PL_Card2
+    }
+    rectangle ":Actions" as PL_Actions {
+      rectangle ":BtnSolicitarOtroColectivo" as PL_RequestOther
+    }
+    rectangle ":EmptyState" as PL_Empty <<message>>
+  }
+
+  rectangle "DetalleColectivo" as P_Detail <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":InformacionGeneral" as PD_Info {
+      rectangle ":Nombre" as PD_Name
+      rectangle ":Descripcion" as PD_Desc
+      rectangle ":Ubicacion" as PD_Location
+      rectangle ":Horarios" as PD_Schedule
+    }
+    rectangle ":Actions" as PD_Actions {
+      rectangle ":BtnVerEspacio" as PD_SpaceBtn
+      rectangle ":BtnVolver" as PD_BackBtn
+    }
+  }
+
+  rectangle "EspacioAsignado" as P_Space <<presentationClass>> {
+    rectangle ":Header" as PS_Header
+    rectangle ":DetalleEspacio" as PS_Info {
+      rectangle ":NumeroEspacio" as PS_Number
+      rectangle ":EstadoSolicitud" as PS_Status
+      rectangle ":UbicacionEspacio" as PS_Location
+    }
+    rectangle ":Actions" as PS_Actions {
+      rectangle ":BtnVerProductos" as PS_ProductsBtn
+      rectangle ":BtnSolicitarCambio" as PS_ChangeBtn
+      rectangle ":BtnVolver" as PS_BackBtn
+    }
+  }
+
+  rectangle "FormularioSolicitudColectivo" as P_RequestCollective <<presentationClass>> {
+    rectangle ":Title" as PRC_Title
+    rectangle ":FormFields" as PRC_Form <<form>> {
+      rectangle ":ColectivoSolicitado" as PRC_Collective <<select>>
+      rectangle ":MotivoSolicitud" as PRC_Reason <<inputField>>
+    }
+    rectangle ":Actions" as PRC_Actions {
+      rectangle ":BtnEnviarSolicitud" as PRC_Send
+      rectangle ":BtnCancelar" as PRC_Cancel
+      rectangle ":MsgError" as PRC_Error <<message>>
+    }
+  }
+
+  rectangle "FormularioCambioEspacio" as P_ChangeSpace <<presentationClass>> {
+    rectangle ":Title" as PCS_Title
+    rectangle ":FormFields" as PCS_Form <<form>> {
+      rectangle ":EspacioActual" as PCS_Current
+      rectangle ":NuevoEspacioSolicitado" as PCS_NewSpace <<select>>
+      rectangle ":MotivoCambio" as PCS_Reason <<inputField>>
+    }
+    rectangle ":Actions" as PCS_Actions {
+      rectangle ":BtnEnviarCambio" as PCS_Send
+      rectangle ":BtnCancelar" as PCS_Cancel
+      rectangle ":MsgError" as PCS_Error <<message>>
+    }
+  }
+}
+@enduml

@@ -1,0 +1,104 @@
+@startuml actividad_gestionar_perfil_reportes
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Perfil y Reportes" {
+
+  circle " " as R_Start <<start>>
+  circle " " as R_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar perfil del emprendedor" as R_ViewProfile <<displayAction>> {
+    {type=detail}
+    --
+    + nombres <<displayPin>>
+    + apellidos <<displayPin>>
+    + correo <<displayPin>>
+    + telefono <<displayPin>>
+    + direccion <<displayPin>>
+    + fotoPerfil <<displayPin>>
+    + descripcionNegocio <<displayPin>>
+  }
+
+  class "Seleccionar opcion" as R_SelectOption <<userAction>>
+
+  class "Mostrar formulario de edicion de perfil" as R_EditProfileForm <<displayAction>> {
+    {type=form}
+    --
+    + nombres <<interactionPin>>
+    + apellidos <<interactionPin>>
+    + telefono <<interactionPin>>
+    + direccion <<interactionPin>>
+    + fotoPerfil <<interactionPin>>
+    + descripcionNegocio <<interactionPin>>
+    + contrasenaActual <<interactionPin>>
+    + nuevaContrasena <<interactionPin>>
+    + confirmarContrasena <<interactionPin>>
+  }
+
+  class "Guardar cambios de perfil" as R_SaveProfile <<systemAction>>
+  class "Mostrar confirmacion de actualizacion" as R_ProfileMsg <<displayAction>> {
+    {type=message}
+    --
+    + mensaje <<displayPin>>
+  }
+
+  class "Mostrar reportes de ventas" as R_ViewReports <<displayAction>> {
+    {type=list}
+    --
+    + fecha <<displayPin>>
+    + producto <<displayPin>>
+    + cantidadVendida <<displayPin>>
+    + totalVenta <<displayPin>>
+  }
+
+  class "Aplicar filtro de reportes" as R_FilterReports <<userAction>>
+  class "Generar reporte" as R_GenerateReport <<systemAction>>
+  class "Descargar reporte PDF" as R_DownloadPDF <<systemAction>>
+  class "Descargar reporte Excel" as R_DownloadExcel <<systemAction>>
+
+  class "Mostrar stock" as R_ViewStock <<displayAction>> {
+    {type=list}
+    --
+    + nombreProducto <<displayPin>>
+    + categoria <<displayPin>>
+    + stockDisponible <<displayPin>>
+  }
+
+  class "Aplicar filtro de stock" as R_FilterStock <<userAction>>
+
+  R_Start --> R_ViewProfile
+  R_ViewProfile --> R_SelectOption
+
+  R_SelectOption --> R_EditProfileForm : [editar perfil]
+  R_EditProfileForm --> R_SaveProfile : submit
+  R_SaveProfile --> R_ProfileMsg
+  R_ProfileMsg --> R_ViewProfile
+
+  R_SelectOption --> R_ViewReports : [consultar reportes]
+  R_ViewReports --> R_FilterReports : [filtrar]
+  R_FilterReports --> R_GenerateReport : submit
+  R_GenerateReport --> R_ViewReports
+  R_ViewReports --> R_DownloadPDF : [descargar PDF]
+  R_DownloadPDF --> R_End
+  R_ViewReports --> R_DownloadExcel : [descargar Excel]
+  R_DownloadExcel --> R_End
+
+  R_SelectOption --> R_ViewStock : [visualizar stock]
+  R_ViewStock --> R_FilterStock : [filtrar]
+  R_FilterStock --> R_ViewStock
+  R_ViewStock --> R_End : [finalizar]
+}
+@enduml

@@ -1,0 +1,44 @@
+@startuml modelo_navegacion_perfil_reportes
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Perfil y Reportes" {
+
+  class "PanelPrincipal" as Panel <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "DetallePerfil" as Perfil <<navigationClass>>
+  class "FormularioEditarPerfil" as EditarPerfil <<navigationClass>>
+  class "ReportesVentas" as Reportes <<navigationClass>>
+  class "VistaStock" as Stock <<navigationClass>>
+  class "FormularioFiltroReportes" as FiltroReportes <<navigationClass>>
+  class "FormularioFiltroStock" as FiltroStock <<navigationClass>>
+  class "DescargaPDF" as DescargarPDF <<navigationClass>>
+  class "DescargaExcel" as DescargarExcel <<navigationClass>>
+  class "OperacionExitosa" as Exito <<navigationClass>>
+
+  Panel "1" --> "1" Perfil : <<navigationLink>>
+  Panel "1" --> "1" Reportes : <<navigationLink>>
+  Panel "1" --> "1" Stock : <<navigationLink>>
+
+  Perfil "1" --> "1" EditarPerfil : <<navigationLink>>
+  EditarPerfil "1" --> "1" Exito : <<navigationLink>>
+  Exito "1" --> "1" Perfil : <<navigationLink>>
+
+  Reportes "1" --> "1" FiltroReportes : <<navigationLink>>
+  Reportes "1" --> "1" DescargarPDF : <<navigationLink>>
+  Reportes "1" --> "1" DescargarExcel : <<navigationLink>>
+  FiltroReportes "1" --> "1" Reportes : <<navigationLink>>
+
+  Stock "1" --> "1" FiltroStock : <<navigationLink>>
+  FiltroStock "1" --> "1" Stock : <<navigationLink>>
+}
+@enduml

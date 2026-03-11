@@ -1,0 +1,50 @@
+@startuml gestionar_colectivos
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Colectivos" {
+  actor "Emprendedor" as Entrepreneur
+
+  usecase "Visualizar Colectivos\nAsignados" as ViewCollectives <<browsing>>
+  usecase "Consultar Informacion\ndel Colectivo" as ViewCollectiveInfo <<browsing>>
+  usecase "Visualizar Horarios\ndel Colectivo" as ViewSchedule <<browsing>>
+  usecase "Solicitar Ingreso a\nOtro Colectivo" as RequestAnotherCollective <<processing>>
+
+  usecase "Seleccionar Colectivo" as SelectCollective <<processing>>
+  usecase "Visualizar Espacio\nAsignado" as ViewAssignedSpace <<browsing>>
+  usecase "Ver Estado de Solicitud\ndel Espacio" as ViewSpaceStatus <<browsing>>
+  usecase "Consultar Ubicacion\ndel Espacio" as ViewSpaceLocation <<browsing>>
+  usecase "Seleccionar Espacio\nSolicitado" as SelectSpace <<processing>>
+  usecase "Administrar Espacio\nSolicitado" as ManageSpace <<processing>>
+  usecase "Solicitar Cambio\nde Espacio" as RequestSpaceChange <<processing>>
+  usecase "Visualizar Productos\ndel Espacio" as ViewSpaceProducts <<browsing>>
+}
+
+Entrepreneur --> ViewCollectives
+Entrepreneur --> SelectCollective
+
+ViewCollectives ..> ViewCollectiveInfo : <<include>>
+ViewCollectiveInfo ..> ViewSchedule : <<extend>>
+ViewCollectives ..> RequestAnotherCollective : <<extend>>
+
+SelectCollective ..> ViewAssignedSpace : <<include>>
+ViewAssignedSpace ..> ViewSpaceStatus : <<include>>
+ViewAssignedSpace ..> ViewSpaceLocation : <<extend>>
+ViewAssignedSpace ..> SelectSpace : <<include>>
+SelectSpace ..> ManageSpace : <<include>>
+ManageSpace ..> RequestSpaceChange : <<extend>>
+ManageSpace ..> ViewSpaceProducts : <<extend>>
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml modelo_navegacion_colectivos
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Colectivos" {
+
+  class "PanelPrincipal" as Panel <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "ListaColectivos" as ListaColectivos <<navigationClass>>
+  class "DetalleColectivo" as DetalleColectivo <<navigationClass>>
+  class "DetalleEspacioAsignado" as EspacioAsignado <<navigationClass>>
+  class "ProductosDelEspacio" as ProductosEspacio <<navigationClass>>
+  class "FormularioSolicitudColectivo" as SolicitudColectivo <<navigationClass>>
+  class "FormularioCambioEspacio" as CambioEspacio <<navigationClass>>
+  class "OperacionExitosa" as Exito <<navigationClass>>
+
+  Panel "1" --> "1" ListaColectivos : <<navigationLink>>
+
+  ListaColectivos "1" --> "*" DetalleColectivo : <<navigationLink>>
+  ListaColectivos "1" --> "1" SolicitudColectivo : <<navigationLink>>
+
+  DetalleColectivo "1" --> "1" EspacioAsignado : <<navigationLink>>
+  DetalleColectivo "1" --> "1" ListaColectivos : <<navigationLink>>
+
+  EspacioAsignado "1" --> "1" ProductosEspacio : <<navigationLink>>
+  EspacioAsignado "1" --> "1" CambioEspacio : <<navigationLink>>
+  EspacioAsignado "1" --> "1" ListaColectivos : <<navigationLink>>
+
+  SolicitudColectivo "1" --> "1" Exito : <<navigationLink>>
+  CambioEspacio "1" --> "1" Exito : <<navigationLink>>
+
+  Exito "1" --> "1" ListaColectivos : <<navigationLink>>
+}
+@enduml

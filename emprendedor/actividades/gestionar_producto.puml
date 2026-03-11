@@ -1,0 +1,130 @@
+@startuml actividad_gestionar_productos
+allow_mixing
+
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Productos" {
+
+  circle " " as P_Start <<start>>
+  circle " " as P_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar colectivos disponibles" as P_ViewCollectives <<displayAction>> {
+    {type=list}
+    --
+    + nombreColectivo <<displayPin>>
+    + espacioAsignado <<displayPin>>
+  }
+
+  class "Seleccionar colectivo" as P_SelectCollective <<userAction>>
+
+  class "Mostrar productos del colectivo" as P_ViewProducts <<displayAction>> {
+    {type=list}
+    --
+    + imagen <<displayPin>>
+    + nombreProducto <<displayPin>>
+    + categoria <<displayPin>>
+    + precio <<displayPin>>
+    + stock <<displayPin>>
+    + estado <<displayPin>>
+  }
+
+  class "Seleccionar opcion" as P_SelectOption <<userAction>>
+
+  class "Mostrar formulario de producto" as P_ProductForm <<displayAction>> {
+    {type=form}
+    --
+    + imagen <<interactionPin>>
+    + nombreProducto <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + precio <<interactionPin>>
+    + categoria <<interactionPin>>
+    + otrosAtributos <<interactionPin>>
+    + stockInicial <<interactionPin>>
+  }
+
+  class "Guardar producto" as P_SaveProduct <<systemAction>>
+  class "Mostrar detalle del producto" as P_ProductDetail <<displayAction>> {
+    {type=detail}
+    --
+    + imagen <<displayPin>>
+    + nombreProducto <<displayPin>>
+    + descripcion <<displayPin>>
+    + precio <<displayPin>>
+    + categoria <<displayPin>>
+    + stock <<displayPin>>
+    + estado <<displayPin>>
+  }
+
+  class "Mostrar formulario de edicion" as P_EditForm <<displayAction>> {
+    {type=form}
+    --
+    + imagen <<interactionPin>>
+    + nombreProducto <<interactionPin>>
+    + descripcion <<interactionPin>>
+    + precio <<interactionPin>>
+    + categoria <<interactionPin>>
+    + otrosAtributos <<interactionPin>>
+  }
+
+  class "Actualizar producto" as P_UpdateProduct <<systemAction>>
+
+  class "Mostrar formulario de stock" as P_StockForm <<displayAction>> {
+    {type=form}
+    --
+    + stockActual <<displayPin>>
+    + nuevoStock <<interactionPin>>
+  }
+
+  class "Actualizar stock" as P_UpdateStock <<systemAction>>
+  class "Eliminar producto" as P_DeleteProduct <<systemAction>>
+
+  class "Mostrar formulario de busqueda" as P_SearchForm <<displayAction>> {
+    {type=form}
+    --
+    + nombreProducto <<interactionPin>>
+    + categoria <<interactionPin>>
+  }
+
+  class "Buscar o filtrar productos" as P_SearchProducts <<systemAction>>
+
+  P_Start --> P_ViewCollectives
+  P_ViewCollectives --> P_SelectCollective
+  P_SelectCollective --> P_ViewProducts
+  P_ViewProducts --> P_SelectOption
+
+  P_SelectOption --> P_ProductForm : [agregar producto]
+  P_ProductForm --> P_SaveProduct : submit
+  P_SaveProduct --> P_ViewProducts
+
+  P_SelectOption --> P_ProductDetail : [seleccionar producto]
+  P_ProductDetail --> P_EditForm : [editar]
+  P_EditForm --> P_UpdateProduct : submit
+  P_UpdateProduct --> P_ViewProducts
+
+  P_ProductDetail --> P_StockForm : [actualizar stock]
+  P_StockForm --> P_UpdateStock : submit
+  P_UpdateStock --> P_ViewProducts
+
+  P_ProductDetail --> P_DeleteProduct : [eliminar]
+  P_DeleteProduct --> P_ViewProducts
+
+  P_SelectOption --> P_SearchForm : [buscar o filtrar]
+  P_SearchForm --> P_SearchProducts : submit
+  P_SearchProducts --> P_ViewProducts
+
+  P_ViewProducts --> P_End : [finalizar]
+}
+@enduml

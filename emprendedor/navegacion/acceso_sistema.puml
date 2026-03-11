@@ -1,0 +1,39 @@
+@startuml modelo_navegacion_acceso
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Acceso al Sistema" {
+
+  class "Inicio" as Inicio <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "FormularioRegistro" as Registro <<navigationClass>>
+  class "FormularioInicioSesion" as Login <<navigationClass>>
+  class "FormularioRecuperacionContrasena" as Recuperacion <<navigationClass>>
+  class "EsperaAprobacion" as Espera <<navigationClass>>
+  class "FormularioCompletarInformacion" as CompletarInfo <<navigationClass>>
+  class "Dashboard" as Dashboard <<navigationClass>>
+
+  Inicio "1" --> "1" Registro : <<navigationLink>>
+  Inicio "1" --> "1" Login : <<navigationLink>>
+  Inicio "1" --> "1" Recuperacion : <<navigationLink>>
+
+  Registro "1" --> "1" Espera : <<navigationLink>>
+  Espera "1" --> "1" Inicio : <<navigationLink>>
+
+  Login "1" --> "1" CompletarInfo : <<navigationLink>>
+  Login "1" --> "1" Dashboard : <<navigationLink>>
+
+  CompletarInfo "1" --> "1" Dashboard : <<navigationLink>>
+
+  Recuperacion "1" --> "1" Inicio : <<navigationLink>>
+}
+@enduml

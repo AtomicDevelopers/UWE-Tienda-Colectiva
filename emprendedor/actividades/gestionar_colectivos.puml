@@ -1,0 +1,152 @@
+@startuml actividad_gestionar_colectivos
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Colectivos" {
+
+  circle " " as C_Start <<start>>
+  circle " " as C_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar colectivos asignados" as C_ViewCollectives <<displayAction>> {
+    {type=list}
+    --
+    + nombreColectivo <<displayPin>>
+    + ubicacion <<displayPin>>
+    + horario <<displayPin>>
+    + estadoEspacio <<displayPin>>
+  }
+
+  class "Seleccionar opcion de colectivo" as C_SelectOption <<userAction>>
+
+  class "Consultar informacion del colectivo" as C_ViewCollectiveInfo <<displayAction>> {
+    {type=detail}
+    --
+    + nombreColectivo <<displayPin>>
+    + descripcion <<displayPin>>
+    + ubicacion <<displayPin>>
+    + horarios <<displayPin>>
+  }
+
+  class "Visualizar horarios del colectivo" as C_ViewSchedule <<displayAction>> {
+    {type=detail}
+    --
+    + diasAtencion <<displayPin>>
+    + horaApertura <<displayPin>>
+    + horaCierre <<displayPin>>
+  }
+
+  class "Mostrar formulario de solicitud de ingreso" as C_RequestCollectiveForm <<displayAction>> {
+    {type=form}
+    --
+    + colectivoSeleccionado <<interactionPin>>
+    + motivoSolicitud <<interactionPin>>
+  }
+
+  class "Completar solicitud de ingreso" as C_FillCollectiveRequest <<userAction>>
+  class "Registrar solicitud de ingreso" as C_SaveCollectiveRequest <<systemAction>>
+  class "Mostrar confirmacion de solicitud" as C_RequestCollectiveMsg <<displayAction>> {
+    {type=message}
+    --
+    + mensaje <<displayPin>>
+  }
+
+  class "Seleccionar colectivo" as C_SelectCollective <<userAction>>
+
+  class "Visualizar espacio asignado" as C_ViewAssignedSpace <<displayAction>> {
+    {type=detail}
+    --
+    + numeroEspacio <<displayPin>>
+    + ubicacionEspacio <<displayPin>>
+    + estadoSolicitud <<displayPin>>
+    + colectivoAsignado <<displayPin>>
+  }
+
+  class "Ver estado de solicitud del espacio" as C_ViewSpaceStatus <<displayAction>> {
+    {type=detail}
+    --
+    + estadoSolicitud <<displayPin>>
+    + fechaSolicitud <<displayPin>>
+  }
+
+  class "Consultar ubicacion del espacio" as C_ViewSpaceLocation <<displayAction>> {
+    {type=detail}
+    --
+    + numeroEspacio <<displayPin>>
+    + zona <<displayPin>>
+    + referenciaUbicacion <<displayPin>>
+  }
+
+  class "Seleccionar espacio solicitado" as C_SelectSpace <<userAction>>
+  class "Administrar espacio solicitado" as C_ManageSpace <<systemAction>>
+
+  class "Visualizar productos del espacio" as C_ViewSpaceProducts <<displayAction>> {
+    {type=list}
+    --
+    + nombreProducto <<displayPin>>
+    + categoria <<displayPin>>
+    + precio <<displayPin>>
+    + stock <<displayPin>>
+  }
+
+  class "Mostrar formulario de cambio de espacio" as C_RequestChangeForm <<displayAction>> {
+    {type=form}
+    --
+    + espacioActual <<displayPin>>
+    + motivoCambio <<interactionPin>>
+    + espacioSolicitado <<interactionPin>>
+  }
+
+  class "Solicitar cambio de espacio" as C_RequestSpaceChange <<userAction>>
+  class "Registrar cambio de espacio" as C_SaveSpaceChange <<systemAction>>
+  class "Mostrar confirmacion de cambio" as C_RequestChangeMsg <<displayAction>> {
+    {type=message}
+    --
+    + mensaje <<displayPin>>
+  }
+
+  C_Start --> C_ViewCollectives
+  C_ViewCollectives --> C_SelectOption
+
+  C_SelectOption --> C_ViewCollectiveInfo : [consultar informacion]
+  C_ViewCollectiveInfo --> C_ViewSchedule : [ver horarios]
+  C_ViewSchedule --> C_ViewCollectives
+
+  C_SelectOption --> C_RequestCollectiveForm : [solicitar otro colectivo]
+  C_RequestCollectiveForm --> C_FillCollectiveRequest : [completar datos]
+  C_FillCollectiveRequest --> C_SaveCollectiveRequest : submit
+  C_SaveCollectiveRequest --> C_RequestCollectiveMsg
+  C_RequestCollectiveMsg --> C_End
+
+  C_SelectOption --> C_SelectCollective : [seleccionar colectivo]
+  C_SelectCollective --> C_ViewAssignedSpace
+  C_ViewAssignedSpace --> C_ViewSpaceStatus : [ver estado]
+  C_ViewSpaceStatus --> C_ViewAssignedSpace
+  C_ViewAssignedSpace --> C_ViewSpaceLocation : [consultar ubicacion]
+  C_ViewSpaceLocation --> C_ViewAssignedSpace
+
+  C_ViewAssignedSpace --> C_SelectSpace : [continuar]
+  C_SelectSpace --> C_ManageSpace
+
+  C_ManageSpace --> C_ViewSpaceProducts : [visualizar productos]
+  C_ViewSpaceProducts --> C_End
+
+  C_ManageSpace --> C_RequestChangeForm : [solicitar cambio de espacio]
+  C_RequestChangeForm --> C_RequestSpaceChange : [completar solicitud]
+  C_RequestSpaceChange --> C_SaveSpaceChange : submit
+  C_SaveSpaceChange --> C_RequestChangeMsg
+  C_RequestChangeMsg --> C_End
+}
+@enduml

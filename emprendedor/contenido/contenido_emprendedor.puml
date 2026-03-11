@@ -1,0 +1,89 @@
+@startuml content_diagram
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Content [ Content Diagram ]" {
+
+  class Emprendedor {
+    -idEmprendedor : Integer
+    -nombres : String
+    -apellidos : String
+    -correo : String
+    -telefono : String
+    -direccion : String
+    -descripcionNegocio : String
+    -contrasena : String
+    -estado : String
+  }
+
+  class Colectivo {
+    -idColectivo : Integer
+    -nombre : String
+    -descripcion : String
+    -ubicacion : String
+    -horario : String
+    -estado : String
+  }
+
+  class Espacio {
+    -idEspacio : Integer
+    -numeroEspacio : String
+    -ubicacion : String
+    -estadoSolicitud : String
+    -estado : String
+  }
+
+  class Producto {
+    -idProducto : Integer
+    -nombre : String
+    -descripcion : String
+    -precio : Decimal
+    -imagen : String
+    -stock : Integer
+    -estado : String
+  }
+
+  class Categoria {
+    -idCategoria : Integer
+    -nombre : String
+    -descripcion : String
+  }
+
+  class Solicitud {
+    -idSolicitud : Integer
+    -fechaSolicitud : Date
+    -tipoSolicitud : String
+    -estadoSolicitud : String
+    -motivo : String
+  }
+
+  class Venta {
+    -idVenta : Integer
+    -fechaVenta : Date
+    -cantidad : Integer
+    -totalVenta : Decimal
+  }
+
+  class Reporte {
+    -idReporte : Integer
+    -fechaInicio : Date
+    -fechaFin : Date
+    -tipoReporte : String
+    -formato : String
+  }
+
+  Emprendedor "1" -- "*" Solicitud
+  Emprendedor "1" -- "*" Colectivo
+  Colectivo "1" -- "*" Espacio
+  Espacio "1" -- "*" Producto
+  Producto "*" -- "1" Categoria
+  Producto "1" -- "*" Venta
+  Emprendedor "1" -- "*" Reporte
+  Reporte "1" -- "*" Venta
+}
+@enduml

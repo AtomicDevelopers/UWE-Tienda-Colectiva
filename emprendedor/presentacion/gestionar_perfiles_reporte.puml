@@ -1,0 +1,82 @@
+@startuml gestion_perfil_reportes_presentacion
+title Presentation - Gestionar Perfil y Reportes [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Perfil y Reportes" {
+
+  rectangle "DetallePerfil" as P_Profile <<presentationClass>> {
+    rectangle ":Header" as PP_Header
+    rectangle ":InformacionPerfil" as PP_Info {
+      rectangle ":Nombres" as PP_Name
+      rectangle ":Apellidos" as PP_Lastname
+      rectangle ":Correo" as PP_Email
+      rectangle ":Telefono" as PP_Phone
+      rectangle ":Direccion" as PP_Address
+      rectangle ":FotoPerfil" as PP_Photo
+      rectangle ":DescripcionNegocio" as PP_Description
+    }
+    rectangle ":Actions" as PP_Actions {
+      rectangle ":BtnEditarPerfil" as PP_EditBtn
+    }
+  }
+
+  rectangle "FormularioEditarPerfil" as P_EditProfile <<presentationClass>> {
+    rectangle ":Title" as PEP_Title
+    rectangle ":FormFields" as PEP_Form <<form>> {
+      rectangle ":Nombres" as PEP_Name <<inputField>>
+      rectangle ":Apellidos" as PEP_Lastname <<inputField>>
+      rectangle ":Telefono" as PEP_Phone <<inputField>>
+      rectangle ":Direccion" as PEP_Address <<inputField>>
+      rectangle ":FotoPerfil" as PEP_Photo <<filePicker>>
+      rectangle ":DescripcionNegocio" as PEP_Description <<inputField>>
+      rectangle ":ContrasenaActual" as PEP_CurrentPassword <<inputField>>
+      rectangle ":NuevaContrasena" as PEP_NewPassword <<inputField>>
+      rectangle ":ConfirmarContrasena" as PEP_ConfirmPassword <<inputField>>
+    }
+    rectangle ":Actions" as PEP_Actions {
+      rectangle ":BtnGuardarCambios" as PEP_Save
+      rectangle ":BtnCancelar" as PEP_Cancel
+      rectangle ":MsgError" as PEP_Error <<message>>
+    }
+  }
+
+  rectangle "ReportesVentas" as P_Reports <<presentationClass>> {
+    rectangle ":Header" as PR_Header
+    rectangle ":Filtros" as PR_Filters {
+      rectangle ":FechaInicio" as PR_StartDate <<inputField>>
+      rectangle ":FechaFin" as PR_EndDate <<inputField>>
+      rectangle ":Producto" as PR_Product <<select>>
+    }
+    rectangle ":ReporteItems" as PR_Items {
+      rectangle ":ReporteVenta" as PR_Item1
+      rectangle ":ReporteVenta" as PR_Item2
+    }
+    rectangle ":Actions" as PR_Actions {
+      rectangle ":BtnDescargarPDF" as PR_PDF
+      rectangle ":BtnDescargarExcel" as PR_Excel
+    }
+    rectangle ":EmptyState" as PR_Empty <<message>>
+  }
+
+  rectangle "VistaStock" as P_Stock <<presentationClass>> {
+    rectangle ":Header" as PS_Header
+    rectangle ":Filtros" as PS_Filters {
+      rectangle ":Producto" as PS_Product <<select>>
+      rectangle ":Categoria" as PS_Category <<select>>
+    }
+    rectangle ":StockItems" as PS_Items {
+      rectangle ":ProductoStock" as PS_Item1
+      rectangle ":ProductoStock" as PS_Item2
+    }
+    rectangle ":EmptyState" as PS_Empty <<message>>
+  }
+}
+@enduml

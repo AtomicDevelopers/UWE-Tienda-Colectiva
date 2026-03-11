@@ -1,0 +1,124 @@
+@startuml actividad_gestionar_acceso
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Acceso al Sistema" {
+
+  circle " " as A_Start <<start>>
+  circle " " as A_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar opciones de acceso" as A_Options <<displayAction>>
+
+  class "Seleccionar opcion" as A_SelectOption <<userAction>>
+
+  class "Mostrar formulario de registro" as A_RegisterForm <<displayAction>> {
+    {type=form}
+    --
+    + nombres <<interactionPin>>
+    + apellidos <<interactionPin>>
+    + correo <<interactionPin>>
+    + telefono <<interactionPin>>
+    + nombreEmprendimiento <<interactionPin>>
+    + descripcionEmprendimiento <<interactionPin>>
+    + colectivoSolicitado <<interactionPin>>
+    + contrasena <<interactionPin>>
+    + confirmarContrasena <<interactionPin>>
+  }
+
+  class "Completar formulario de solicitud" as A_FillForm <<userAction>>
+  class "Enviar solicitud al colectivo" as A_SendRequest <<systemAction>>
+  class "Registrar estado en espera" as A_Pending <<systemAction>>
+  class "Mostrar mensaje de solicitud enviada" as A_RequestMsg <<displayAction>> {
+    {type=message}
+    --
+    + mensaje <<displayPin>>
+  }
+
+  class "Mostrar formulario de login" as A_LoginForm <<displayAction>> {
+    {type=form}
+    --
+    + correo <<interactionPin>>
+    + contrasena <<interactionPin>>
+    + recordarme <<interactionPin>>
+  }
+
+  class "Ingresar credenciales" as A_InputCredentials <<userAction>>
+  class "Validar credenciales" as A_ValidateCredentials <<systemAction>>
+  class "Mostrar error de acceso" as A_LoginError <<displayAction>> {
+    {type=message}
+    --
+    + textoError <<displayPin>>
+  }
+
+  class "Completar acceso al sistema" as A_CompleteAccess <<systemAction>>
+  class "Verificar primer ingreso" as A_CheckFirstAccess <<systemAction>>
+
+  class "Mostrar formulario de informacion completa" as A_FirstAccessForm <<displayAction>> {
+    {type=form}
+    --
+    + direccion <<interactionPin>>
+    + fotoPerfil <<interactionPin>>
+    + descripcionNegocio <<interactionPin>>
+    + redesSociales <<interactionPin>>
+  }
+
+  class "Guardar informacion complementaria" as A_SaveExtraInfo <<systemAction>>
+  class "Mostrar panel principal" as A_Dashboard <<displayAction>>
+
+  class "Mostrar formulario de recuperacion" as A_RecoveryForm <<displayAction>> {
+    {type=form}
+    --
+    + correo <<interactionPin>>
+  }
+
+  class "Solicitar recuperacion de contrasena" as A_RequestRecovery <<userAction>>
+  class "Procesar recuperacion de contrasena" as A_ProcessRecovery <<systemAction>>
+  class "Mostrar confirmacion de recuperacion" as A_RecoveryMsg <<displayAction>> {
+    {type=message}
+    --
+    + mensaje <<displayPin>>
+  }
+
+  A_Start --> A_Options
+  A_Options --> A_SelectOption
+
+  A_SelectOption --> A_RegisterForm : [registrarse]
+  A_RegisterForm --> A_FillForm : [completar datos]
+  A_FillForm --> A_SendRequest : submit
+  A_SendRequest --> A_Pending
+  A_Pending --> A_RequestMsg
+  A_RequestMsg --> A_End
+
+  A_SelectOption --> A_LoginForm : [iniciar sesion]
+  A_LoginForm --> A_InputCredentials : [ingresar datos]
+  A_InputCredentials --> A_ValidateCredentials : submit
+  A_ValidateCredentials --> A_LoginError : [credenciales incorrectas]
+  A_LoginError --> A_LoginForm : [reintentar]
+  A_ValidateCredentials --> A_CompleteAccess : [credenciales correctas]
+  A_CompleteAccess --> A_CheckFirstAccess
+  A_CheckFirstAccess --> A_FirstAccessForm : [primer ingreso]
+  A_CheckFirstAccess --> A_Dashboard : [perfil completo]
+  A_FirstAccessForm --> A_SaveExtraInfo : [guardar datos]
+  A_SaveExtraInfo --> A_Dashboard
+  A_Dashboard --> A_End
+
+  A_SelectOption --> A_RecoveryForm : [recuperar contrasena]
+  A_RecoveryForm --> A_RequestRecovery : [ingresar correo]
+  A_RequestRecovery --> A_ProcessRecovery : submit
+  A_ProcessRecovery --> A_RecoveryMsg
+  A_RecoveryMsg --> A_End
+}
+@enduml

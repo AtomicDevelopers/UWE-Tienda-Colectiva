@@ -1,0 +1,97 @@
+@startuml gestion_acceso_presentacion
+title Presentation - Gestionar Acceso al Sistema [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Acceso al Sistema" {
+
+  rectangle "InicioAcceso" as P_Inicio <<presentationClass>> {
+    rectangle ":Header" as PI_Header
+    rectangle ":OpcionesAcceso" as PI_Options {
+      rectangle ":BtnRegistrarse" as PI_Register
+      rectangle ":BtnIniciarSesion" as PI_Login
+      rectangle ":BtnRecuperarContrasena" as PI_Recovery
+    }
+  }
+
+  rectangle "FormularioRegistro" as P_Registro <<presentationClass>> {
+    rectangle ":Title" as PR_Title
+    rectangle ":FormFields" as PR_Form <<form>> {
+      rectangle ":Nombres" as PR_Nombres <<inputField>>
+      rectangle ":Apellidos" as PR_Apellidos <<inputField>>
+      rectangle ":Correo" as PR_Correo <<inputField>>
+      rectangle ":Telefono" as PR_Telefono <<inputField>>
+      rectangle ":NombreEmprendimiento" as PR_Negocio <<inputField>>
+      rectangle ":DescripcionEmprendimiento" as PR_Descripcion <<inputField>>
+      rectangle ":ColectivoSolicitado" as PR_Colectivo <<select>>
+      rectangle ":Contrasena" as PR_Contrasena <<inputField>>
+      rectangle ":ConfirmarContrasena" as PR_Confirmar <<inputField>>
+    }
+    rectangle ":Actions" as PR_Actions {
+      rectangle ":BtnEnviarSolicitud" as PR_Send
+      rectangle ":BtnCancelar" as PR_Cancel
+      rectangle ":MsgError" as PR_Error <<message>>
+    }
+  }
+
+  rectangle "EsperaAprobacion" as P_Espera <<presentationClass>> {
+    rectangle ":Header" as PE_Header
+    rectangle ":MensajeEspera" as PE_Message <<message>>
+    rectangle ":BtnVolverInicio" as PE_Back
+  }
+
+  rectangle "FormularioInicioSesion" as P_Login <<presentationClass>> {
+    rectangle ":Title" as PL_Title
+    rectangle ":FormFields" as PL_Form <<form>> {
+      rectangle ":Correo" as PL_Correo <<inputField>>
+      rectangle ":Contrasena" as PL_Contrasena <<inputField>>
+      rectangle ":Recordarme" as PL_Recordarme <<select>>
+    }
+    rectangle ":Actions" as PL_Actions {
+      rectangle ":BtnIngresar" as PL_Submit
+      rectangle ":BtnRecuperarContrasena" as PL_Recovery
+      rectangle ":MsgError" as PL_Error <<message>>
+    }
+  }
+
+  rectangle "FormularioRecuperacionContrasena" as P_Recovery <<presentationClass>> {
+    rectangle ":Title" as PRC_Title
+    rectangle ":FormFields" as PRC_Form <<form>> {
+      rectangle ":Correo" as PRC_Correo <<inputField>>
+    }
+    rectangle ":Actions" as PRC_Actions {
+      rectangle ":BtnEnviar" as PRC_Send
+      rectangle ":BtnCancelar" as PRC_Cancel
+      rectangle ":MsgConfirmacion" as PRC_Message <<message>>
+    }
+  }
+
+  rectangle "FormularioCompletarInformacion" as P_Complete <<presentationClass>> {
+    rectangle ":Title" as PC_Title
+    rectangle ":FormFields" as PC_Form <<form>> {
+      rectangle ":Direccion" as PC_Direccion <<inputField>>
+      rectangle ":FotoPerfil" as PC_Foto <<filePicker>>
+      rectangle ":DescripcionNegocio" as PC_Descripcion <<inputField>>
+      rectangle ":RedesSociales" as PC_Redes <<inputField>>
+    }
+    rectangle ":Actions" as PC_Actions {
+      rectangle ":BtnGuardar" as PC_Save
+      rectangle ":BtnCancelar" as PC_Cancel
+      rectangle ":MsgError" as PC_Error <<message>>
+    }
+  }
+
+  rectangle "Dashboard" as P_Dashboard <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":MenuPrincipal" as PD_Menu
+    rectangle ":ResumenGeneral" as PD_Summary
+  }
+}
+@enduml

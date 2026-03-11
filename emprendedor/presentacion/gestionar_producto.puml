@@ -1,0 +1,108 @@
+@startuml gestion_productos_presentacion
+title Presentation - Gestionar Productos [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Productos" {
+
+  rectangle "ListaProductos" as P_List <<presentationClass>> {
+    rectangle ":Header" as PL_Header
+    rectangle ":SelectorColectivo" as PL_Collective <<select>>
+    rectangle ":SearchFilter" as PL_Filter {
+      rectangle ":BuscarProducto" as PL_Search <<inputField>>
+      rectangle ":FiltrarCategoria" as PL_Category <<select>>
+    }
+    rectangle ":ProductItems" as PL_Items {
+      rectangle ":ProductoCard" as PL_Card1
+      rectangle ":ProductoCard" as PL_Card2
+    }
+    rectangle ":Actions" as PL_Actions {
+      rectangle ":BtnAgregarProducto" as PL_CreateBtn
+    }
+    rectangle ":EmptyState" as PL_Empty <<message>>
+  }
+
+  rectangle "DetalleProducto" as P_Detail <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":Imagen" as PD_Image
+    rectangle ":Informacion" as PD_Info {
+      rectangle ":Nombre" as PD_Name
+      rectangle ":Descripcion" as PD_Desc
+      rectangle ":Categoria" as PD_Category
+      rectangle ":Precio" as PD_Price
+      rectangle ":Stock" as PD_Stock
+      rectangle ":Estado" as PD_Status
+    }
+    rectangle ":Actions" as PD_Actions {
+      rectangle ":BtnEditar" as PD_EditBtn
+      rectangle ":BtnActualizarStock" as PD_StockBtn
+      rectangle ":BtnEliminar" as PD_DeleteBtn
+      rectangle ":BtnVolver" as PD_BackBtn
+    }
+  }
+
+  rectangle "FormularioCrearProducto" as P_Create <<presentationClass>> {
+    rectangle ":Title" as PC_Title
+    rectangle ":FormFields" as PC_Form <<form>> {
+      rectangle ":Imagen" as PC_Image <<filePicker>>
+      rectangle ":Nombre" as PC_Name <<inputField>>
+      rectangle ":Descripcion" as PC_Desc <<inputField>>
+      rectangle ":Precio" as PC_Price <<inputField>>
+      rectangle ":Categoria" as PC_Category <<select>>
+      rectangle ":OtrosAtributos" as PC_Attributes <<inputField>>
+      rectangle ":StockInicial" as PC_Stock <<inputField>>
+    }
+    rectangle ":Actions" as PC_Actions {
+      rectangle ":BtnGuardar" as PC_Save
+      rectangle ":BtnCancelar" as PC_Cancel
+      rectangle ":MsgError" as PC_Error <<message>>
+    }
+  }
+
+  rectangle "FormularioEditarProducto" as P_Edit <<presentationClass>> {
+    rectangle ":Title" as PE_Title
+    rectangle ":FormFields" as PE_Form <<form>> {
+      rectangle ":Imagen" as PE_Image <<filePicker>>
+      rectangle ":Nombre" as PE_Name <<inputField>>
+      rectangle ":Descripcion" as PE_Desc <<inputField>>
+      rectangle ":Precio" as PE_Price <<inputField>>
+      rectangle ":Categoria" as PE_Category <<select>>
+      rectangle ":OtrosAtributos" as PE_Attributes <<inputField>>
+    }
+    rectangle ":Actions" as PE_Actions {
+      rectangle ":BtnActualizar" as PE_Update
+      rectangle ":BtnCancelar" as PE_Cancel
+      rectangle ":MsgError" as PE_Error <<message>>
+    }
+  }
+
+  rectangle "FormularioActualizarStock" as P_Stock <<presentationClass>> {
+    rectangle ":Title" as PS_Title
+    rectangle ":FormFields" as PS_Form <<form>> {
+      rectangle ":StockActual" as PS_Current
+      rectangle ":NuevoStock" as PS_New <<inputField>>
+    }
+    rectangle ":Actions" as PS_Actions {
+      rectangle ":BtnGuardarStock" as PS_Save
+      rectangle ":BtnCancelar" as PS_Cancel
+      rectangle ":MsgError" as PS_Error <<message>>
+    }
+  }
+
+  rectangle "ConfirmacionEliminacion" as P_Delete <<presentationClass>> {
+    rectangle ":DialogTitle" as PDG_Title
+    rectangle ":DialogMessage" as PDG_Message
+    rectangle ":Actions" as PDG_Actions {
+      rectangle ":BtnConfirmar" as PDG_Confirm
+      rectangle ":BtnCancelar" as PDG_Cancel
+    }
+  }
+}
+@enduml

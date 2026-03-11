@@ -1,0 +1,49 @@
+@startuml gestionar_acceso
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Acceso al Sistema" {
+  actor "Emprendedor" as Entrepreneur
+  actor "Colectivo" as Collective
+
+  usecase "Registrarse" as Register <<processing>>
+  usecase "Completar Formulario\nde Solicitud" as FillForm <<processing>>
+  usecase "Enviar Solicitud al\nColectivo" as SendRequest <<processing>>
+  usecase "Quedar en Espera de\nAprobacion" as PendingApproval <<processing>>
+
+  usecase "Iniciar Sesion" as Login <<processing>>
+  usecase "Validar Credenciales" as ValidateCredentials <<processing>>
+  usecase "Completar Acceso\nal Sistema" as CompleteAccess <<processing>>
+  usecase "Completar Informacion\nPrimer Acceso" as FirstAccess <<processing>>
+  usecase "Cambiar Contrasena\nTemporal" as ChangeTempPassword <<processing>>
+
+  usecase "Recuperar Contrasena" as RecoverPassword <<processing>>
+}
+
+Entrepreneur --> Register
+Entrepreneur --> Login
+Entrepreneur --> RecoverPassword
+Collective --> SendRequest
+
+Register ..> FillForm : <<include>>
+FillForm ..> SendRequest : <<include>>
+SendRequest ..> PendingApproval : <<include>>
+
+Login ..> ValidateCredentials : <<include>>
+ValidateCredentials ..> CompleteAccess : <<include>>
+CompleteAccess ..> FirstAccess : <<extend>>
+CompleteAccess ..> ChangeTempPassword : <<extend>>
+
+@enduml
