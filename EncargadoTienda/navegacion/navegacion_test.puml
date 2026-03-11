@@ -1,0 +1,49 @@
+@startuml navegacion_gestion_tienda_espacio
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Tienda, Espacios, Reportes y Comunicacion" {
+
+  class "Dashboard" as Dashboard <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "InformacionTienda" as InformacionTienda <<navigationClass>>
+  class "ListaEspacios" as ListaEspacios <<navigationClass>>
+  class "DetalleEspacio" as DetalleEspacio <<navigationClass>>
+  class "FormularioEspacio" as FormularioEspacio <<navigationClass>>
+  class "ReportesVentas" as ReportesVentas <<navigationClass>>
+  class "ReportesStock" as ReportesStock <<navigationClass>>
+  class "DescargaReporte" as DescargaReporte <<navigationClass>>
+  class "ProductosAltaDemanda" as ProductosAltaDemanda <<navigationClass>>
+  class "FormularioMensaje" as FormularioMensaje <<navigationClass>>
+  class "OperacionExitosa" as Exito <<navigationClass>>
+
+  Dashboard "1" --> "1" InformacionTienda : <<navigationLink>>
+  Dashboard "1" --> "1" ListaEspacios : <<navigationLink>>
+  Dashboard "1" --> "1" ReportesVentas : <<navigationLink>>
+  Dashboard "1" --> "1" ReportesStock : <<navigationLink>>
+  Dashboard "1" --> "1" ProductosAltaDemanda : <<navigationLink>>
+
+  ListaEspacios "1" --> "*" DetalleEspacio : <<navigationLink>>
+  ListaEspacios "1" --> "1" FormularioEspacio : <<navigationLink>>
+  DetalleEspacio "1" --> "1" FormularioEspacio : <<navigationLink>>
+
+  ReportesVentas "1" --> "1" DescargaReporte : <<navigationLink>>
+  ReportesStock "1" --> "1" DescargaReporte : <<navigationLink>>
+
+  ProductosAltaDemanda "1" --> "1" FormularioMensaje : <<navigationLink>>
+  FormularioMensaje "1" --> "1" Exito : <<navigationLink>>
+  FormularioEspacio "1" --> "1" Exito : <<navigationLink>>
+  DescargaReporte "1" --> "1" Exito : <<navigationLink>>
+
+  Exito "1" --> "1" Dashboard : <<navigationLink>>
+}
+@enduml

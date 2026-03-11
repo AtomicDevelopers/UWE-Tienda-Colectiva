@@ -1,0 +1,182 @@
+@startuml actividad_gestion_tienda_espacio
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Tienda, Espacios, Reportes y Comunicacion" {
+
+  circle " " as B_Start <<start>>
+  circle " " as B_End <<end>>
+  skinparam circleBackgroundColor black
+
+  package "Panel Principal" {
+    class "Mostrar panel principal" as B_Dashboard <<displayAction>> {
+      {type=menu}
+    }
+
+    class "Seleccionar opcion de gestion" as B_SelectOption <<userAction>>
+  }
+
+  package "Informacion de la Tienda" {
+    class "Mostrar informacion de la tienda" as B_ViewStoreInfo <<displayAction>> {
+      {type=detail}
+      --
+      + nombreTienda <<displayPin>>
+      + ubicacion <<displayPin>>
+      + horario <<displayPin>>
+      + estadoGeneral <<displayPin>>
+    }
+  }
+
+  package "Gestion de Espacios" {
+    class "Mostrar lista de espacios" as B_ListSpaces <<displayAction>> {
+      {type=list}
+      --
+      + numeroEspacio <<displayPin>>
+      + estado <<displayPin>>
+      + emprendimientoAsignado <<displayPin>>
+    }
+
+    class "Seleccionar espacio" as B_SelectSpace <<userAction>>
+
+    class "Mostrar detalle de espacio" as B_ViewSpaceDetail <<displayAction>> {
+      {type=detail}
+      --
+      + numeroEspacio <<displayPin>>
+      + ubicacion <<displayPin>>
+      + estado <<displayPin>>
+      + emprendimientoAsignado <<displayPin>>
+    }
+
+    class "Mostrar formulario de espacio" as B_SpaceForm <<displayAction>> {
+      {type=form}
+      --
+      + numeroEspacio <<interactionPin>>
+      + ubicacion <<interactionPin>>
+      + estado <<interactionPin>>
+      + emprendimientoAsignado <<interactionPin>>
+    }
+
+    class "Procesar gestion de espacio" as B_ProcessSpace <<systemAction>>
+    class "Mostrar confirmacion de espacio" as B_SpaceMsg <<displayAction>> {
+      {type=message}
+      --
+      + mensaje <<displayPin>>
+    }
+    class "Mostrar error de espacio" as B_SpaceError <<displayAction>> {
+      {type=message}
+      --
+      + textoError <<displayPin>>
+    }
+  }
+
+  package "Gestion de Reportes" {
+    class "Mostrar reportes de ventas" as B_ViewSalesReports <<displayAction>> {
+      {type=list}
+      --
+      + fecha <<displayPin>>
+      + emprendimiento <<displayPin>>
+      + totalVentas <<displayPin>>
+    }
+
+    class "Mostrar reportes de stock" as B_ViewStockReports <<displayAction>> {
+      {type=list}
+      --
+      + producto <<displayPin>>
+      + stockDisponible <<displayPin>>
+      + emprendimiento <<displayPin>>
+    }
+
+    class "Seleccionar tipo de descarga" as B_SelectDownload <<userAction>>
+    class "Descargar reporte" as B_DownloadReport <<systemAction>>
+    class "Mostrar error de descarga" as B_DownloadError <<displayAction>> {
+      {type=message}
+      --
+      + textoError <<displayPin>>
+    }
+  }
+
+  package "Comunicacion con Emprendedores" {
+    class "Mostrar productos con alta demanda" as B_ViewHighDemand <<displayAction>> {
+      {type=list}
+      --
+      + producto <<displayPin>>
+      + nivelDemanda <<displayPin>>
+      + stockDisponible <<displayPin>>
+      + emprendimiento <<displayPin>>
+    }
+
+    class "Seleccionar emprendedor" as B_SelectEntrepreneur <<userAction>>
+
+    class "Mostrar formulario de mensaje" as B_MessageForm <<displayAction>> {
+      {type=form}
+      --
+      + destinatario <<interactionPin>>
+      + asunto <<interactionPin>>
+      + mensaje <<interactionPin>>
+    }
+
+    class "Enviar mensaje o notificacion" as B_SendMessage <<systemAction>>
+    class "Mostrar confirmacion de envio" as B_MessageMsg <<displayAction>> {
+      {type=message}
+      --
+      + mensaje <<displayPin>>
+    }
+    class "Mostrar error de envio" as B_MessageError <<displayAction>> {
+      {type=message}
+      --
+      + textoError <<displayPin>>
+    }
+  }
+
+  B_Start --> B_Dashboard
+  B_Dashboard --> B_SelectOption
+
+  B_SelectOption --> B_ViewStoreInfo : [consultar informacion de la tienda]
+  B_ViewStoreInfo --> B_End
+
+  B_SelectOption --> B_ListSpaces : [gestionar espacios]
+  B_ListSpaces --> B_SelectSpace
+  B_SelectSpace --> B_ViewSpaceDetail
+  B_ViewSpaceDetail --> B_SpaceForm : [crear, editar, eliminar o asignar]
+  B_SpaceForm --> B_ProcessSpace : submit
+  B_ProcessSpace --> B_SpaceMsg : [operacion exitosa]
+  B_ProcessSpace --> B_SpaceError : [datos invalidos]
+  B_SpaceError --> B_SpaceForm : [corregir]
+  B_SpaceMsg --> B_End
+
+  B_SelectOption --> B_ViewSalesReports : [consultar reportes de ventas]
+  B_ViewSalesReports --> B_SelectDownload : [descargar]
+  B_SelectDownload --> B_DownloadReport : submit
+  B_DownloadReport --> B_End : [descarga exitosa]
+  B_DownloadReport --> B_DownloadError : [sin datos o error]
+  B_DownloadError --> B_ViewSalesReports : [reintentar]
+
+  B_SelectOption --> B_ViewStockReports : [consultar reportes de stock]
+  B_ViewStockReports --> B_SelectDownload : [descargar]
+  B_SelectDownload --> B_DownloadReport : submit
+  B_DownloadReport --> B_End : [descarga exitosa]
+  B_DownloadReport --> B_DownloadError : [sin datos o error]
+  B_DownloadError --> B_ViewStockReports : [reintentar]
+
+  B_SelectOption --> B_ViewHighDemand : [identificar alta demanda]
+  B_ViewHighDemand --> B_SelectEntrepreneur
+  B_SelectEntrepreneur --> B_MessageForm
+  B_MessageForm --> B_SendMessage : submit
+  B_SendMessage --> B_MessageMsg : [envio exitoso]
+  B_SendMessage --> B_MessageError : [datos invalidos]
+  B_MessageError --> B_MessageForm : [corregir]
+  B_MessageMsg --> B_End
+}
+@enduml

@@ -1,0 +1,66 @@
+@startuml gestion_encargado_tienda
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Emprendedores, Colectivos, Inventario y Ventas" {
+  actor "Encargado de Tienda" as Manager
+
+  usecase "Visualizar Colectivos\nAsociados" as ViewCollectives <<browsing>>
+  usecase "Consultar Detalle\ndel Colectivo" as ViewCollectiveDetail <<browsing>>
+
+  usecase "Visualizar Emprendedores\nAsociados" as ViewEntrepreneurs <<browsing>>
+  usecase "Consultar Detalle\ndel Emprendedor" as ViewEntrepreneurDetail <<browsing>>
+  usecase "Revisar Espacios\nAsignados" as ReviewAssignedSpaces <<browsing>>
+
+  usecase "Revisar Solicitudes" as ReviewRequests <<processing>>
+  usecase "Aprobar Solicitudes" as ApproveRequests <<processing>>
+  usecase "Rechazar Solicitudes" as RejectRequests <<processing>>
+
+  usecase "Consultar Stock de\nEmprendedores" as ViewEntrepreneurStock <<browsing>>
+  usecase "Ver Productos en Tienda" as ViewProductsInStore <<browsing>>
+
+  usecase "Registrar Movimiento\nde Inventario" as RegisterInventoryMove <<processing>>
+  usecase "Ajuste de Stock" as StockAdjustment <<processing>>
+  usecase "Devolucion" as StockReturn <<processing>>
+
+  usecase "Registrar Venta" as RegisterSale <<processing>>
+  usecase "Agregar Items\nde Venta" as AddSaleItems <<processing>>
+  usecase "Confirmar Venta" as ConfirmSale <<processing>>
+  usecase "Ver Historial\nde Ventas" as ViewSalesHistory <<browsing>>
+}
+
+Manager --> ViewCollectives
+Manager --> ReviewRequests
+Manager --> RegisterInventoryMove
+Manager --> RegisterSale
+Manager --> ViewSalesHistory
+
+ViewCollectives ..> ViewCollectiveDetail : <<extend>>
+ViewCollectiveDetail ..> ViewEntrepreneurs : <<include>>
+ViewEntrepreneurs ..> ViewEntrepreneurDetail : <<extend>>
+ViewEntrepreneurDetail ..> ReviewAssignedSpaces : <<extend>>
+ViewEntrepreneurDetail ..> ViewEntrepreneurStock : <<extend>>
+ViewEntrepreneurStock ..> ViewProductsInStore : <<include>>
+
+ReviewRequests ..> ApproveRequests : <<extend>>
+ReviewRequests ..> RejectRequests : <<extend>>
+
+RegisterInventoryMove ..> StockAdjustment : <<extend>>
+RegisterInventoryMove ..> StockReturn : <<extend>>
+
+RegisterSale ..> AddSaleItems : <<include>>
+AddSaleItems ..> ConfirmSale : <<include>>
+
+@enduml

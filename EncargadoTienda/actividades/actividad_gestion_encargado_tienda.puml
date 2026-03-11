@@ -1,0 +1,147 @@
+@startuml actividad_gestion_encargado_tienda
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Activity Gestionar Emprendedores, Colectivos, Inventario y Ventas" {
+
+  circle " " as A_Start <<start>>
+  circle " " as A_End <<end>>
+  skinparam circleBackgroundColor black
+
+  package "Seleccion de Colectivo y Emprendedor" {
+    class "Mostrar colectivos asociados" as A_ViewCollectives <<displayAction>> {
+      {type=list}
+      --
+      + nombreColectivo <<displayPin>>
+      + estado <<displayPin>>
+    }
+
+    class "Seleccionar colectivo" as A_SelectCollective <<userAction>>
+
+    class "Mostrar detalle del colectivo" as A_ViewCollectiveDetail <<displayAction>> {
+      {type=detail}
+      --
+      + nombreColectivo <<displayPin>>
+      + descripcion <<displayPin>>
+      + emprendedoresAsociados <<displayPin>>
+    }
+
+    class "Mostrar emprendedores asociados" as A_ViewEntrepreneurs <<displayAction>> {
+      {type=list}
+      --
+      + nombreEmprendedor <<displayPin>>
+      + espacioAsignado <<displayPin>>
+      + estadoSolicitud <<displayPin>>
+    }
+
+    class "Seleccionar emprendedor" as A_SelectEntrepreneur <<userAction>>
+
+    class "Mostrar detalle del emprendedor" as A_ViewEntrepreneurDetail <<displayAction>> {
+      {type=detail}
+      --
+      + nombreEmprendedor <<displayPin>>
+      + colectivo <<displayPin>>
+      + espacioAsignado <<displayPin>>
+    }
+  }
+
+  package "Gestion de Espacios" {
+    class "Mostrar espacios asignados" as A_ViewAssignedSpaces <<displayAction>> {
+      {type=list}
+      --
+      + numeroEspacio <<displayPin>>
+      + estadoEspacio <<displayPin>>
+    }
+  }
+
+  package "Consulta de Stock y Productos" {
+    class "Mostrar stock del emprendedor" as A_ViewStock <<displayAction>> {
+      {type=list}
+      --
+      + producto <<displayPin>>
+      + stock <<displayPin>>
+    }
+
+    class "Mostrar productos en tienda" as A_ViewProducts <<displayAction>> {
+      {type=list}
+      --
+      + nombreProducto <<displayPin>>
+      + categoria <<displayPin>>
+      + precio <<displayPin>>
+    }
+  }
+
+  package "Gestion de Solicitudes" {
+    class "Mostrar solicitudes pendientes" as A_ViewRequests <<displayAction>> {
+      {type=list}
+      --
+      + solicitud <<displayPin>>
+      + estado <<displayPin>>
+    }
+
+    class "Seleccionar decision de solicitud" as A_RequestDecision <<userAction>>
+    class "Procesar solicitud" as A_ProcessRequest <<systemAction>>
+  }
+
+  package "Movimiento de Inventario" {
+    class "Mostrar formulario de movimiento de inventario" as A_InventoryForm <<displayAction>> {
+      {type=form}
+      --
+      + tipoMovimiento <<interactionPin>>
+      + producto <<interactionPin>>
+      + cantidad <<interactionPin>>
+      + observacion <<interactionPin>>
+    }
+
+    class "Registrar movimiento de inventario" as A_SaveInventoryMove <<systemAction>>
+  }
+
+  package "Registro de Venta" {
+    class "Mostrar formulario de venta" as A_SaleForm <<displayAction>> {
+      {type=form}
+      --
+      + producto <<interactionPin>>
+      + cantidad <<interactionPin>>
+      + precio <<interactionPin>>
+    }
+
+    class "Agregar items de venta" as A_AddSaleItems <<userAction>>
+    class "Confirmar venta" as A_ConfirmSale <<systemAction>>
+  }
+
+  A_Start --> A_ViewCollectives
+  A_ViewCollectives --> A_SelectCollective
+  A_SelectCollective --> A_ViewCollectiveDetail
+  A_ViewCollectiveDetail --> A_ViewEntrepreneurs
+  A_ViewEntrepreneurs --> A_SelectEntrepreneur
+  A_SelectEntrepreneur --> A_ViewEntrepreneurDetail
+
+  A_ViewEntrepreneurDetail --> A_ViewAssignedSpaces : [revisar espacios]
+  A_ViewAssignedSpaces --> A_End
+
+  A_ViewEntrepreneurDetail --> A_ViewStock : [consultar stock]
+  A_ViewStock --> A_ViewProducts : [ver productos]
+  A_ViewProducts --> A_End
+
+  A_ViewEntrepreneurDetail --> A_ViewRequests : [revisar solicitudes]
+  A_ViewRequests --> A_RequestDecision
+  A_RequestDecision --> A_ProcessRequest : submit
+  A_ProcessRequest --> A_End
+
+  A_ViewEntrepreneurDetail --> A_InventoryForm : [registrar movimiento]
+  A_InventoryForm --> A_SaveInventoryMove : submit
+  A_SaveInventoryMove --> A_End
+
+  A_ViewEntrepreneurDetail --> A_SaleForm : [registrar venta]
+  A_SaleForm --> A_AddSaleItems
+  A_AddSaleItems --> A_ConfirmSale : submit
+  A_ConfirmSale --> A_End
+}
+@enduml

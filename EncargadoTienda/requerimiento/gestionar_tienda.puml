@@ -1,0 +1,61 @@
+@startuml gestion_tienda_espacio
+allow_mixing
+
+skinparam shadow false
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Requirements Gestionar Tienda, Espacios, Reportes y Comunicacion" {
+  actor "Encargado de Tienda" as Manager
+
+  usecase "Consultar Informacion\nde la Tienda" as ViewStoreInfo <<browsing>>
+  usecase "Visualizar Horarios\nde la Tienda" as ViewStoreSchedule <<browsing>>
+  usecase "Visualizar Estado General\nde la Tienda" as ViewStoreStatus <<browsing>>
+
+  usecase "Listar Espacios" as ListSpaces <<browsing>>
+  usecase "Ver Detalle de Espacio" as ViewSpaceDetail <<browsing>>
+  usecase "Crear Espacio" as CreateSpace <<processing>>
+  usecase "Editar Espacio" as EditSpace <<processing>>
+  usecase "Eliminar Espacio" as DeleteSpace <<processing>>
+  usecase "Asignar Espacio a\nEmprendimiento" as AssignSpace <<processing>>
+
+  usecase "Consultar Reportes\nde Ventas" as ViewSalesReports <<browsing>>
+  usecase "Consultar Reportes\nde Stock" as ViewStockReports <<browsing>>
+  usecase "Descargar Reporte" as DownloadReport <<processing>>
+
+  usecase "Identificar Productos con\nAlta Demanda" as IdentifyDemand <<processing>>
+  usecase "Enviar Mensaje al\nEmprendedor" as SendMessage <<processing>>
+  usecase "Notificar Reposicion\nde Productos" as NotifyRestock <<processing>>
+}
+
+Manager --> ViewStoreInfo
+Manager --> ListSpaces
+Manager --> ViewSalesReports
+Manager --> ViewStockReports
+Manager --> IdentifyDemand
+
+ViewStoreInfo ..> ViewStoreSchedule : <<extend>>
+ViewStoreInfo ..> ViewStoreStatus : <<extend>>
+
+ListSpaces ..> ViewSpaceDetail : <<extend>>
+ListSpaces ..> CreateSpace : <<extend>>
+ViewSpaceDetail ..> EditSpace : <<extend>>
+ViewSpaceDetail ..> DeleteSpace : <<extend>>
+ViewSpaceDetail ..> AssignSpace : <<extend>>
+
+ViewSalesReports ..> DownloadReport : <<extend>>
+ViewStockReports ..> DownloadReport : <<extend>>
+
+IdentifyDemand ..> SendMessage : <<extend>>
+IdentifyDemand ..> NotifyRestock : <<extend>>
+
+@enduml

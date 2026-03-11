@@ -1,0 +1,117 @@
+@startuml presentacion_gestion_encargado_tienda
+title Presentation - Gestionar Emprendedores, Colectivos, Inventario y Ventas [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Emprendedores, Colectivos, Inventario y Ventas" {
+
+  rectangle "DashboardEncargado" as P_Dashboard <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":MenuOpciones" as PD_Menu {
+      rectangle ":BtnColectivos" as PD_Colectivos
+      rectangle ":BtnSolicitudes" as PD_Solicitudes
+      rectangle ":BtnMovimientoInventario" as PD_Inventario
+      rectangle ":BtnRegistrarVenta" as PD_Venta
+      rectangle ":BtnHistorialVentas" as PD_Historial
+    }
+  }
+
+  rectangle "ListaColectivos" as P_Collectives <<presentationClass>> {
+    rectangle ":Header" as PC_Header
+    rectangle ":ColectivoItems" as PC_Items {
+      rectangle ":ColectivoCard" as PC_Card1
+      rectangle ":ColectivoCard" as PC_Card2
+    }
+    rectangle ":EmptyState" as PC_Empty <<message>>
+  }
+
+  rectangle "DetalleColectivo" as P_CollectiveDetail <<presentationClass>> {
+    rectangle ":Header" as PCD_Header
+    rectangle ":InformacionGeneral" as PCD_Info {
+      rectangle ":Nombre" as PCD_Name
+      rectangle ":Descripcion" as PCD_Desc
+      rectangle ":Estado" as PCD_Status
+    }
+    rectangle ":AccionVerEmprendedores" as PCD_ViewEntrepreneurs
+  }
+
+  rectangle "ListaEmprendedores" as P_Entrepreneurs <<presentationClass>> {
+    rectangle ":Header" as PE_Header
+    rectangle ":EmprendedorItems" as PE_Items {
+      rectangle ":EmprendedorCard" as PE_Card1
+      rectangle ":EmprendedorCard" as PE_Card2
+    }
+    rectangle ":EmptyState" as PE_Empty <<message>>
+  }
+
+  rectangle "DetalleEmprendedor" as P_EntrepreneurDetail <<presentationClass>> {
+    rectangle ":Header" as PED_Header
+    rectangle ":InformacionGeneral" as PED_Info {
+      rectangle ":Nombre" as PED_Name
+      rectangle ":Colectivo" as PED_Collective
+      rectangle ":EspacioAsignado" as PED_Space
+    }
+    rectangle ":Actions" as PED_Actions {
+      rectangle ":BtnVerEspacios" as PED_ViewSpaces
+      rectangle ":BtnVerStock" as PED_ViewStock
+    }
+  }
+
+  rectangle "Solicitudes" as P_Requests <<presentationClass>> {
+    rectangle ":Header" as PR_Header
+    rectangle ":RequestItems" as PR_Items {
+      rectangle ":SolicitudCard" as PR_Card1
+      rectangle ":SolicitudCard" as PR_Card2
+    }
+    rectangle ":Actions" as PR_Actions {
+      rectangle ":BtnAprobar" as PR_Approve
+      rectangle ":BtnRechazar" as PR_Reject
+    }
+  }
+
+  rectangle "RegistroMovimientoInventario" as P_Inventory <<presentationClass>> {
+    rectangle ":Title" as PI_Title
+    rectangle ":FormFields" as PI_Form <<form>> {
+      rectangle ":TipoMovimiento" as PI_Type <<select>>
+      rectangle ":Producto" as PI_Product <<select>>
+      rectangle ":Cantidad" as PI_Quantity <<inputField>>
+      rectangle ":Observacion" as PI_Observation <<inputField>>
+    }
+    rectangle ":Actions" as PI_Actions {
+      rectangle ":BtnGuardar" as PI_Save
+      rectangle ":BtnCancelar" as PI_Cancel
+      rectangle ":MsgError" as PI_Error <<message>>
+    }
+  }
+
+  rectangle "FormularioVenta" as P_Sale <<presentationClass>> {
+    rectangle ":Title" as PS_Title
+    rectangle ":FormFields" as PS_Form <<form>> {
+      rectangle ":Producto" as PS_Product <<select>>
+      rectangle ":Cantidad" as PS_Quantity <<inputField>>
+      rectangle ":Precio" as PS_Price <<inputField>>
+    }
+    rectangle ":Actions" as PS_Actions {
+      rectangle ":BtnAgregarItem" as PS_AddItem
+      rectangle ":BtnConfirmarVenta" as PS_Confirm
+      rectangle ":MsgError" as PS_Error <<message>>
+    }
+  }
+
+  rectangle "HistorialVentas" as P_SalesHistory <<presentationClass>> {
+    rectangle ":Header" as PH_Header
+    rectangle ":SaleItems" as PH_Items {
+      rectangle ":VentaCard" as PH_Card1
+      rectangle ":VentaCard" as PH_Card2
+    }
+    rectangle ":EmptyState" as PH_Empty <<message>>
+  }
+}
+@enduml

@@ -1,0 +1,128 @@
+@startuml presentacion_gestion_tienda_espacio
+title Presentation - Gestionar Tienda, Espacios, Reportes y Comunicacion [Presentation Diagram]
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam packageStyle rectangle
+
+skinparam rectangle {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+package "Presentation - Gestionar Tienda, Espacios, Reportes y Comunicacion" {
+
+  rectangle "DashboardTienda" as P_Dashboard <<presentationClass>> {
+    rectangle ":Header" as PD_Header
+    rectangle ":MenuOpciones" as PD_Menu {
+      rectangle ":BtnInformacionTienda" as PD_Info
+      rectangle ":BtnEspacios" as PD_Spaces
+      rectangle ":BtnReportesVentas" as PD_SalesReports
+      rectangle ":BtnReportesStock" as PD_StockReports
+      rectangle ":BtnAltaDemanda" as PD_HighDemand
+    }
+  }
+
+  rectangle "InformacionTienda" as P_StoreInfo <<presentationClass>> {
+    rectangle ":Header" as PSI_Header
+    rectangle ":InformacionGeneral" as PSI_Info {
+      rectangle ":NombreTienda" as PSI_Name
+      rectangle ":Ubicacion" as PSI_Location
+      rectangle ":Horario" as PSI_Schedule
+      rectangle ":EstadoGeneral" as PSI_Status
+    }
+  }
+
+  rectangle "ListaEspacios" as P_Spaces <<presentationClass>> {
+    rectangle ":Header" as PS_Header
+    rectangle ":SpaceItems" as PS_Items {
+      rectangle ":EspacioCard" as PS_Card1
+      rectangle ":EspacioCard" as PS_Card2
+    }
+    rectangle ":Actions" as PS_Actions {
+      rectangle ":BtnCrearEspacio" as PS_Create
+    }
+    rectangle ":EmptyState" as PS_Empty <<message>>
+  }
+
+  rectangle "DetalleEspacio" as P_SpaceDetail <<presentationClass>> {
+    rectangle ":Header" as PSD_Header
+    rectangle ":InformacionEspacio" as PSD_Info {
+      rectangle ":NumeroEspacio" as PSD_Number
+      rectangle ":Ubicacion" as PSD_Location
+      rectangle ":Estado" as PSD_Status
+      rectangle ":EmprendimientoAsignado" as PSD_Assigned
+    }
+    rectangle ":Actions" as PSD_Actions {
+      rectangle ":BtnEditar" as PSD_Edit
+      rectangle ":BtnEliminar" as PSD_Delete
+      rectangle ":BtnAsignar" as PSD_Assign
+    }
+  }
+
+  rectangle "FormularioEspacio" as P_SpaceForm <<presentationClass>> {
+    rectangle ":Title" as PSF_Title
+    rectangle ":FormFields" as PSF_Form <<form>> {
+      rectangle ":NumeroEspacio" as PSF_Number <<inputField>>
+      rectangle ":Ubicacion" as PSF_Location <<inputField>>
+      rectangle ":Estado" as PSF_Status <<select>>
+      rectangle ":EmprendimientoAsignado" as PSF_Assigned <<select>>
+    }
+    rectangle ":Actions" as PSF_Actions {
+      rectangle ":BtnGuardar" as PSF_Save
+      rectangle ":BtnCancelar" as PSF_Cancel
+      rectangle ":MsgError" as PSF_Error <<message>>
+    }
+  }
+
+  rectangle "ReportesVentas" as P_SalesReports <<presentationClass>> {
+    rectangle ":Header" as PRV_Header
+    rectangle ":ReporteItems" as PRV_Items {
+      rectangle ":ReporteVentaCard" as PRV_Card1
+      rectangle ":ReporteVentaCard" as PRV_Card2
+    }
+    rectangle ":Actions" as PRV_Actions {
+      rectangle ":BtnDescargarReporte" as PRV_Download
+    }
+    rectangle ":EmptyState" as PRV_Empty <<message>>
+  }
+
+  rectangle "ReportesStock" as P_StockReports <<presentationClass>> {
+    rectangle ":Header" as PRS_Header
+    rectangle ":ReporteItems" as PRS_Items {
+      rectangle ":ReporteStockCard" as PRS_Card1
+      rectangle ":ReporteStockCard" as PRS_Card2
+    }
+    rectangle ":Actions" as PRS_Actions {
+      rectangle ":BtnDescargarReporte" as PRS_Download
+    }
+    rectangle ":EmptyState" as PRS_Empty <<message>>
+  }
+
+  rectangle "ProductosAltaDemanda" as P_HighDemand <<presentationClass>> {
+    rectangle ":Header" as PHD_Header
+    rectangle ":ProductItems" as PHD_Items {
+      rectangle ":ProductoDemandaCard" as PHD_Card1
+      rectangle ":ProductoDemandaCard" as PHD_Card2
+    }
+    rectangle ":Actions" as PHD_Actions {
+      rectangle ":BtnNotificarEmprendedor" as PHD_Notify
+    }
+    rectangle ":EmptyState" as PHD_Empty <<message>>
+  }
+
+  rectangle "FormularioMensaje" as P_Message <<presentationClass>> {
+    rectangle ":Title" as PM_Title
+    rectangle ":FormFields" as PM_Form <<form>> {
+      rectangle ":Destinatario" as PM_Recipient <<select>>
+      rectangle ":Asunto" as PM_Subject <<inputField>>
+      rectangle ":Mensaje" as PM_MessageField <<inputField>>
+    }
+    rectangle ":Actions" as PM_Actions {
+      rectangle ":BtnEnviar" as PM_Send
+      rectangle ":BtnCancelar" as PM_Cancel
+      rectangle ":MsgError" as PM_Error <<message>>
+    }
+  }
+}
+@enduml

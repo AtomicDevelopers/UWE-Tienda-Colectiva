@@ -1,0 +1,59 @@
+@startuml navegacion_gestion_encargado_tienda
+
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Navigation - Gestionar Emprendedores, Colectivos, Inventario y Ventas" {
+
+  class "Dashboard" as Dashboard <<navigationClass>> {
+    {tag=isHome}
+  }
+
+  class "ListaColectivos" as ListaColectivos <<navigationClass>>
+  class "DetalleColectivo" as DetalleColectivo <<navigationClass>>
+  class "ListaEmprendedores" as ListaEmprendedores <<navigationClass>>
+  class "DetalleEmprendedor" as DetalleEmprendedor <<navigationClass>>
+  class "EspaciosAsignados" as EspaciosAsignados <<navigationClass>>
+  class "Solicitudes" as Solicitudes <<navigationClass>>
+  class "StockEmprendedor" as StockEmprendedor <<navigationClass>>
+  class "ProductosEnTienda" as ProductosEnTienda <<navigationClass>>
+
+  class "RegistroMovimientoInventario" as MovimientoInventario <<navigationClass>>
+  class "FormularioAjusteStock" as AjusteStock <<navigationClass>>
+  class "FormularioDevolucion" as Devolucion <<navigationClass>>
+
+  class "FormularioVenta" as FormularioVenta <<navigationClass>>
+  class "HistorialVentas" as HistorialVentas <<navigationClass>>
+  class "OperacionExitosa" as Exito <<navigationClass>>
+
+  Dashboard "1" --> "1" ListaColectivos : <<navigationLink>>
+  Dashboard "1" --> "1" Solicitudes : <<navigationLink>>
+  Dashboard "1" --> "1" MovimientoInventario : <<navigationLink>>
+  Dashboard "1" --> "1" FormularioVenta : <<navigationLink>>
+  Dashboard "1" --> "1" HistorialVentas : <<navigationLink>>
+
+  ListaColectivos "1" --> "*" DetalleColectivo : <<navigationLink>>
+  DetalleColectivo "1" --> "1" ListaEmprendedores : <<navigationLink>>
+  ListaEmprendedores "1" --> "*" DetalleEmprendedor : <<navigationLink>>
+
+  DetalleEmprendedor "1" --> "1" EspaciosAsignados : <<navigationLink>>
+  DetalleEmprendedor "1" --> "1" StockEmprendedor : <<navigationLink>>
+  StockEmprendedor "1" --> "1" ProductosEnTienda : <<navigationLink>>
+
+  Solicitudes "1" --> "1" Exito : <<navigationLink>>
+
+  MovimientoInventario "1" --> "1" AjusteStock : <<navigationLink>>
+  MovimientoInventario "1" --> "1" Devolucion : <<navigationLink>>
+  AjusteStock "1" --> "1" Exito : <<navigationLink>>
+  Devolucion "1" --> "1" Exito : <<navigationLink>>
+
+  FormularioVenta "1" --> "1" Exito : <<navigationLink>>
+  Exito "1" --> "1" Dashboard : <<navigationLink>>
+}
+@enduml
