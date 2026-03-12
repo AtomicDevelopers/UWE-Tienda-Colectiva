@@ -1,0 +1,25 @@
+@startuml flujo_registrar_movimiento_inventario
+title Flujo de Proceso - Registrar Movimiento de Inventario
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+start
+:Boton Movimiento de Inventario pulsado;
+:<<systemAction>> Mostrar formulario de movimiento;
+:<<userAction>> Ingresar datos del movimiento;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Registrar movimiento de inventario;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

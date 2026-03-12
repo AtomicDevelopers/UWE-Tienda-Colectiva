@@ -16,7 +16,6 @@ skinparam usecase {
 
 package "Requirements Gestionar Acceso al Sistema" {
   actor "Emprendedor" as Entrepreneur
-  actor "Colectivo" as Collective
 
   usecase "Registrarse" as Register <<processing>>
   usecase "Completar Formulario\nde Solicitud" as FillForm <<processing>>
@@ -35,7 +34,6 @@ package "Requirements Gestionar Acceso al Sistema" {
 Entrepreneur --> Register
 Entrepreneur --> Login
 Entrepreneur --> RecoverPassword
-Collective --> SendRequest
 
 Register ..> FillForm : <<include>>
 FillForm ..> SendRequest : <<include>>

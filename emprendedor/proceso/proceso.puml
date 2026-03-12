@@ -1,0 +1,68 @@
+@startuml proceso_gestionar_acceso
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Proceso [ Gestionar Acceso al Sistema ]" {
+
+  class "ProcesoAcceso" as ProcesoAcceso <<processClass>>
+
+  class "Registro" as Registro <<processClass>>
+  class "InicioDeSesion" as InicioDeSesion <<processClass>>
+  class "RecuperacionDeContrasena" as RecuperacionDeContrasena <<processClass>>
+  class "CompletarInformacion" as CompletarInformacion <<processClass>>
+
+  class "DatosAcceso" as DatosAcceso <<processClass>> {
+    -nombres : String
+    -apellidos : String
+    -correo : String
+    -telefono : String
+    -colectivoSolicitado : String
+    -contrasena : String
+    -confirmarContrasena : String
+    -direccion : String
+    -fotoPerfil : String
+    -descripcionNegocio : String
+    -redesSociales : String
+    --
+    -validarDatos()
+  }
+
+  class "ConfirmacionSolicitud" as ConfirmacionSolicitud <<processClass>> {
+    -enviarSolicitud()
+  }
+
+  class "ConfirmacionAcceso" as ConfirmacionAcceso <<processClass>> {
+    -completarAcceso()
+  }
+
+  class "ConfirmacionRecuperacion" as ConfirmacionRecuperacion <<processClass>> {
+    -recuperarContrasena()
+  }
+
+  class "ErrorDeValidacion" as ErrorDeValidacion <<processClass>> {
+    -mensaje : String
+  }
+
+  ProcesoAcceso <|-- Registro
+  ProcesoAcceso <|-- InicioDeSesion
+  ProcesoAcceso <|-- RecuperacionDeContrasena
+  ProcesoAcceso <|-- CompletarInformacion
+
+  Registro --> DatosAcceso
+  InicioDeSesion --> DatosAcceso
+  RecuperacionDeContrasena --> DatosAcceso
+  CompletarInformacion --> DatosAcceso
+
+  Registro --> ConfirmacionSolicitud
+  InicioDeSesion --> ConfirmacionAcceso
+  RecuperacionDeContrasena --> ConfirmacionRecuperacion
+
+  DatosAcceso --> ErrorDeValidacion
+}
+@enduml

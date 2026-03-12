@@ -1,0 +1,67 @@
+@startuml proceso_gestion_tienda_espacio
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Proceso [ Gestionar Tienda, Espacios, Reportes y Comunicacion ]" {
+
+  class "ProcesoTiendaEspacio" as ProcesoTiendaEspacio <<processClass>>
+
+  class "ConsultaInformacionTienda" as ConsultaInformacionTienda <<processClass>>
+  class "GestionEspacios" as GestionEspacios <<processClass>>
+  class "ConsultaReportes" as ConsultaReportes <<processClass>>
+  class "ComunicacionAltaDemanda" as ComunicacionAltaDemanda <<processClass>>
+
+  class "DatosTiendaEspacio" as DatosTiendaEspacio <<processClass>> {
+    -numeroEspacio : String
+    -ubicacion : String
+    -estado : String
+    -emprendimientoAsignado : String
+    -tipoReporte : String
+    -formato : String
+    -producto : String
+    -destinatario : String
+    -asunto : String
+    -mensaje : String
+    --
+    -validarDatos()
+  }
+
+  class "ConfirmacionEspacio" as ConfirmacionEspacio <<processClass>> {
+    -procesarEspacio()
+  }
+
+  class "ConfirmacionReporte" as ConfirmacionReporte <<processClass>> {
+    -descargarReporte()
+  }
+
+  class "ConfirmacionMensaje" as ConfirmacionMensaje <<processClass>> {
+    -enviarMensaje()
+  }
+
+  class "ErrorDeValidacion" as ErrorDeValidacion <<processClass>> {
+    -mensaje : String
+  }
+
+  ProcesoTiendaEspacio <|-- ConsultaInformacionTienda
+  ProcesoTiendaEspacio <|-- GestionEspacios
+  ProcesoTiendaEspacio <|-- ConsultaReportes
+  ProcesoTiendaEspacio <|-- ComunicacionAltaDemanda
+
+  ConsultaInformacionTienda --> DatosTiendaEspacio
+  GestionEspacios --> DatosTiendaEspacio
+  ConsultaReportes --> DatosTiendaEspacio
+  ComunicacionAltaDemanda --> DatosTiendaEspacio
+
+  GestionEspacios --> ConfirmacionEspacio
+  ConsultaReportes --> ConfirmacionReporte
+  ComunicacionAltaDemanda --> ConfirmacionMensaje
+
+  DatosTiendaEspacio --> ErrorDeValidacion
+}
+@enduml

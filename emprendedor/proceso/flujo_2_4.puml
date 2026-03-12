@@ -1,0 +1,24 @@
+@startuml flujo_solicitar_cambio_espacio
+title Flujo de Proceso - Solicitar Cambio de Espacio
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+start
+:Boton Solicitar Cambio de Espacio pulsado;
+:<<systemAction>> Mostrar formulario de cambio;
+:<<userAction>> Ingresar datos de cambio;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Registrar cambio de espacio;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif

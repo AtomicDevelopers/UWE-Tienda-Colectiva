@@ -1,0 +1,21 @@
+@startuml flujo_gestionar_espacio_asignado
+title Flujo de Proceso - Gestionar Espacio Asignado
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+start
+:Boton Gestionar Espacio pulsado;
+:<<systemAction>> Mostrar espacio asignado;
+:<<systemAction>> Mostrar estado del espacio;
+:<<systemAction>> Mostrar ubicacion del espacio;
+:<<userAction>> Seleccionar espacio;
+:<<systemAction>> Administrar espacio;
+:<<systemAction>> Mostrar productos del espacio;
+stop
+
+@enduml

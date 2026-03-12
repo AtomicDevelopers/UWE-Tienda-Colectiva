@@ -1,0 +1,26 @@
+@startuml flujo_solicitar_otro_colectivo
+title Flujo de Proceso - Solicitar Ingreso a Otro Colectivo
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+start
+:Boton Solicitar Otro Colectivo pulsado;
+:<<systemAction>> Mostrar formulario de solicitud;
+:<<userAction>> Ingresar datos de solicitud;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Registrar solicitud de ingreso;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

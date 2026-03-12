@@ -1,0 +1,66 @@
+@startuml proceso_gestion_encargado_tienda
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Proceso [ Gestionar Emprendedores, Colectivos, Inventario y Ventas ]" {
+
+  class "ProcesoGestionEncargado" as ProcesoGestionEncargado <<processClass>>
+
+  class "ConsultaColectivosEmprendedores" as ConsultaColectivosEmprendedores <<processClass>>
+  class "RevisionSolicitudes" as RevisionSolicitudes <<processClass>>
+  class "RegistroMovimientoInventario" as RegistroMovimientoInventario <<processClass>>
+  class "RegistroVenta" as RegistroVenta <<processClass>>
+
+  class "DatosGestionEncargado" as DatosGestionEncargado <<processClass>> {
+    -colectivoSeleccionado : String
+    -emprendedorSeleccionado : String
+    -solicitudSeleccionada : String
+    -decisionSolicitud : String
+    -tipoMovimiento : String
+    -producto : String
+    -cantidad : Integer
+    -observacion : String
+    -precio : Decimal
+    --
+    -validarDatos()
+  }
+
+  class "ConfirmacionSolicitud" as ConfirmacionSolicitud <<processClass>> {
+    -procesarSolicitud()
+  }
+
+  class "ConfirmacionInventario" as ConfirmacionInventario <<processClass>> {
+    -registrarMovimiento()
+  }
+
+  class "ConfirmacionVenta" as ConfirmacionVenta <<processClass>> {
+    -confirmarVenta()
+  }
+
+  class "ErrorDeValidacion" as ErrorDeValidacion <<processClass>> {
+    -mensaje : String
+  }
+
+  ProcesoGestionEncargado <|-- ConsultaColectivosEmprendedores
+  ProcesoGestionEncargado <|-- RevisionSolicitudes
+  ProcesoGestionEncargado <|-- RegistroMovimientoInventario
+  ProcesoGestionEncargado <|-- RegistroVenta
+
+  ConsultaColectivosEmprendedores --> DatosGestionEncargado
+  RevisionSolicitudes --> DatosGestionEncargado
+  RegistroMovimientoInventario --> DatosGestionEncargado
+  RegistroVenta --> DatosGestionEncargado
+
+  RevisionSolicitudes --> ConfirmacionSolicitud
+  RegistroMovimientoInventario --> ConfirmacionInventario
+  RegistroVenta --> ConfirmacionVenta
+
+  DatosGestionEncargado --> ErrorDeValidacion
+}
+@enduml

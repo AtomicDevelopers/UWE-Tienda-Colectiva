@@ -1,0 +1,26 @@
+@startuml flujo_revisar_solicitudes
+title Flujo de Proceso - Revisar Solicitudes
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+start
+:Boton Revisar Solicitudes pulsado;
+:<<systemAction>> Mostrar solicitudes pendientes;
+:<<userAction>> Seleccionar solicitud;
+:<<userAction>> Elegir decision;
+:<<systemAction>> Validar decision;
+
+if (Decision valida?) then (Si)
+  :<<systemAction>> Procesar solicitud;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

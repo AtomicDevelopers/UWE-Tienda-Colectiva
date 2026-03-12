@@ -1,4 +1,4 @@
-@startuml actividad_gestionar_acceso
+@startuml actividad_registro
 allow_mixing
 
 skinparam shadow false
@@ -8,21 +8,12 @@ skinparam class {
   BorderColor #A80036
   ArrowColor #A80036
 }
-skinparam usecase {
-  BackgroundColor #FEFECE
-  BorderColor #A80036
-  ArrowColor #A80036
-}
 
-package "Activity Gestionar Acceso al Sistema" {
+package "Activity Registro" {
 
   circle " " as A_Start <<start>>
   circle " " as A_End <<end>>
   skinparam circleBackgroundColor black
-
-  class "Mostrar opciones de acceso" as A_Options <<displayAction>>
-
-  class "Seleccionar opcion" as A_SelectOption <<userAction>>
 
   class "Mostrar formulario de registro" as A_RegisterForm <<displayAction>> {
     {type=form}
@@ -46,6 +37,21 @@ package "Activity Gestionar Acceso al Sistema" {
     --
     + mensaje <<displayPin>>
   }
+
+  A_Start --> A_RegisterForm
+  A_RegisterForm --> A_FillForm : [completar datos]
+  A_FillForm --> A_SendRequest : submit
+  A_SendRequest --> A_Pending
+  A_Pending --> A_RequestMsg
+  A_RequestMsg --> A_End
+}
+
+
+package "Activity Inicio de Sesion" {
+
+  circle " " as A_Start <<start>>
+  circle " " as A_End <<end>>
+  skinparam circleBackgroundColor black
 
   class "Mostrar formulario de login" as A_LoginForm <<displayAction>> {
     {type=form}
@@ -78,6 +84,26 @@ package "Activity Gestionar Acceso al Sistema" {
   class "Guardar informacion complementaria" as A_SaveExtraInfo <<systemAction>>
   class "Mostrar panel principal" as A_Dashboard <<displayAction>>
 
+  A_Start --> A_LoginForm
+  A_LoginForm --> A_InputCredentials : [ingresar datos]
+  A_InputCredentials --> A_ValidateCredentials : submit
+  A_ValidateCredentials --> A_LoginError : [credenciales incorrectas]
+  A_LoginError --> A_LoginForm : [reintentar]
+  A_ValidateCredentials --> A_CompleteAccess : [credenciales correctas]
+  A_CompleteAccess --> A_CheckFirstAccess
+  A_CheckFirstAccess --> A_FirstAccessForm : [primer ingreso]
+  A_CheckFirstAccess --> A_Dashboard : [perfil completo]
+  A_FirstAccessForm --> A_SaveExtraInfo : [guardar datos]
+  A_SaveExtraInfo --> A_Dashboard
+  A_Dashboard --> A_End
+}
+
+package "Activity Recuperacion de Contrasena" {
+
+  circle " " as A_Start <<start>>
+  circle " " as A_End <<end>>
+  skinparam circleBackgroundColor black
+
   class "Mostrar formulario de recuperacion" as A_RecoveryForm <<displayAction>> {
     {type=form}
     --
@@ -92,30 +118,7 @@ package "Activity Gestionar Acceso al Sistema" {
     + mensaje <<displayPin>>
   }
 
-  A_Start --> A_Options
-  A_Options --> A_SelectOption
-
-  A_SelectOption --> A_RegisterForm : [registrarse]
-  A_RegisterForm --> A_FillForm : [completar datos]
-  A_FillForm --> A_SendRequest : submit
-  A_SendRequest --> A_Pending
-  A_Pending --> A_RequestMsg
-  A_RequestMsg --> A_End
-
-  A_SelectOption --> A_LoginForm : [iniciar sesion]
-  A_LoginForm --> A_InputCredentials : [ingresar datos]
-  A_InputCredentials --> A_ValidateCredentials : submit
-  A_ValidateCredentials --> A_LoginError : [credenciales incorrectas]
-  A_LoginError --> A_LoginForm : [reintentar]
-  A_ValidateCredentials --> A_CompleteAccess : [credenciales correctas]
-  A_CompleteAccess --> A_CheckFirstAccess
-  A_CheckFirstAccess --> A_FirstAccessForm : [primer ingreso]
-  A_CheckFirstAccess --> A_Dashboard : [perfil completo]
-  A_FirstAccessForm --> A_SaveExtraInfo : [guardar datos]
-  A_SaveExtraInfo --> A_Dashboard
-  A_Dashboard --> A_End
-
-  A_SelectOption --> A_RecoveryForm : [recuperar contrasena]
+  A_Start --> A_RecoveryForm
   A_RecoveryForm --> A_RequestRecovery : [ingresar correo]
   A_RequestRecovery --> A_ProcessRecovery : submit
   A_ProcessRecovery --> A_RecoveryMsg

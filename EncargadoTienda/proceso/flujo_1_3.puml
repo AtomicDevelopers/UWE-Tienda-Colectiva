@@ -1,0 +1,19 @@
+@startuml flujo_registrar_venta_encargado
+title Flujo de Proceso - Registrar Venta
+
+start
+:Boton Registrar Venta pulsado;
+:<<systemAction>> Mostrar formulario de venta;
+:<<userAction>> Agregar items de venta;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Confirmar venta;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml proceso_gestionar_colectivos
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+package "Proceso [ Gestionar Colectivos ]" {
+
+  class "ProcesoColectivos" as ProcesoColectivos <<processClass>>
+
+  class "ConsultaColectivo" as ConsultaColectivo <<processClass>>
+  class "SolicitudIngresoColectivo" as SolicitudIngresoColectivo <<processClass>>
+  class "GestionEspacioAsignado" as GestionEspacioAsignado <<processClass>>
+  class "SolicitudCambioEspacio" as SolicitudCambioEspacio <<processClass>>
+
+  class "DatosColectivo" as DatosColectivo <<processClass>> {
+    -colectivoSeleccionado : String
+    -motivoSolicitud : String
+    -espacioActual : String
+    -espacioSolicitado : String
+    -motivoCambio : String
+    --
+    -validarDatos()
+  }
+
+  class "ConfirmacionSolicitudColectivo" as ConfirmacionSolicitudColectivo <<processClass>> {
+    -registrarSolicitud()
+  }
+
+  class "ConfirmacionCambioEspacio" as ConfirmacionCambioEspacio <<processClass>> {
+    -registrarCambioEspacio()
+  }
+
+  class "ErrorDeValidacion" as ErrorDeValidacion <<processClass>> {
+    -mensaje : String
+  }
+
+  ProcesoColectivos <|-- ConsultaColectivo
+  ProcesoColectivos <|-- SolicitudIngresoColectivo
+  ProcesoColectivos <|-- GestionEspacioAsignado
+  ProcesoColectivos <|-- SolicitudCambioEspacio
+
+  ConsultaColectivo --> DatosColectivo
+  SolicitudIngresoColectivo --> DatosColectivo
+  GestionEspacioAsignado --> DatosColectivo
+  SolicitudCambioEspacio --> DatosColectivo
+
+  SolicitudIngresoColectivo --> ConfirmacionSolicitudColectivo
+  SolicitudCambioEspacio --> ConfirmacionCambioEspacio
+
+  DatosColectivo --> ErrorDeValidacion
+}
+@enduml

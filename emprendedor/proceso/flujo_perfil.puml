@@ -1,0 +1,59 @@
+@startuml flujo_gestionar_acceso
+title Flujo de Proceso - Gestionar Acceso al Sistema
+
+start
+:Seleccionar opcion de acceso;
+
+if (Opcion elegida) then (Registrarse)
+  :Ingresar datos de registro;
+  :Validar datos;
+  if (Datos validos?) then (Si)
+    :Enviar solicitud al colectivo;
+    :Registrar estado en espera;
+    :Mostrar confirmacion de solicitud;
+    stop
+  else (No)
+    :Mostrar error de validacion;
+    stop
+  endif
+
+elseif (Iniciar sesion)
+  :Ingresar credenciales;
+  :Validar credenciales;
+  if (Credenciales correctas?) then (Si)
+    :Completar acceso;
+    :Verificar primer ingreso;
+    if (Es primer ingreso?) then (Si)
+      :Completar informacion faltante;
+      :Validar datos;
+      if (Datos validos?) then (Si)
+        :Guardar informacion;
+        :Mostrar panel principal;
+        stop
+      else (No)
+        :Mostrar error de validacion;
+        stop
+      endif
+    else (No)
+      :Mostrar panel principal;
+      stop
+    endif
+  else (No)
+    :Mostrar error de acceso;
+    stop
+  endif
+
+else (Recuperar contrasena)
+  :Ingresar correo;
+  :Validar correo;
+  if (Correo valido?) then (Si)
+    :Procesar recuperacion;
+    :Mostrar confirmacion;
+    stop
+  else (No)
+    :Mostrar error de validacion;
+    stop
+  endif
+endif
+
+@enduml

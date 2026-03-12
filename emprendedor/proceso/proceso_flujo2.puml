@@ -1,0 +1,35 @@
+@startuml flujo_inicio_de_sesion
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+title Flujo de Proceso - Inicio de Sesion
+
+start
+:Boton Iniciar Sesion pulsado;
+:<<userAction>> Ingresar credenciales;
+:<<systemAction>> Validar credenciales;
+
+if (Credenciales correctas?) then (si)
+  :<<systemAction>> Completar acceso;
+  :<<systemAction>> Verificar primer ingreso;
+
+  if (Es primer ingreso?) then (si)
+    :<<userAction>> Completar informacion faltante;
+    :<<systemAction>> Guardar informacion;
+    :<<systemAction>> Mostrar panel principal;
+    stop
+  else (no)
+    :<<systemAction>> Mostrar panel principal;
+    stop
+  endif
+
+else (no)
+  :<<systemAction>> Mostrar error de acceso;
+  stop
+endif
+
+@enduml

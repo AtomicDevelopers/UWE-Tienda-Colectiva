@@ -1,4 +1,4 @@
-@startuml actividad_gestionar_colectivos
+@startuml actividad_consultar_colectivo
 allow_mixing
 
 skinparam shadow false
@@ -8,13 +8,8 @@ skinparam class {
   BorderColor #A80036
   ArrowColor #A80036
 }
-skinparam usecase {
-  BackgroundColor #FEFECE
-  BorderColor #A80036
-  ArrowColor #A80036
-}
 
-package "Activity Gestionar Colectivos" {
+package "Activity Consultar Informacion del Colectivo" {
 
   circle " " as C_Start <<start>>
   circle " " as C_End <<end>>
@@ -29,7 +24,7 @@ package "Activity Gestionar Colectivos" {
     + estadoEspacio <<displayPin>>
   }
 
-  class "Seleccionar opcion de colectivo" as C_SelectOption <<userAction>>
+  class "Seleccionar colectivo" as C_SelectCollective <<userAction>>
 
   class "Consultar informacion del colectivo" as C_ViewCollectiveInfo <<displayAction>> {
     {type=detail}
@@ -48,6 +43,20 @@ package "Activity Gestionar Colectivos" {
     + horaCierre <<displayPin>>
   }
 
+  C_Start --> C_ViewCollectives
+  C_ViewCollectives --> C_SelectCollective
+  C_SelectCollective --> C_ViewCollectiveInfo
+  C_ViewCollectiveInfo --> C_ViewSchedule : [ver horarios]
+  C_ViewSchedule --> C_End
+}
+
+
+package "Activity Solicitar Ingreso a Otro Colectivo" {
+
+  circle " " as C_Start <<start>>
+  circle " " as C_End <<end>>
+  skinparam circleBackgroundColor black
+
   class "Mostrar formulario de solicitud de ingreso" as C_RequestCollectiveForm <<displayAction>> {
     {type=form}
     --
@@ -61,6 +70,28 @@ package "Activity Gestionar Colectivos" {
     {type=message}
     --
     + mensaje <<displayPin>>
+  }
+
+  C_Start --> C_RequestCollectiveForm
+  C_RequestCollectiveForm --> C_FillCollectiveRequest : [completar datos]
+  C_FillCollectiveRequest --> C_SaveCollectiveRequest : submit
+  C_SaveCollectiveRequest --> C_RequestCollectiveMsg
+  C_RequestCollectiveMsg --> C_End
+}
+
+package "Activity Gestionar Espacio Asignado" {
+
+  circle " " as C_Start <<start>>
+  circle " " as C_End <<end>>
+  skinparam circleBackgroundColor black
+
+  class "Mostrar colectivos asignados" as C_ViewCollectives <<displayAction>> {
+    {type=list}
+    --
+    + nombreColectivo <<displayPin>>
+    + ubicacion <<displayPin>>
+    + horario <<displayPin>>
+    + estadoEspacio <<displayPin>>
   }
 
   class "Seleccionar colectivo" as C_SelectCollective <<userAction>>
@@ -118,22 +149,12 @@ package "Activity Gestionar Colectivos" {
   }
 
   C_Start --> C_ViewCollectives
-  C_ViewCollectives --> C_SelectOption
-
-  C_SelectOption --> C_ViewCollectiveInfo : [consultar informacion]
-  C_ViewCollectiveInfo --> C_ViewSchedule : [ver horarios]
-  C_ViewSchedule --> C_ViewCollectives
-
-  C_SelectOption --> C_RequestCollectiveForm : [solicitar otro colectivo]
-  C_RequestCollectiveForm --> C_FillCollectiveRequest : [completar datos]
-  C_FillCollectiveRequest --> C_SaveCollectiveRequest : submit
-  C_SaveCollectiveRequest --> C_RequestCollectiveMsg
-  C_RequestCollectiveMsg --> C_End
-
-  C_SelectOption --> C_SelectCollective : [seleccionar colectivo]
+  C_ViewCollectives --> C_SelectCollective
   C_SelectCollective --> C_ViewAssignedSpace
+
   C_ViewAssignedSpace --> C_ViewSpaceStatus : [ver estado]
   C_ViewSpaceStatus --> C_ViewAssignedSpace
+
   C_ViewAssignedSpace --> C_ViewSpaceLocation : [consultar ubicacion]
   C_ViewSpaceLocation --> C_ViewAssignedSpace
 

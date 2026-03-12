@@ -1,0 +1,20 @@
+@startuml flujo_consultar_colectivo
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+
+title Flujo de Proceso - Consultar Informacion del Colectivo
+
+start
+:Boton Ver Colectivos pulsado;
+:<<systemAction>> Mostrar colectivos asignados;
+:<<userAction>> Seleccionar colectivo;
+:<<systemAction>> Mostrar informacion del colectivo;
+:<<systemAction>> Mostrar horarios del colectivo;
+stop
+
+@enduml

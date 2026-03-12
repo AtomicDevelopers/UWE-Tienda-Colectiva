@@ -1,0 +1,25 @@
+@startuml flujo_consultar_reportes_encargado
+title Flujo de Proceso - Consultar Reportes
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+start
+:Boton Consultar Reportes pulsado;
+:<<systemAction>> Mostrar reportes de ventas o stock;
+:<<userAction>> Seleccionar tipo de descarga;
+:<<systemAction>> Validar solicitud de descarga;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Descargar reporte;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

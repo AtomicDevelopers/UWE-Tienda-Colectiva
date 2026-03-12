@@ -1,0 +1,25 @@
+@startuml flujo_recuperacion_de_contrasena
+
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #efe951
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+title Flujo de Proceso - Recuperacion de Contrasena
+
+start
+:Boton Recuperar Contrasena pulsado;
+:<<userAction>> Ingresar correo;
+:<<systemAction>> Validar correo;
+
+if (Correo valido?) then (si)
+  :<<systemAction>> Procesar recuperacion;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (no)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

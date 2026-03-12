@@ -1,0 +1,27 @@
+@startuml flujo_comunicacion_alta_demanda
+title Flujo de Proceso - Comunicacion por Alta Demanda
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+start
+:Boton Alta Demanda pulsado;
+:<<systemAction>> Mostrar productos con alta demanda;
+:<<userAction>> Seleccionar emprendedor;
+:<<systemAction>> Mostrar formulario de mensaje;
+:<<userAction>> Ingresar mensaje;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Enviar mensaje o notificacion;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml

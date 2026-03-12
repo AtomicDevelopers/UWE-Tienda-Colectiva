@@ -1,0 +1,11 @@
+@startuml flujo_consultar_informacion_tienda
+title Flujo de Proceso - Consultar Informacion de la Tienda
+
+start
+:Boton Informacion de la Tienda pulsado;
+:<<systemAction>> Mostrar informacion de la tienda;
+:<<systemAction>> Mostrar horarios de la tienda;
+:<<systemAction>> Mostrar estado general de la tienda;
+stop
+
+@enduml

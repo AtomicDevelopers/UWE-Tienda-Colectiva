@@ -1,0 +1,29 @@
+@startuml flujo_gestionar_espacios
+title Flujo de Proceso - Gestionar Espacios
+
+skinparam shadow false
+skinparam roundCorner 12
+skinparam class {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+  ArrowColor #A80036
+}
+start
+:Boton Gestionar Espacios pulsado;
+:<<systemAction>> Mostrar lista de espacios;
+:<<userAction>> Seleccionar espacio;
+:<<systemAction>> Mostrar detalle de espacio;
+:<<systemAction>> Mostrar formulario de espacio;
+:<<userAction>> Ingresar datos de espacio;
+:<<systemAction>> Validar datos;
+
+if (Datos validos?) then (Si)
+  :<<systemAction>> Procesar gestion de espacio;
+  :<<systemAction>> Mostrar confirmacion;
+  stop
+else (No)
+  :<<systemAction>> Mostrar error de validacion;
+  stop
+endif
+
+@enduml
