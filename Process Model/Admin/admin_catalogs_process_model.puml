@@ -9,18 +9,30 @@ package "Process - Admin - Gestion de Catalogos" {
   class "Gestion Tipos Emprendimiento" as GTE <<processClass>>
   class "Lista Tipos Emprendimiento" as LTE <<processClass>>
   class "Editar Tipo Emprendimiento" as ETE <<processClass>>
-  class "Entrada Tipo Emprendimiento" as InTE <<processClass>>
+  class "Entrada Tipo Emprendimiento" as InTE <<processClass>> {
+    - nombre
+    - descripcion
+    - activo
+  }
 
   class "Gestion Tipos Producto" as GTP <<processClass>>
   class "Lista Tipos Producto" as LTP <<processClass>>
   class "Editar Tipo Producto" as ETP <<processClass>>
-  class "Entrada Tipo Producto" as InTP <<processClass>>
+  class "Entrada Tipo Producto" as InTP <<processClass>> {
+    - nombre
+    - descripcion
+    - activo
+  }
 
   class "Gestion Ciudades" as GC <<processClass>>
   class "Lista Ciudades" as LC <<processClass>>
   class "Editar Ciudad" as EC <<processClass>>
   class "Eliminar Ciudad" as DC <<processClass>>
-  class "Entrada Ciudad" as InC <<processClass>>
+  class "Entrada Ciudad" as InC <<processClass>> {
+    - nombre
+    - descripcion
+    - habilitada
+  }
   class "Validar Eliminacion Ciudad" as VEC <<processClass>>
 
   class "Error Validacion" as ErrorValidacion <<processClass>>

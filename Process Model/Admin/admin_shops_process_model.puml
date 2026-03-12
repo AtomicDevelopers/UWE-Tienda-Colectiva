@@ -5,9 +5,25 @@ skinparam roundCorner 15
 
 package "Process - Admin - Gestion de Tiendas" {
   class "Crear Tienda Colectiva" as CrearTienda <<processClass>>
-  class "Entrada Tienda" as EntradaTienda <<processClass>>
+  class "Entrada Tienda" as EntradaTienda <<processClass>> {
+   - nombre
+   - descripcion
+   - telefono
+   - direccion
+   - horario
+   - habilitada
+  }
   class "Confirmacion Tienda" as ConfirmacionTienda <<processClass>>
-  class "Detalle Tienda" as DetalleTienda <<processClass>>
+  class "Detalle Tienda" as DetalleTienda <<processClass>> {
+   - id
+   - nombre
+   - descripcion
+   - telefono
+   - direccion
+   - horario
+   - habilitada
+   - fechaCreacion
+  }
   class "Habilitar/Deshabilitar Tienda" as ToggleTienda <<processClass>>
   class "Eliminar Tienda" as EliminarTienda <<processClass>>
   class "Error Validacion" as ErrorValidacion <<processClass>>

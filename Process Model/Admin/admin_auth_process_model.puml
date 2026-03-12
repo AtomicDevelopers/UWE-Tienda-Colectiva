@@ -7,10 +7,15 @@ package "Process - Admin - Autenticacion" {
   class "Inicio Flujo" as Inicio <<processClass>>
   class "Fin Flujo" as Fin <<processClass>>
   class "Login Admin" as Login <<processClass>>
-  class "Entrada Login" as EntradaLogin <<processClass>>
+  class "Entrada Login" as EntradaLogin <<processClass>> {
+    - email
+    - contraseña
+  }
   class "Confirmacion Login" as ConfirmLogin <<processClass>>
   class "Recuperar Contrasena" as Recover <<processClass>>
-  class "Entrada Recuperacion" as EntradaRec <<processClass>>
+  class "Entrada Recuperacion" as EntradaRec <<processClass>> {
+    - email
+  }
   class "Confirmacion Recuperacion" as ConfirmRec <<processClass>>
   class "Cerrar Sesion" as Logout <<processClass>>
   class "Error Validacion" as ErrorValidacion <<processClass>>

@@ -1,0 +1,31 @@
+@startuml admin_auth_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+partition "Process Flow - Admin - Autenticacion" {
+  (*) --> "Proveer Credenciales" <<userAction>>
+  --> "Validar Autenticación" <<systemAction>>
+  if "¿Credenciales válidas?" then
+    -->[Sí] "Confirmar Inicio de Sesión" <<systemAction>>
+    --> "Sesión Iniciada (Continuar)" <<systemAction>>
+    --> "Cerrar Sesión" <<userAction>>
+    --> "Finalizar Sesión" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Mostrar Error de Validación" <<systemAction>>
+    --> "Proveer Credenciales" <<userAction>>
+  endif
+
+  (*) --> "Solicitar Recuperación" <<userAction>>
+  --> "Proveer Email" <<userAction>>
+  --> "Verificar Email" <<systemAction>>
+  if "¿Email válido?" then
+    -->[Sí] "Confirmar Recuperación" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Mostrar Error de Validación correo" <<systemAction>>
+    --> "Proveer Email" <<userAction>>
+  endif
+}
+@enduml

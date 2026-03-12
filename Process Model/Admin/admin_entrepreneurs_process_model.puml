@@ -5,7 +5,14 @@ skinparam roundCorner 15
 
 package "Process - Admin - Gestion de Emprendimientos" {
   class "Listar Emprendimientos" as ListarEmp <<processClass>>
-  class "Detalle Emprendimiento" as DetalleEmp <<processClass>>
+  class "Detalle Emprendimiento" as DetalleEmp <<processClass>> {
+    - id
+    - nombre
+    - descripcion
+    - propietarioId
+    - estado
+    - fechaAlta
+  }
   class "Habilitar/Deshabilitar Emprendimiento" as ToggleEmp <<processClass>>
   class "Error Validacion" as ErrorValidacion <<processClass>>
   class "Continuar Operación" as Continuar <<processClass>>

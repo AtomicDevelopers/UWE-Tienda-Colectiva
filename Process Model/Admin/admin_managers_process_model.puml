@@ -5,11 +5,20 @@ skinparam roundCorner 15
 
 package "Process - Admin - Gestion de Encargados" {
   class "Listar Encargados" as Listar <<processClass>>
-  class "Detalle Encargado" as Detalle <<processClass>>
+  class "Detalle Encargado" as Detalle <<processClass>> {
+   - id
+   - nombre
+   - telefono
+   - email
+  }
   class "Agregar Encargado" as Agregar <<processClass>>
   class "Editar Encargado" as Editar <<processClass>>
   class "Eliminar Encargado" as Eliminar <<processClass>>
-  class "Entrada Encargado" as Entrada <<processClass>>
+  class "Entrada Encargado" as Entrada <<processClass>> {
+   - nombre
+   - telefono
+   - email
+  }
   class "Error Validacion" as ErrorValidacion <<processClass>>
   class "Continuar Operación" as Continuar <<processClass>>
   diamond "¿Datos encargado válidos?" as DEnc

@@ -1,0 +1,57 @@
+@startuml admin_catalogs_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+partition "Process Flow - Admin - Gestion de Catalogos" {
+  ' Tipos Emprendimiento
+  (*) --> "Listar Tipos Emprendimiento" <<systemAction>>
+  --> "Acción Tipo Emprendimiento (Nuevo/Editar)" <<userAction>>
+  --> "Ingresar Datos Tipo Emprendimiento" <<userAction>>
+  --> "Validar Datos Tipo Emprendimiento" <<systemAction>>
+  if "¿Datos válidos?" then
+    -->[Sí] "Guardar Tipo Emprendimiento" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Mostrar Error Emprendimiento" <<systemAction>>
+    --> "Ingresar Datos Tipo Emprendimiento" <<userAction>>
+  endif
+
+  ' Tipos Producto
+  (*) --> "Listar Tipos Producto" <<systemAction>>
+  --> "Acción Tipo Producto (Nuevo/Editar)" <<userAction>>
+  --> "Ingresar Datos Tipo Producto" <<userAction>>
+  --> "Validar Datos Tipo Producto" <<systemAction>>
+  if "¿Datos válidos?" then
+    -->[Sí] "Guardar Tipo Producto" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Mostrar Error Producto" <<systemAction>>
+    --> "Ingresar Datos Tipo Producto" <<userAction>>
+  endif
+
+  ' Ciudades
+  (*) --> "Listar Ciudades" <<systemAction>>
+  --> "Seleccionar Acción Ciudad" <<userAction>>
+  if "¿Acción?" then
+    -->[Nuevo/Editar] "Ingresar Datos Ciudad" <<userAction>>
+    --> "Validar Datos Ciudad" <<systemAction>>
+    if "¿Datos ciudad válidos?" then
+      -->[Sí] "Guardar Ciudad" <<systemAction>>
+      --> (*)
+    else
+      -->[No] "Mostrar Error Ciudad" <<systemAction>>
+      --> "Ingresar Datos Ciudad" <<userAction>>
+    endif
+  else
+    -->[Eliminar] "Validar Dependencias Ciudad" <<systemAction>>
+    if "¿Ciudad con dependencias?" then
+      -->[Sí] "Mostrar Error (No se puede eliminar)" <<systemAction>>
+      --> "Listar Ciudades" <<systemAction>>
+    else
+      -->[No] "Eliminar Ciudad" <<systemAction>>
+      --> (*)
+    endif
+  endif
+}
+@enduml

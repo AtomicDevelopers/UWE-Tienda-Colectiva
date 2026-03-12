@@ -1,0 +1,35 @@
+@startuml admin_managers_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+partition "Process Flow - Admin - Gestion de Encargados" {
+  (*) --> "Listar Encargados" <<systemAction>>
+  --> "Seleccionar Acción (Ver/Nuevo/Editar/Eliminar)" <<userAction>>
+  if "¿Acción?" then
+    -->[Ver] "Ver Detalles Encargado" <<systemAction>>
+    --> (*)
+  else
+    if "¿Es nuevo o editar?" then
+      -->[Sí] "Ingresar Datos Encargado" <<userAction>>
+      --> "Validar Datos Encargado" <<systemAction>>
+      if "¿Datos encargado válidos?" then
+        -->[Sí] "Guardar Encargado" <<systemAction>>
+        --> (*)
+      else
+        -->[No] "Mostrar Error de Validación" <<systemAction>>
+        --> "Ingresar Datos Encargado" <<userAction>>
+      endif
+    else
+      -->[Eliminar] "Validar Eliminacion" <<systemAction>>
+      if "¿Se puede eliminar?" then
+        -->[Sí] "Eliminar Encargado" <<systemAction>>
+        --> (*)
+      else
+        -->[No] "Mostrar Error (No se puede eliminar)" <<systemAction>>
+        --> "Listar Encargados" <<systemAction>>
+      endif
+    endif
+  endif
+}
+@enduml

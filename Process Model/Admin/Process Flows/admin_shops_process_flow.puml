@@ -1,0 +1,41 @@
+@startuml admin_shops_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+partition "Process Flow - Admin - Gestion de Tiendas" {
+  (*) --> "Iniciar Creacion Tienda Colectiva" <<userAction>>
+  --> "Ingresar Datos Tienda" <<userAction>>
+  --> "Validar Datos Tienda" <<systemAction>>
+  if "¿Datos tienda válidos?" then
+    -->[Sí] "Confirmar Creacion de Tienda" <<userAction>>
+    --> "Guardar Tienda" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Mostrar Error" <<systemAction>>
+    --> "Ingresar Datos Tienda" <<userAction>>
+  endif
+
+  (*) --> "Ver Detalles Tienda" <<systemAction>>
+  --> "Seleccionar Acción (Habilitar/Eliminar)" <<userAction>>
+  if "¿Acción?" then
+    -->[Habilitar/Deshabilitar] "Confirmar Cambio de Estado" <<userAction>>
+    if "¿Confirmar cambio de estado?" then
+      -->[Sí] "Actualizar Estado" <<systemAction>>
+      --> (*)
+    else
+      -->[No] "Cancelar Cambio" <<systemAction>>
+      --> "Ver Detalles Tienda" <<systemAction>>
+    endif
+  else
+    -->[Eliminar] "Intentar Eliminar Tienda" <<systemAction>>
+    if "¿Puede eliminar tienda?" then
+      -->[Sí] "Eliminar Tienda" <<systemAction>>
+      --> (*)
+    else
+      -->[No] "Mostrar Error Eliminacion" <<systemAction>>
+      --> "Ver Detalles Tienda" <<systemAction>>
+    endif
+  endif
+}
+@enduml

@@ -1,0 +1,20 @@
+@startuml admin_entrepreneurs_process_flow
+skinparam shadow false
+skinparam packageStyle rectangle
+skinparam roundCorner 15
+
+partition "Process Flow - Admin - Gestion de Emprendimientos" {
+  (*) --> "Listar Emprendimientos" <<systemAction>>
+  --> "Seleccionar Emprendimiento" <<userAction>>
+  --> "Ver Detalles Emprendimiento" <<systemAction>>
+  --> "Desencadenar Habilitar/Deshabilitar" <<userAction>>
+  --> "Confirmar Cambio de Estado" <<userAction>>
+  if "¿Confirmar cambio de estado?" then
+    -->[Sí] "Actualizar Estado" <<systemAction>>
+    --> (*)
+  else
+    -->[No] "Cancelar Cambio" <<systemAction>>
+    --> "Ver Detalles Emprendimiento" <<systemAction>>
+  endif
+}
+@enduml
